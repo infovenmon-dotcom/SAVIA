@@ -1,0 +1,22 @@
+{
+  "extraKnownMarketplaces": {
+    "claude-seo-ai": {
+      "source": { "source": "github", "repo": "Hainrixz/claude-seo-ai" }
+    },
+    "ui-ux-pro-max-skill": {
+      "source": { "source": "github", "repo": "nextlevelbuilder/ui-ux-pro-max-skill" }
+    },
+    "anthropic-agent-skills": {
+      "source": { "source": "github", "repo": "anthropics/skills" }
+    },
+    "marketingskills": {
+      "source": { "source": "github", "repo": "coreyhaines31/marketingskills" }
+    }
+  },
+  "enabledPlugins": {
+    "claude-seo-ai@claude-seo-ai": true,
+    "ui-ux-pro-max@ui-ux-pro-max-skill": true,
+    "example-skills@anthropic-agent-skills": true,
+    "marketing-skills@marketingskills": true
+  }
+}
