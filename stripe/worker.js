@@ -279,11 +279,18 @@ async function buscarCodigoStripe(env, codigo) {
   if (!code || !env.STRIPE_SECRET_KEY) return null;
   const H = { 'Authorization': 'Bearer ' + env.STRIPE_SECRET_KEY };
   try {
+    // expand[]=data.coupon: pedimos el cupón COMPLETO en la misma llamada. Sin
+    // esto, Stripe puede devolver solo el id del cupón y el % se queda a 0 (el
+    // carrito acababa deduciendo el descuento del nombre del código).
     const url = 'https://api.stripe.com/v1/promotion_codes'
-      + '?code=' + encodeURIComponent(code) + '&active=true&limit=1';
+      + '?code=' + encodeURIComponent(code) + '&active=true&limit=1'
+      + '&expand[]=data.coupon';
     const r = await fetch(url, { headers: H });
     const j = await r.json();
-    if (!r.ok || !j.data || !j.data.length) return null;
+    if (!r.ok || !j.data || !j.data.length) {
+      if (!r.ok) console.error('stripe promotion_codes:', r.status, JSON.stringify(j && j.error || j));
+      return null;
+    }
     const pc = j.data[0];
     let cup = pc.coupon;
     // El cupón puede venir como objeto o como id (string). Si falta el %/importe,
@@ -292,7 +299,12 @@ async function buscarCodigoStripe(env, codigo) {
       const cid = (typeof cup === 'string') ? cup : (cup && cup.id);
       if (cid) {
         const rc = await fetch('https://api.stripe.com/v1/coupons/' + encodeURIComponent(cid), { headers: H });
-        if (rc.ok) cup = await rc.json();
+        const jc = await rc.json().catch(() => null);
+        if (rc.ok) cup = jc;
+        // Si tampoco se puede leer el cupón (p.ej. clave restringida sin permiso
+        // de "Coupons"), queda registrado en los logs de Cloudflare en vez de
+        // devolver un 0 mudo.
+        else console.error('stripe coupons/' + cid + ':', rc.status, JSON.stringify(jc && jc.error || jc));
       }
     }
     cup = cup || {};
