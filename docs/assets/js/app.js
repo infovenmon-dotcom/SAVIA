@@ -491,6 +491,20 @@ function irACategorias() {
 }
 window.irACategorias = irACategorias;
 
+/* Lleva a la seccion de newsletter (regalo de bienvenida) dejandola POR DEBAJO
+   de la barra fija. Su altura cambia segun el mensaje del banner rotativo, asi
+   que se mide en el momento, igual que en irACategorias(). Desde la tienda
+   (que no tiene esa seccion) salta a la landing. */
+function irAlRegalo() {
+  const destino = document.getElementById('newsletter');
+  if (!destino) { window.location.href = 'index.html#newsletter'; return; }
+  const barra = document.querySelector('.barra-fija');
+  const off = (barra ? barra.offsetHeight : 0) + 10;
+  const y = destino.getBoundingClientRect().top + window.scrollY - off;
+  window.scrollTo({ top: Math.max(0, y), behavior: 'smooth' });
+}
+window.irAlRegalo = irAlRegalo;
+
 /* ---------- Landing: 6 mas vendidos ---------- */
 function renderLandingBestSellers() {
   const cont = document.getElementById('best-sellers');
@@ -668,4 +682,6 @@ document.addEventListener('DOMContentLoaded', async () => {
   if (window.Carrito && typeof Carrito.render === 'function') Carrito.render();
   // Mensaje de gracias / cancelación al volver de Stripe.
   gestionarRetornoPago();
+  // Si se llega desde la tienda con #newsletter, recolocar bajo la barra fija.
+  if (location.hash === '#newsletter') setTimeout(irAlRegalo, 350);
 });

@@ -1610,3 +1610,43 @@ html.a11y-contraste .btn-primario { background: #06402b !important; color: #fff 
   padding: 11px 16px; font-weight: 600; font-size: .92rem;
 }
 .vacaciones-aviso a { color: #3a2c05; text-decoration: underline; }
+
+/* ---------- Boton "Solicita tu regalo" (barra superior) ----------
+   Gancho de captacion siempre visible: lleva a la seccion de newsletter
+   (#newsletter, en la landing). Dorado para que destaque sobre el verde del
+   carrito sin competir con el. */
+.btn-regalo {
+  display: inline-flex;
+  align-items: center;
+  gap: .4em;
+  background: linear-gradient(100deg, var(--dorado-claro), #f2d8a4);
+  color: #3a2c05;
+  text-decoration: none;
+  border: 1px solid rgba(184, 134, 11, .45);
+  border-radius: 999px;
+  padding: 9px 16px;
+  font-weight: 700;
+  font-size: .92rem;
+  line-height: 1.1;
+  white-space: nowrap;
+  box-shadow: 0 2px 8px rgba(184, 134, 11, .22);
+  transition: transform .15s var(--ease), box-shadow .15s var(--ease);
+}
+.btn-regalo:hover { transform: translateY(-2px); box-shadow: 0 6px 16px rgba(184, 134, 11, .30); color: #3a2c05; }
+.btn-regalo:focus-visible { outline: 2px solid var(--verde-oscuro); outline-offset: 2px; }
+.btn-regalo .br-corto { display: none; }
+
+/* La barra superior es sticky: sin esto, al saltar a #newsletter el titulo
+   queda tapado por el banner + la cabecera. */
+#newsletter { scroll-margin-top: 150px; }
+
+@media (max-width: 900px) {
+  .btn-regalo .br-largo { display: none; }
+  .btn-regalo .br-corto { display: inline; }
+}
+@media (max-width: 600px) {
+  .cabecera-inner { gap: 10px; padding: 10px 12px; }
+  .nav-tienda { gap: 12px; font-size: .88rem; }
+  .btn-regalo { padding: 8px 12px; font-size: .84rem; }
+  #newsletter { scroll-margin-top: 215px; }
+}
