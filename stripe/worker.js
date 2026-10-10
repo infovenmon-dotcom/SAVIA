@@ -1678,7 +1678,7 @@ async function manejarSuscripcion(request, env, cors) {
       cta + pie + `</div>`;
   } else {
     // Nuevo suscriptor: bienvenida (el regalo llega en su primer pedido).
-    subject = '🌿 Tu 10 % de bienvenida (solo septiembre) — Savia de Alma';
+    subject = '🌿 Tu 10 % de bienvenida — Savia de Alma';
     html =
       `<div style="font-family:-apple-system,Segoe UI,Roboto,Arial,sans-serif;max-width:560px;margin:0 auto;color:#333">` +
       `<h2 style="color:#6b7a4f">¡Bienvenida/o a Savia de Alma! 🌿</h2>` +
@@ -1687,7 +1687,6 @@ async function manejarSuscripcion(request, env, cors) {
         `<div style="color:#8a8578;font-size:13px">Y un extra, solo por apuntarte:</div>` +
         `<div style="color:#1D6B50;font-size:18px;font-weight:bold;margin-top:4px">10 % de descuento en tu primer pedido</div>` +
         `<div style="color:#B07A2E;font-size:26px;font-weight:bold;letter-spacing:2px;margin-top:4px">REGALATE10</div>` +
-        `<div style="color:#c0392b;font-size:13px;font-weight:bold;margin-top:8px">⏳ Solo válido hasta el 30 de septiembre</div>` +
         `<div style="margin-top:12px"><a href="${NL_SITE}/tienda.html?codigo=REGALATE10&amp;utm_source=newsletter&amp;utm_medium=email&amp;utm_content=bienvenida" style="background:#B07A2E;color:#fff;padding:11px 22px;border-radius:8px;text-decoration:none;font-weight:600">🛍️ Comprar con mi 10 %</a></div>` +
         `<div style="color:#aaa;font-size:12px;margin-top:8px">Se aplica solo en tu primer pedido. El botón ya lo activa por ti.</div>` +
       `</div>` +
