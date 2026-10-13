@@ -671,6 +671,7 @@ window.verFactura = verFactura;
 /* ---------- Envíos (CTT) ---------- */
 let ENVIOS = [];
 let CTT_OK = false;
+let CTT_ENTORNO = '';
 
 function _fechaCorta(ts) {
   if (!ts) return '—';
@@ -698,6 +699,7 @@ async function cargarEnvios() {
     const d = await r.json();
     ENVIOS = d.pedidos || [];
     CTT_OK = !!d.ctt;
+    CTT_ENTORNO = d.cttEntorno || '';
     pintarEnvios();
     _msg(msg, ENVIOS.length ? ENVIOS.length + ' pedido(s)' : '', 'ok');
   } catch (e) {
@@ -707,11 +709,19 @@ async function cargarEnvios() {
 
 function pintarEnvios() {
   const T = document.getElementById('env-tabla');
+  // Si CTT no apunta a produccion, las etiquetas salen igual pero el envio NO
+  // existe de verdad: se declara en el simulador y no aparece en su panel.
+  const avisoCtt = (CTT_ENTORNO && CTT_ENTORNO !== 'produccion')
+    ? '<div class="admin-caja" style="background:#fdecea;border:1px solid #c0392b;margin-bottom:12px">'
+      + '<strong style="color:#c0392b">⚠️ CTT en modo ' + CTT_ENTORNO + '</strong>'
+      + '<div class="nota">Las etiquetas se generan, pero los envíos NO llegan al panel de CTT ni se recogen. '
+      + 'Revisa la variable <code>CTT_BASE_URL</code> en Cloudflare (debe ser https://api.cttexpress.com).</div></div>'
+    : '';
   if (!ENVIOS.length) {
-    T.innerHTML = '<p class="nota">No hay pedidos ' + (document.getElementById('env-pend').checked ? 'pendientes' : '') + '. (Aparecerán aquí en cuanto entre una venta pagada.)</p>';
+    T.innerHTML = avisoCtt + '<p class="nota">No hay pedidos ' + (document.getElementById('env-pend').checked ? 'pendientes' : '') + '. (Aparecerán aquí en cuanto entre una venta pagada.)</p>';
     return;
   }
-  T.innerHTML = ENVIOS.map((p, i) => {
+  T.innerHTML = avisoCtt + ENVIOS.map((p, i) => {
     const e = p.envio || {};
     const prods = (p.lineas || []).map(l => l.cantidad + '× ' + _esc(l.titulo)).join('<br>');
     const dir = _esc(_dirTexto(e));

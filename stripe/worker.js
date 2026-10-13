@@ -1179,7 +1179,7 @@ async function manejarEnviosLista(request, env, cors) {
     } while (cursor && guard++ < 20);
   }
   pedidos.sort((a, b) => (b.fecha || 0) - (a.fecha || 0));
-  return jsonResp({ pedidos, ctt: cttConfigurado(env) }, 200, cors);
+  return jsonResp({ pedidos, ctt: cttConfigurado(env), cttEntorno: cttEntorno(env) }, 200, cors);
 }
 
 /* Guarda el nº de seguimiento de un pedido, lo marca como enviado y avisa al cliente. */
@@ -1323,8 +1323,22 @@ async function manejarBorrarFactura(request, env, cors) {
 // pasar de pruebas a producción, se pide un token nuevo automáticamente en vez
 // de reutilizar el de test guardado en KV.
 function cttTokenKey(env) { return 'ctt:token:' + String(env.CTT_CLIENT_ID || '').slice(-10); }
-function cttBase(env) { return (env.CTT_BASE_URL || 'https://api-test.cttexpress.com').replace(/\/+$/, ''); }
-function cttConfigurado(env) { return !!(env.CTT_CLIENT_ID && env.CTT_CLIENT_SECRET && env.CTT_CLIENT_CENTER); }
+// SIN valor por defecto a proposito. Antes caia a api-test.cttexpress.com si
+// faltaba la variable, y eso declaraba envios REALES en el entorno de pruebas:
+// la etiqueta se imprimia igual y el envio no aparecia en el panel de CTT.
+// Ahora falla de forma ruidosa y el panel lo avisa antes de dejarte pulsar.
+function cttBase(env) {
+  const b = String(env.CTT_BASE_URL || '').trim();
+  if (!b) throw new Error('CTT_BASE_URL sin configurar. Ponla en Cloudflare: https://api.cttexpress.com (produccion) o https://api-test.cttexpress.com (pruebas).');
+  return b.replace(/\/+$/, '');
+}
+/* 'produccion' | 'PRUEBAS' | 'sin configurar' — para avisar en el panel. */
+function cttEntorno(env) {
+  const b = String(env.CTT_BASE_URL || '').trim();
+  if (!b) return 'sin configurar';
+  return /api-test\./i.test(b) ? 'PRUEBAS' : 'produccion';
+}
+function cttConfigurado(env) { return !!(env.CTT_CLIENT_ID && env.CTT_CLIENT_SECRET && env.CTT_CLIENT_CENTER && env.CTT_BASE_URL); }
 function cttZonaDeCP(cp) { return String(cp || '').padStart(5, '0').startsWith('07') ? 'baleares' : 'peninsula'; }
 function cttServicio(env, zona) {
   return zona === 'baleares' ? (env.CTT_SERVICE_BALEARES || env.CTT_SERVICE_PENINSULA || 'C24')
