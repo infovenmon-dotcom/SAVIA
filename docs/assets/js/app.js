@@ -684,4 +684,22 @@ document.addEventListener('DOMContentLoaded', async () => {
   gestionarRetornoPago();
   // Si se llega desde la tienda con #newsletter, recolocar bajo la barra fija.
   if (location.hash === '#newsletter') setTimeout(irAlRegalo, 350);
+  // Si se llega desde una ficha de producto (/producto/<handle>/) con
+  // ?producto=<handle>, abrir ese producto directamente.
+  abrirProductoDeLaURL();
 });
+
+/* Las fichas estaticas enlazan a tienda.html?producto=<handle>.
+   Al llegar, abrimos ese producto y limpiamos el parametro. */
+function abrirProductoDeLaURL() {
+  const handle = new URLSearchParams(location.search).get('producto');
+  if (!handle) return;
+  const existe = DATA && DATA.products && DATA.products.some(p => p.handle === handle);
+  if (!existe || typeof abrirFicha !== 'function') return;
+  setTimeout(() => {
+    abrirFicha(handle);
+    const u = new URL(location.href);
+    u.searchParams.delete('producto');
+    history.replaceState({}, '', u.pathname + (u.search || '') + u.hash);
+  }, 300);
+}

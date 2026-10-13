@@ -1,0 +1,41 @@
+/* Ficha de producto (paginas /producto/<handle>/).
+   Generadas por tools/generar-fichas.js. */
+/* Solo padding vertical: la forma abreviada pisaria el padding lateral
+   que aporta .contenedor y el contenido quedaria pegado al borde. */
+.ficha { padding-top: 28px; padding-bottom: 60px; }
+.ficha-migas { font-size: .88rem; color: #6b705c; margin-bottom: 18px; }
+.ficha-migas a { color: inherit; }
+.ficha-migas a:hover { color: var(--verde-oscuro); }
+
+.ficha-grid { display: grid; gap: 28px; align-items: start; }
+@media (min-width: 46em) { .ficha-grid { grid-template-columns: 1.1fr 1fr; gap: 40px; } }
+
+.ficha-galeria { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; }
+.ficha-img-grande { grid-column: 1 / -1; width: 100%; height: auto;
+  border-radius: var(--radio, 14px); background: #fff; }
+.ficha-img-mini { width: 100%; height: auto; border-radius: 8px; background: #fff; }
+
+.ficha-coleccion { text-transform: uppercase; letter-spacing: .12em; font-size: .75rem;
+  font-weight: 600; color: #8a8f7a; margin-bottom: 6px; }
+.ficha h1 { font-family: var(--fuente-titulo); font-size: clamp(1.6rem, 4vw, 2.3rem);
+  line-height: 1.15; margin-bottom: 8px; }
+.ficha-lema { font-style: italic; color: #6b705c; margin-bottom: 12px; }
+.ficha-precio { font-size: 1.8rem; font-weight: 700; color: var(--verde-oscuro); margin: 10px 0; }
+.ficha-corta { margin-bottom: 18px; }
+.ficha-nota { font-size: .85rem; color: #8a6d1f; margin-top: 10px; }
+.ficha-features { margin: 18px 0 0 18px; }
+.ficha-features li { margin-bottom: 5px; }
+
+.ficha-bloque { margin-top: 36px; }
+.ficha-bloque h2 { font-family: var(--fuente-titulo); font-size: 1.3rem; margin-bottom: 10px; }
+.ficha-bloque ul { margin-left: 18px; }
+.ficha-bloque li { margin-bottom: 7px; }
+
+.ficha-datos { display: grid; gap: 10px; }
+@media (min-width: 40em) { .ficha-datos { grid-template-columns: 1fr 1fr; } }
+.ficha-dato { border-top: 1px solid var(--borde); padding-top: 8px; }
+.ficha-dato dt { font-size: .78rem; text-transform: uppercase; letter-spacing: .08em;
+  color: #8a8f7a; font-weight: 600; }
+.ficha-dato dd { margin: 2px 0 0; }
+.ficha-inci { margin-top: 16px; font-size: .85rem; color: #5b6050; line-height: 1.5; }
+.ficha-volver { margin-top: 40px; }
