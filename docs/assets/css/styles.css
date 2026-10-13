@@ -1640,13 +1640,26 @@ html.a11y-contraste .btn-primario { background: #06402b !important; color: #fff 
    queda tapado por el banner + la cabecera. */
 #newsletter { scroll-margin-top: 150px; }
 
-@media (max-width: 900px) {
+@media (max-width: 56.25em) {
   .btn-regalo .br-largo { display: none; }
   .btn-regalo .br-corto { display: inline; }
 }
-@media (max-width: 600px) {
+@media (max-width: 37.5em) {
   .cabecera-inner { gap: 10px; padding: 10px 12px; }
   .nav-tienda { gap: 12px; font-size: .88rem; }
   .btn-regalo { padding: 8px 12px; font-size: .84rem; }
   #newsletter { scroll-margin-top: 215px; }
+}
+
+/* Cuando el usuario agranda la letra del movil, la cabecera deja de caber
+   y el carrito se salia de la pantalla: quedaba imposible de pulsar.
+   Por debajo de 20em de ancho util la fila se parte y el carrito baja,
+   pero sigue viendose. En em, no en px, para que dependa del tamano de
+   letra del usuario y no solo del ancho del movil. */
+@media (max-width: 20em) {
+  .cabecera-inner { flex-wrap: wrap; row-gap: 8px; }
+  .cabecera-inner > .logo,
+  .cabecera-inner > .boton-carrito { flex: 0 0 auto; }
+  .cabecera-inner > .nav-tienda { flex: 0 1 auto; flex-wrap: wrap; }
+  .cabecera-inner > .btn-regalo { flex: 0 1 auto; min-width: 0; }
 }
