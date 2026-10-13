@@ -32,6 +32,9 @@
           <a href="/tienda.html">Tienda</a>
           <a href="/index.html#contacto">Contacto</a>
         </nav>
+        <button class="boton-carrito" onclick="abrirCarrito()">
+          🛒 <span class="carrito-contador oculto" data-carrito-contador>0</span>
+        </button>
       </div>
     </header>
   </div>
@@ -53,7 +56,8 @@
         <p class="ficha-lema">Suavidad que ilumina.</p>
         <p class="ficha-precio">10,99 €</p>
         <p class="ficha-corta">Exfoliante corporal sólido de zanahoria y lino · exfoliación suave · 98,5% natural · vegano</p>
-        <a class="btn btn-primario btn-bloque" href="/tienda.html?producto=exfoliante-zanahoria-lino">Comprar en la tienda</a>
+        <button class="btn btn-primario btn-bloque" onclick="anadirDesdeFicha('exfoliante-zanahoria-lino')">Añadir al carrito</button>
+        <a class="btn btn-secundario btn-bloque" href="/tienda.html?producto=exfoliante-zanahoria-lino">Ver en la tienda</a>
         <p class="ficha-nota">🌿 Exclusivo de la web</p>
         <ul class="ficha-features">
           <li>Exfolia y nutre a la vez</li>
@@ -122,6 +126,45 @@
   <div class="kit-digital">
     <img src="/assets/img/kit-digital.png" alt="Programa Kit Digital, financiado por los fondos Next Generation EU - Plan de Recuperación, Transformación y Resiliencia, Gobierno de España, red.es">
   </div>
+  <div class="overlay" id="overlay" onclick="cerrarCarrito()"></div>
+  <aside class="panel-carrito" id="panel-carrito" aria-label="Carrito">
+    <div class="panel-cab">
+      <h3>Tu carrito</h3>
+      <button class="cerrar" onclick="cerrarCarrito()" aria-label="Cerrar">×</button>
+    </div>
+    <div class="panel-items" id="carrito-items"></div>
+    <div class="panel-resumen" id="carrito-resumen"></div>
+  </aside>
+  <script src="/assets/js/products.js"></script>
+  <script>
+    /* products.js guarda las imagenes con ruta relativa ("assets/img/..").
+       Desde /producto/<handle>/ eso apunta dentro de esta carpeta y el
+       carrito pintaria miniaturas rotas. Se pasan a ruta absoluta antes
+       de que cart.js lea el catalogo. */
+    (function () {
+      var d = window.SAVIA_DATA;
+      if (!d || !d.products) return;
+      var abs = function (u) {
+        return (u && u[0] !== '/' && !/^https?:/.test(u)) ? '/' + u : u;
+      };
+      d.products.forEach(function (p) {
+        p.image = abs(p.image);
+        if (Array.isArray(p.images)) p.images = p.images.map(abs);
+      });
+    })();
+  </script>
+  <script src="/assets/js/config.js"></script>
+  <script src="/assets/js/cart.js"></script>
+  <script src="/assets/js/checkout.js"></script>
+  <script>
+    /* La ficha no carga app.js (espera la rejilla de la tienda), asi que
+       anade al carrito con la API de Carrito directamente. */
+    function anadirDesdeFicha(handle) {
+      if (!window.Carrito) { location.href = '/tienda.html?producto=' + handle; return; }
+      Carrito.fijar(handle, (Carrito.items[handle] || 0) + 1);
+      if (typeof abrirCarrito === 'function') abrirCarrito();
+    }
+  </script>
   <script src="/assets/js/accesibilidad.js"></script>
   <script defer src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "55b5e0bbafb34a94bc832c5a8500b78d"}'></script>
 </body>
