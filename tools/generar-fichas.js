@@ -241,8 +241,7 @@ ${CABECERA}
 
     ${resenasPublicables(p.handle).length ? `<section class="ficha-bloque ficha-resenas">
       <h2>⭐ Opiniones de clientes</h2>
-      <p class="fr-fuente">Opiniones de compradores verificados en
-        <a href="${esc(DATA.amazonStore)}" target="_blank" rel="noopener">Amazon.es</a></p>
+      <p class="fr-fuente">Opiniones de compradores verificados en Amazon.es</p>
       ${resenasPublicables(p.handle).map(rv => `<div class="fr-item">
         <div class="resena-estrellas">${'★'.repeat(rv.r || 5)}${'☆'.repeat(5 - (rv.r || 5))}</div>
         <p>“${esc(rv.t)}”</p>
