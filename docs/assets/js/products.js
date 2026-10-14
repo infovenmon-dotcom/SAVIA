@@ -2296,14 +2296,14 @@ window.SAVIA_DATA = {
       "features": [
         "Se vende por unidad",
         "Mango de bambu natural",
-        "Cerdas suaves",
+        "Cerdas suaves de nylon",
         "Sin plástico en el mango",
         "Ligero y cómodo",
         "Vegano"
       ],
       "bullets": [
         "BAMBU EN LUGAR DE PLÁSTICO: el mango es de bambu, una de las plantas de crecimiento más rápido.",
-        "CERDAS SUAVES: comodas para encias sensibles sin renunciar a una limpieza a fondo.",
+        "CERDAS SUAVES DE NYLON: comodas para encias sensibles sin renunciar a una limpieza a fondo.",
         "TRES VECES AL DÍA: es el producto que más repites, y por eso el que más cambia tu huella.",
         "DÉJALO SECAR AL AIRE: de pie y fuera del vaso, el bambu dura mucho más.",
         "SE VENDE POR UNIDAD: añade los que necesites a la cesta."
