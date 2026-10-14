@@ -2326,24 +2326,24 @@ window.SAVIA_DATA = {
         "assets/img/products/esponja-konjac.jpg"
       ],
       "specs": {
-        "peso": "~30 g el pack",
+        "peso": "~10 g",
         "natural": "Raíz de konjac",
-        "fabricacion": "Pack de 3 esponjas de raíz de konjac con nuez de nogal molida. 7,5 × 5,5 cm. Biodegradables. Vida útil 6-8 semanas cada una."
+        "fabricacion": "Esponja de raíz de konjac con nuez de nogal molida. 7,5 × 5,5 cm. Biodegradable. Vida útil de 6 a 8 semanas."
       },
       "handle": "esponja-konjac",
-      "title": "Esponja Facial de Konjac · Pack de 3",
+      "title": "Esponja Facial de Konjac · Unidad",
       "sku": "SDA-AC-KONJAC",
       "type": "Accesorio facial",
       "collection": "accesorios",
       "collectionName": "Accesorios",
       "image": "assets/img/products/esponja-konjac.jpg",
       "lema": "Limpia la cara sin que la cara se entere.",
-      "short": "Pack de 3. Raíz de konjac con nuez de nogal, forma de gota, 7,5 × 5,5 cm",
-      "descripcion": "Tres esponjas de raíz de konjac con nuez de nogal molida. Secas están duras como una piedra; al mojarlas se vuelven blandas como una nube y limpian la piel sin arrastrarla. Con tres tienes para varios meses.",
+      "short": "Unidad. Raíz de konjac con nuez de nogal, forma de gota, 7,5 × 5,5 cm",
+      "descripcion": "Esponja de raíz de konjac con nuez de nogal molida. Seca está dura como una piedra; al mojarla se vuelve blanda como una nube y limpia la piel sin arrastrarla. Cada esponja dura entre 6 y 8 semanas.",
       "indicado": "Ideal para pieles sensibles y para quien quiere limpiar a diario sin resecar.",
       "modoUso": "Moja la esponja hasta que se ablande. Masajea el rostro en circulos, con o sin limpiador. Aclara, escurre sin retorcer y cuelga a secar.",
       "features": [
-        "Pack de 3 esponjas",
+        "Se vende por unidad",
         "Raíz de konjac natural",
         "Con nuez de nogal molida",
         "Forma de gota, 7,5 × 5,5 cm",
@@ -2351,7 +2351,7 @@ window.SAVIA_DATA = {
         "Vegano"
       ],
       "bullets": [
-        "VIENEN TRES: cada una dura entre 6 y 8 semanas, así que tienes para medio año.",
+        "SE VENDE POR UNIDAD: añade las que necesites a la cesta; cada una dura entre 6 y 8 semanas.",
         "CON NUEZ DE NOGAL: aporta un punto de textura para una limpieza algo más profunda.",
         "SOLA O CON LIMPIADOR: funciona con agua, y multiplica tu limpiador facial sólido.",
         "BIODEGRADABLE: cuando termine su vida, al compost.",
@@ -2470,31 +2470,31 @@ window.SAVIA_DATA = {
         "assets/img/products/cepillo-facial.jpg"
       ],
       "specs": {
-        "peso": "~70 g el juego",
+        "peso": "~35 g",
         "natural": "",
-        "fabricacion": "Juego de dos cepillos de madera con cerdas, 8 × 7 cm cada uno."
+        "fabricacion": "Cepillo de madera con cerdas, 8 × 7 cm."
       },
       "handle": "cepillo-facial",
-      "title": "Cepillo Facial de Limpieza · Juego de 2",
+      "title": "Cepillo Facial de Limpieza · Unidad",
       "sku": "SDA-AC-CEPFACIAL",
       "type": "Accesorio facial",
       "collection": "accesorios",
       "collectionName": "Accesorios",
       "image": "assets/img/products/cepillo-facial.jpg",
       "lema": "La cara también agradece un masaje.",
-      "short": "Juego de 2 piezas, marrón y rosa. Madera y cerdas suaves, 8 × 7 cm",
-      "descripcion": "Dos cepillos de madera con cerdas suaves, uno marrón y otro rosa, con forma curva para adaptarse al óvalo de la cara. Se agarran con la palma, sin mango, y recorren mejilla, mandíbula y cuello con un gesto suave.",
+      "short": "Unidad. Madera con cerdas suaves, forma curva, 8 × 7 cm",
+      "descripcion": "Cepillo de madera con cerdas suaves y forma curva, pensado para adaptarse al óvalo de la cara. Se agarra con la palma, sin mango, y recorre mejilla, mandíbula y cuello con un gesto suave.",
       "indicado": "Para la limpieza diaria del rostro, solo o con tu limpiador facial sólido.",
       "modoUso": "Sobre la piel húmeda, apoya el cepillo en la palma y desliza desde el centro hacia afuera con movimientos suaves. Aclara y deja secar con las cerdas hacia abajo.",
       "features": [
-        "Juego de 2 piezas: marrón y rosa",
+        "Se vende por unidad",
         "Madera con cerdas suaves",
         "Forma curva, se agarra con la palma",
-        "8 × 7 cm cada uno",
+        "8 × 7 cm",
         "Uso diario"
       ],
       "bullets": [
-        "VIENEN DOS: uno marrón y uno rosa, para ti y para quien tú quieras.",
+        "SE VENDE POR UNIDAD: añade el tuyo a la cesta, sin packs que no necesitas.",
         "SIN MANGO: se agarra con la palma, y por eso recorre la cara sin forzar la muñeca.",
         "CIRCULOS SUAVES: el gesto es de masaje, no de frotar.",
         "CON TU LIMPIADOR SÓLIDO: hace más espuma y reparte mejor el producto.",
