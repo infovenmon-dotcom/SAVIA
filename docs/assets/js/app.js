@@ -282,6 +282,49 @@ const COMBINA_COL = {
   ceras:            ['champu-cafeina-canela', 'jabonera-pequena'],
   accesorios:       ['jabon-leche-cabra', 'jabon-leche-burra-aloe'],
 };
+/* ---------- Venta cruzada por categoria ----------
+   Al abrir una pestana de la tienda, debajo de sus productos aparece
+   "Completa tu rutina con...": piezas de OTRAS categorias que de verdad
+   acompanan a lo que esta mirando. A diferencia de COMBINA_COL (ficha de
+   producto), aqui SI entran los "Proximamente": sirven para anunciarlos.
+   Regla: nada de la propia categoria, y lo agotado no se ensena. */
+const CROSS_COL = {
+  champus:          ['acondicionador-coco', 'cepillo-pelo-madera', 'jabonera-pequena'],
+  acondicionadores: ['champu-cafeina-canela', 'cepillo-pelo-madera', 'jabonera-pequena'],
+  jabones:          ['jabonera-metalica', 'jabonera-bambu', 'esponja-exfoliante'],
+  exfoliantes:      ['esponja-konjac', 'esponja-exfoliante', 'jabonera-bambu'],
+  depilacion:       ['esponja-exfoliante', 'sales-epsom-500', 'jabonera-bambu'],
+  desodorantes:     ['jabon-leche-cabra', 'neceser-blanco', 'esponja-exfoliante'],
+  faciales:         ['esponja-konjac', 'cepillo-facial', 'set-contorno-facial', 'jabonera-pequena'],
+  afeitado:         ['kit-afeitado-completo', 'kit-afeitado', 'jabonera-metalica', 'esponja-exfoliante'],
+  ceras:            ['champu-cafeina-canela', 'cepillo-pelo-madera', 'jabonera-pequena'],
+  accesorios:       ['jabon-leche-cabra', 'champu-cafeina-canela', 'espuma-afeitar-avellana'],
+  'sales-epsom':    ['jabon-leche-cabra', 'esponja-exfoliante', 'jabonera-metalica'],
+};
+function crossDeColeccion(slug) {
+  const out = [];
+  for (const h of (CROSS_COL[slug] || [])) {
+    const x = DATA.products.find(y => y.handle === h);
+    if (!x || x.collection === slug || out.includes(x)) continue;
+    // Agotado de verdad, no; "proximamente" si, que para eso se anuncia.
+    if (estaAgotado(x) && !x.proximamente) continue;
+    out.push(x);
+  }
+  return out.slice(0, 4);
+}
+/* Bloque que se cuelga al final de cada seccion de la tienda. */
+function bloqueCross(slug) {
+  const items = crossDeColeccion(slug);
+  if (!items.length) return '';
+  return `
+          <div class="cross-rutina">
+            <h3 class="cross-titulo">🌿 Completa tu rutina con&hellip;</h3>
+            <div class="grid-productos">
+              ${items.map(x => cardProducto(x, { compacta: true })).join('')}
+            </div>
+          </div>`;
+}
+
 function relacionadosDe(p) {
   const handles = COMBINA_COL[p.collection] || [];
   const out = [];
@@ -458,6 +501,7 @@ function renderTienda() {
           <div class="grid-productos">
             ${items.map(p => cardProducto(p)).join('')}
           </div>
+${bloqueCross(col.slug)}
         </div>
       </section>`;
   }).join('');

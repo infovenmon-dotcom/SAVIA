@@ -383,6 +383,32 @@ img { max-width: 100%; display: block; }
 
 /* ---------- Secciones ---------- */
 .seccion { padding: 48px 0; }
+
+/* Venta cruzada al final de cada categoria de la tienda. Va sobre beige y
+   con una linea arriba para que se lea como "ademas", no como mas de lo
+   mismo; las tarjetas son las de siempre, en version compacta. */
+.cross-rutina {
+  margin-top: 36px;
+  padding: 24px 18px 26px;
+  background: var(--beige);
+  border-top: 2px solid var(--dorado);
+  border-radius: var(--radio);
+}
+.cross-titulo {
+  font-family: var(--fuente-titulo);
+  font-size: 1.22rem;
+  color: var(--verde-oscuro);
+  margin: 0 0 16px;
+  text-align: center;
+}
+.cross-rutina .grid-productos { grid-template-columns: repeat(2, 1fr); gap: 14px; }
+@media (min-width: 720px) {
+  .cross-rutina .grid-productos { grid-template-columns: repeat(3, 1fr); }
+}
+@media (min-width: 960px) {
+  .cross-rutina .grid-productos { grid-template-columns: repeat(4, 1fr); }
+}
+.cross-rutina .card h3 { font-size: .95rem; }
 .seccion-titulo {
   text-align: center;
   font-size: 1.9rem;
