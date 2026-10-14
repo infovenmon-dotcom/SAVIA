@@ -9,6 +9,10 @@ const path = require('path');
 const RAIZ = path.join(__dirname, '..', 'docs');
 const SITIO = 'https://saviadealma.com';
 
+/* Sello de version de los assets: al cambiar un .js o .css hay que
+   subirlo, o los navegadores siguen sirviendo la copia en cache. */
+const V = '20261014-1';
+
 /* --- cargar el catalogo sin navegador --- */
 const src = fs.readFileSync(path.join(RAIZ, 'assets/js/products.js'), 'utf8');
 const window = {};
@@ -89,7 +93,7 @@ const PIE = `  <footer class="pie">
     <div class="panel-items" id="carrito-items"></div>
     <div class="panel-resumen" id="carrito-resumen"></div>
   </aside>
-  <script src="/assets/js/products.js"></script>
+  <script src="/assets/js/products.js?v=${V}"></script>
   <script>
     /* products.js guarda las imagenes con ruta relativa ("assets/img/..").
        Desde /producto/<handle>/ eso apunta dentro de esta carpeta y el
@@ -108,7 +112,7 @@ const PIE = `  <footer class="pie">
     })();
   </script>
   <script src="/assets/js/config.js"></script>
-  <script src="/assets/js/cart.js"></script>
+  <script src="/assets/js/cart.js?v=${V}"></script>
   <script src="/assets/js/checkout.js"></script>
   <script>
     /* La ficha no carga app.js (espera la rejilla de la tienda), asi que
@@ -187,8 +191,8 @@ function ficha(p) {
   <meta property="og:description" content="${esc(metaDesc)}">
   <meta property="og:url" content="${url}">
   <meta property="og:image" content="${esc(abs(imgs[0]))}">
-  <link rel="stylesheet" href="/assets/css/styles.css">
-  <link rel="stylesheet" href="/assets/css/ficha.css">
+  <link rel="stylesheet" href="/assets/css/styles.css?v=${V}">
+  <link rel="stylesheet" href="/assets/css/ficha.css?v=${V}">
   <link rel="icon" href="/assets/img/favicon.ico" sizes="any">
   <link rel="icon" type="image/png" sizes="32x32" href="/assets/img/favicon-32.png">
   <link rel="apple-touch-icon" href="/assets/img/apple-touch-icon.png">
