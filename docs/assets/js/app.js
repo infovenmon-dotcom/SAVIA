@@ -351,7 +351,9 @@ function trioJabonera() {
   return TRIO_JABONERA.map((grupo, i) => grupo[(dia + i) % grupo.length]);
 }
 const COMBINA_PROD = {
-  'jabonera-metalica': trioJabonera,
+  // Los tres jabones del dia, y debajo la base de bambu que recoge el agua:
+  // es la pareja que sale en las fotos del producto.
+  'jabonera-metalica': () => trioJabonera().concat('jabonera-bambu'),
 };
 function relacionadosDe(p) {
   const def = COMBINA_PROD[p.handle];
@@ -362,7 +364,7 @@ function relacionadosDe(p) {
     const x = DATA.products.find(y => y.handle === h);
     if (x && recomendable(x) && !estaAgotado(x) && !x.proximamente && !out.includes(x)) out.push(x);
   }
-  return out.slice(0, 3);
+  return out.slice(0, 4);
 }
 function _precioTxt(p) { return tienePrecio(p) ? precioDe(p).toFixed(2).replace('.', ',') + ' €' : ''; }
 

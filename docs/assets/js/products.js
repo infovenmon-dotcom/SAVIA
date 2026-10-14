@@ -2425,7 +2425,7 @@ window.SAVIA_DATA = {
       "specs": {
         "peso": "~70 g",
         "natural": "",
-        "fabricacion": "Rejilla de acero en forma de onda, con hueco para tres pastillas de pie. Se vende sola, sin bandeja."
+        "fabricacion": "Rejilla de acero en forma de onda, con hueco para tres pastillas de pie. Se vende sola: en las fotos aparece sobre nuestra Jabonera de Bambú, que va aparte."
       },
       "handle": "jabonera-metalica",
       "title": "Jabonera Metálica de Acero",
@@ -2436,9 +2436,9 @@ window.SAVIA_DATA = {
       "image": "assets/img/products/jabonera-metalica.jpg",
       "lema": "No todos los días necesitas el mismo jabón.",
       "short": "Rejilla de acero con hueco para tres pastillas de pie, secas y aireadas, sin plástico",
-      "descripcion": "No todos los días te sientes igual ni necesitas lo mismo. Las ondas de esta rejilla dejan hueco para tres pastillas de pie, cada una en el suyo: una para los días de calma, otra para los que hay que despertar y otra para cuando toca limpieza a fondo. Cuáles, lo eliges tú. Y al estar de pie y en alto, escurren entre ducha y ducha, que es justo lo que hace que una pastilla dure el doble.",
+      "descripcion": "No todos los días te sientes igual ni necesitas lo mismo. Las ondas de esta rejilla dejan hueco para tres pastillas de pie, cada una en el suyo: una para los días de calma, otra para los que hay que despertar y otra para cuando toca limpieza a fondo. Cuáles, lo eliges tú. Y al estar de pie y en alto, escurren entre ducha y ducha, que es justo lo que hace que una pastilla dure el doble. La rejilla se vende sola; encaja sobre nuestra Jabonera de Bambú, que recoge el agua.",
       "indicado": "Para quien usa más de un jabón y los quiere todos secos, a mano y sin que se toquen.",
-      "modoUso": "Coloca las pastillas de pie en los huecos de la rejilla, en un sitio donde el agua pueda caer. Enjuaga la jabonera de vez en cuando.",
+      "modoUso": "Coloca las pastillas de pie en los huecos de la rejilla, en un sitio donde el agua pueda caer, o sobre una jabonera de bambú que la recoja. Enjuaga la rejilla de vez en cuando.",
       "features": [
         "Hueco para tres pastillas",
         "Acero resistente",
@@ -2451,6 +2451,7 @@ window.SAVIA_DATA = {
         "EL AGUA ES EL ENEMIGO: una pastilla que se queda en un charco se gasta al doble de velocidad.",
         "DE PIE Y SIN TOCARSE: cada pastilla en su onda, escurriendo, sin pegarse a la de al lado.",
         "SIN PLÁSTICO: solo acero, nada más.",
+        "SOBRE LA JABONERA DE BAMBÚ: la rejilla va suelta y encaja encima de la nuestra, que recoge el agua. Se vende aparte.",
         "SE AMORTIZA SOLA: lo que alarga tus pastillas ya paga la jabonera."
       ],
       "proximamente": true
