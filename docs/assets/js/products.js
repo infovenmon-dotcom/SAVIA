@@ -2303,10 +2303,10 @@ window.SAVIA_DATA = {
         "Vegano"
       ],
       "bullets": [
-        "BAMBU EN LUGAR DE PLÁSTICO: el mango es de bambu, una de las plantas de crecimiento más rapido.",
+        "BAMBU EN LUGAR DE PLÁSTICO: el mango es de bambu, una de las plantas de crecimiento más rápido.",
         "CERDAS SUAVES: comodas para encias sensibles sin renunciar a una limpieza a fondo.",
         "TRES VECES AL DÍA: es el producto que más repites, y por eso el que más cambia tu huella.",
-        "DEJALO SECAR AL AIRE: de pie y fuera del vaso, el bambu dura mucho más.",
+        "DÉJALO SECAR AL AIRE: de pie y fuera del vaso, el bambu dura mucho más.",
         "SE VENDE POR UNIDAD: añade los que necesites a la cesta."
       ],
       "proximamente": true
@@ -2327,12 +2327,12 @@ window.SAVIA_DATA = {
         "assets/img/products/esponja-konjac.jpg"
       ],
       "specs": {
-        "peso": "~10 g",
+        "peso": "~30 g el pack",
         "natural": "Raíz de konjac",
-        "fabricacion": "Raíz de konjac con nuez de nogal. Biodegradable. Vida util 6-8 semanas."
+        "fabricacion": "Pack de 3 esponjas de raíz de konjac con nuez de nogal molida. 7,5 × 5,5 cm. Biodegradables. Vida útil 6-8 semanas cada una."
       },
       "handle": "esponja-konjac",
-      "title": "Esponja Facial de Konjac",
+      "title": "Esponja Facial de Konjac · Pack de 3",
       "price": 5.99,
       "sku": "SDA-AC-KONJAC",
       "type": "Accesorio facial",
@@ -2340,19 +2340,20 @@ window.SAVIA_DATA = {
       "collectionName": "Accesorios",
       "image": "assets/img/products/esponja-konjac.jpg",
       "lema": "Limpia la cara sin que la cara se entere.",
-      "short": "Raíz de konjac con nuez de nogal, limpieza suave diaria, vegano",
-      "descripcion": "Esponja de raíz de konjac con nuez de nogal. Seca esta dura como una piedra; al mojarla se vuelve blanda como una nube y limpia la piel sin arrastrarla.",
+      "short": "Pack de 3. Raíz de konjac con nuez de nogal, forma de gota, 7,5 × 5,5 cm",
+      "descripcion": "Tres esponjas de raíz de konjac con nuez de nogal molida. Secas están duras como una piedra; al mojarlas se vuelven blandas como una nube y limpian la piel sin arrastrarla. Con tres tienes para varios meses.",
       "indicado": "Ideal para pieles sensibles y para quien quiere limpiar a diario sin resecar.",
       "modoUso": "Moja la esponja hasta que se ablande. Masajea el rostro en circulos, con o sin limpiador. Aclara, escurre sin retorcer y cuelga a secar.",
       "features": [
+        "Pack de 3 esponjas",
         "Raíz de konjac natural",
-        "Con nuez de nogal",
-        "Limpieza suave diaria",
+        "Con nuez de nogal molida",
+        "Forma de gota, 7,5 × 5,5 cm",
         "Biodegradable",
         "Vegano"
       ],
       "bullets": [
-        "DE PIEDRA A NUBE: seca esta rigida; con agua se ablanda y se vuelve suavisima.",
+        "VIENEN TRES: cada una dura entre 6 y 8 semanas, así que tienes para medio año.",
         "CON NUEZ DE NOGAL: aporta un punto de textura para una limpieza algo más profunda.",
         "SOLA O CON LIMPIADOR: funciona con agua, y multiplica tu limpiador facial sólido.",
         "BIODEGRADABLE: cuando termine su vida, al compost.",
@@ -2402,7 +2403,7 @@ window.SAVIA_DATA = {
       ],
       "bullets": [
         "DOS PIEZAS: el gua sha para el ovalo y la mandibula, y el rodillo para los ojos.",
-        "SIEMPRE CON PRODUCTO: usalo sobre aceite o crema para que deslice, nunca en seco.",
+        "SIEMPRE CON PRODUCTO: úsalo sobre aceite o crema para que deslice, nunca en seco.",
         "DEL CENTRO HACIA AFUERA: ese es el sentido, y sin apretar.",
         "CINCO MINUTOS: es un ritual corto, de los que de verdad se mantienen.",
         "FRÍO SI TE APETECE: guardado en la nevera, la sensación al despertar es otra."
@@ -2466,19 +2467,19 @@ window.SAVIA_DATA = {
         "facial",
         "limpieza",
         "masaje",
-        "vegano",
+        "madera",
         "accesorio"
       ],
       "images": [
         "assets/img/products/cepillo-facial.jpg"
       ],
       "specs": {
-        "peso": "~35 g",
+        "peso": "~70 g el juego",
         "natural": "",
-        "fabricacion": "Cepillo facial de cerdas suaves con mango."
+        "fabricacion": "Juego de dos cepillos de madera con cerdas, 8 × 7 cm cada uno."
       },
       "handle": "cepillo-facial",
-      "title": "Cepillo Facial de Limpieza",
+      "title": "Cepillo Facial de Limpieza · Juego de 2",
       "price": 7.99,
       "sku": "SDA-AC-CEPFACIAL",
       "type": "Accesorio facial",
@@ -2486,22 +2487,23 @@ window.SAVIA_DATA = {
       "collectionName": "Accesorios",
       "image": "assets/img/products/cepillo-facial.jpg",
       "lema": "La cara también agradece un masaje.",
-      "short": "Cerdas suaves, masaje facial, limpieza diaria, mango cómodo, vegano",
-      "descripcion": "Cepillo de cerdas suaves para masajear el rostro mientras limpias. El mango cabe en la mano y permite recorrer la cara sin esfuerzo.",
+      "short": "Juego de 2 piezas, marrón y rosa. Madera y cerdas suaves, 8 × 7 cm",
+      "descripcion": "Dos cepillos de madera con cerdas suaves, uno marrón y otro rosa, con forma curva para adaptarse al óvalo de la cara. Se agarran con la palma, sin mango, y recorren mejilla, mandíbula y cuello con un gesto suave.",
       "indicado": "Para la limpieza diaria del rostro, solo o con tu limpiador facial sólido.",
-      "modoUso": "Sobre la piel humeda, masajea en circulos suaves desde el centro hacia afuera. Aclara y deja secar con las cerdas hacia abajo.",
+      "modoUso": "Sobre la piel húmeda, apoya el cepillo en la palma y desliza desde el centro hacia afuera con movimientos suaves. Aclara y deja secar con las cerdas hacia abajo.",
       "features": [
-        "Cerdas suaves",
-        "Mango cómodo",
-        "Masaje mientras limpias",
-        "Uso diario",
-        "Vegano"
+        "Juego de 2 piezas: marrón y rosa",
+        "Madera con cerdas suaves",
+        "Forma curva, se agarra con la palma",
+        "8 × 7 cm cada uno",
+        "Uso diario"
       ],
       "bullets": [
-        "SUAVE DE VERDAD: las cerdas estan pensadas para la cara, no para el cuerpo.",
-        "CIRCULOS, SIN APRETAR: el gesto es de masaje, no de frotar.",
+        "VIENEN DOS: uno marrón y uno rosa, para ti y para quien tú quieras.",
+        "SIN MANGO: se agarra con la palma, y por eso recorre la cara sin forzar la muñeca.",
+        "CIRCULOS SUAVES: el gesto es de masaje, no de frotar.",
         "CON TU LIMPIADOR SÓLIDO: hace más espuma y reparte mejor el producto.",
-        "SECALO BOCA ABAJO: con las cerdas hacia abajo escurre y dura mucho más."
+        "SÉCALO BOCA ABAJO: con las cerdas hacia abajo escurre y dura mucho más."
       ],
       "proximamente": true
     },
@@ -2522,7 +2524,7 @@ window.SAVIA_DATA = {
       "specs": {
         "peso": "~95 g",
         "natural": "Madera natural",
-        "fabricacion": "Cepillo de madera natural con puas de punta redondeada."
+        "fabricacion": "Cepillo de madera natural de 24 × 8 cm, con púas de punta redondeada y orificio para colgar."
       },
       "handle": "cepillo-pelo-madera",
       "title": "Cepillo de Pelo de Madera",
@@ -2532,24 +2534,26 @@ window.SAVIA_DATA = {
       "collection": "accesorios",
       "collectionName": "Accesorios",
       "image": "assets/img/products/cepillo-pelo-madera.jpg",
-      "lema": "Desenreda sin tirones y sin electricidad estatica.",
-      "short": "Madera natural, puas redondeadas, desenreda sin tirones, sin plástico",
-      "descripcion": "Cepillo de madera natural con puas de punta redondeada. Desenreda sin arrastrar y, al no ser de plástico, no carga el pelo de electricidad estatica.",
+      "lema": "Desenreda sin tirones y sin electricidad estática.",
+      "short": "Madera natural, 24 × 8 cm, púas redondeadas, desenreda sin tirones, sin plástico",
+      "descripcion": "Cepillo de madera natural con púas de punta redondeada. Desenreda sin arrastrar y, al no ser de plástico, no carga el pelo de electricidad estática.",
       "indicado": "Para todo tipo de cabello, y especialmente si se te encrespa al cepillarlo.",
       "modoUso": "Empieza por las puntas y ve subiendo poco a poco hacia la raíz. Nunca al reves.",
       "features": [
         "Madera natural",
-        "Puas de punta redondeada",
-        "Sin electricidad estatica",
+        "24 × 8 cm",
+        "Púas de punta redondeada",
+        "Sin electricidad estática",
         "Desenreda sin tirones",
         "Sin plástico"
       ],
       "bullets": [
         "DE LAS PUNTAS A LA RAÍZ: ese es el orden, y por eso no hay tirones.",
-        "PUAS REDONDEADAS: no aranan el cuero cabelludo.",
+        "PÚAS REDONDEADAS: no aranan el cuero cabelludo.",
         "ADIOS AL ENCRESPADO: la madera no carga el pelo como el plástico.",
         "REPARTE LO QUE YA TIENES: distribuye el sebo natural de la raíz a lo largo del pelo.",
-        "SE LIMPIA FÁCIL: retira el pelo con los dedos; la madera, mejor sin remojarla."
+        "SE LIMPIA FÁCIL: retira el pelo con los dedos; la madera, mejor sin remojarla.",
+        "CON ORIFICIO PARA COLGAR: se guarda a la vista y seco, no en un cajón."
       ],
       "proximamente": true
     },
