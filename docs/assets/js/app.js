@@ -276,12 +276,19 @@ const COMBINA_COL = {
   jabones:          ['jabonera-bambu', 'esponja-exfoliante'],
   exfoliantes:      ['jabonera-bambu', 'esponja-exfoliante'],
   depilacion:       ['esponja-exfoliante', 'jabonera-bambu'],
-  desodorantes:     ['jabon-leche-cabra', 'esponja-exfoliante'],
-  faciales:         ['jabonera-pequena', 'jabon-leche-cabra'],
+  desodorantes:     ['jabon-naranja-canela', 'esponja-exfoliante'],
+  faciales:         ['jabonera-pequena', 'jabon-arbol-te'],
   afeitado:         ['jabonera-bambu', 'esponja-exfoliante'],
   ceras:            ['champu-cafeina-canela', 'jabonera-pequena'],
-  accesorios:       ['jabon-leche-cabra', 'jabon-leche-burra-aloe'],
+  accesorios:       ['jabon-lavanda', 'jabon-karite'],
 };
+/* La leche de cabra y la de burra son los dos unicos jabones no veganos del
+   catalogo. Se venden igual, pero no se recomiendan: quien llega buscando
+   cosmetica vegana no debe encontrarselos sugeridos. */
+function recomendable(p) {
+  return !!p && p.vegano !== false;
+}
+
 /* ---------- Venta cruzada por categoria ----------
    Al abrir una pestana de la tienda, debajo de sus productos aparece
    "Completa tu rutina con...": piezas de OTRAS categorias que de verdad
@@ -294,18 +301,19 @@ const CROSS_COL = {
   jabones:          ['jabonera-metalica', 'jabonera-bambu', 'esponja-exfoliante'],
   exfoliantes:      ['esponja-konjac', 'esponja-exfoliante', 'jabonera-bambu'],
   depilacion:       ['esponja-exfoliante', 'sales-epsom-500', 'jabonera-bambu'],
-  desodorantes:     ['jabon-leche-cabra', 'neceser-blanco', 'esponja-exfoliante'],
+  desodorantes:     ['jabon-naranja-canela', 'neceser-blanco', 'esponja-exfoliante'],
   faciales:         ['esponja-konjac', 'cepillo-facial', 'set-contorno-facial', 'jabonera-pequena'],
   afeitado:         ['kit-afeitado-completo', 'kit-afeitado', 'jabonera-metalica', 'esponja-exfoliante'],
   ceras:            ['champu-cafeina-canela', 'cepillo-pelo-madera', 'jabonera-pequena'],
-  accesorios:       ['jabon-leche-cabra', 'champu-cafeina-canela', 'espuma-afeitar-avellana'],
-  'sales-epsom':    ['jabon-leche-cabra', 'esponja-exfoliante', 'jabonera-metalica'],
+  accesorios:       ['jabon-lavanda', 'champu-cafeina-canela', 'espuma-afeitar-avellana'],
+  'sales-epsom':    ['jabon-lavanda', 'esponja-exfoliante', 'jabonera-metalica'],
 };
 function crossDeColeccion(slug) {
   const out = [];
   for (const h of (CROSS_COL[slug] || [])) {
     const x = DATA.products.find(y => y.handle === h);
     if (!x || x.collection === slug || out.includes(x)) continue;
+    if (!recomendable(x)) continue;
     // Agotado de verdad, no; "proximamente" si, que para eso se anuncia.
     if (estaAgotado(x) && !x.proximamente) continue;
     out.push(x);
@@ -325,13 +333,34 @@ function bloqueCross(slug) {
           </div>`;
 }
 
+/* Excepciones por producto: cuando el argumento de venta de una pieza SON
+   otros productos concretos, mandan estos y no los de su categoria.
+   La jabonera de acero tiene hueco para tres pastillas: el que la mira tiene
+   que ver cuales tres. */
+/* La jabonera no vende un trio cerrado: vende tener tres jabones a mano.
+   Por eso se propone un momento (calma / despertar / limpieza a fondo) y
+   dentro de cada uno va rotando el jabon sugerido, para que no parezca un
+   lote fijo. Rota por dia, no al azar, para que no baile en cada recarga. */
+const TRIO_JABONERA = [
+  ['jabon-lavanda', 'jabon-karite', 'jabon-cbd'],
+  ['jabon-pepita-uva', 'jabon-naranja-canela'],
+  ['jabon-arbol-te', 'jabon-carbon-activo'],
+];
+function trioJabonera() {
+  const dia = Math.floor(Date.now() / 86400000);
+  return TRIO_JABONERA.map((grupo, i) => grupo[(dia + i) % grupo.length]);
+}
+const COMBINA_PROD = {
+  'jabonera-metalica': trioJabonera,
+};
 function relacionadosDe(p) {
-  const handles = COMBINA_COL[p.collection] || [];
+  const def = COMBINA_PROD[p.handle];
+  const handles = (typeof def === 'function' ? def() : def) || COMBINA_COL[p.collection] || [];
   const out = [];
   for (const h of handles) {
     if (h === p.handle) continue;
     const x = DATA.products.find(y => y.handle === h);
-    if (x && !estaAgotado(x) && !x.proximamente && !out.includes(x)) out.push(x);
+    if (x && recomendable(x) && !estaAgotado(x) && !x.proximamente && !out.includes(x)) out.push(x);
   }
   return out.slice(0, 3);
 }
@@ -429,16 +458,21 @@ function abrirFicha(handle) {
         ${amazon}`}
       </div>`;
 
-  const sellos = [
+  /* Estos sellos hablan de NUESTRA cosmetica: artesanal, hecha en Espana y
+     sin envase. En una rejilla de acero o un cepillo comprados fuera serian
+     falsos, asi que ahi no se ensenan. Lo mismo con "vegano": en un accesorio
+     no sabemos de que son las cerdas, y afirmarlo seria inventarselo. */
+  const esCosmetico = p.collection !== 'accesorios' && p.collection !== 'sales-epsom';
+  const sellos = esCosmetico ? [
     ['🤲', 'Artesanal'],
     ['🇪🇸', 'Hecho en España'],
     ['🌿', 'Origen natural'],
     ['♻️', 'Sin envase'],
     ['🐰', 'Cruelty free'],
-  ];
-  if (p.vegano !== false) sellos.push(['🌱', 'Vegano']);
-  const sellosBlock = `<div class="ficha-sellos">${sellos.map(([e, t]) =>
-    `<span class="sello"><span class="sello-ico">${e}</span>${t}</span>`).join('')}</div>`;
+  ] : [];
+  if (esCosmetico && p.vegano !== false) sellos.push(['🌱', 'Vegano']);
+  const sellosBlock = sellos.length ? `<div class="ficha-sellos">${sellos.map(([e, t]) =>
+    `<span class="sello"><span class="sello-ico">${e}</span>${t}</span>`).join('')}</div>` : '';
 
   cont.innerHTML = `
     ${galeria}

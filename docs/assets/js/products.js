@@ -2414,6 +2414,7 @@ window.SAVIA_DATA = {
       "tags": [
         "jabonera",
         "acero",
+        "tres jabones",
         "zero waste",
         "accesorio",
         "bano"
@@ -2424,7 +2425,7 @@ window.SAVIA_DATA = {
       "specs": {
         "peso": "~70 g",
         "natural": "",
-        "fabricacion": "Rejilla de acero. Se vende sola, sin bandeja."
+        "fabricacion": "Rejilla de acero en forma de onda, con hueco para tres pastillas de pie. Se vende sola, sin bandeja."
       },
       "handle": "jabonera-metalica",
       "title": "Jabonera Metálica de Acero",
@@ -2433,24 +2434,24 @@ window.SAVIA_DATA = {
       "collection": "accesorios",
       "collectionName": "Accesorios",
       "image": "assets/img/products/jabonera-metalica.jpg",
-      "lema": "Tu jabón dura el doble si respira.",
-      "short": "Rejilla de acero, drena y airea, alarga la vida de tu pastilla, sin plástico",
-      "descripcion": "Rejilla de acero que deja el jabón en alto para que escurra y se seque entre usos. Sin bandeja de plástico: el agua cae y ya esta.",
-      "indicado": "Para cualquiera de nuestras pastillas de jabón o champú sólido.",
-      "modoUso": "Coloca la pastilla sobre la rejilla, en un sitio donde el agua pueda caer. Enjuaga la jabonera de vez en cuando.",
+      "lema": "No todos los días necesitas el mismo jabón.",
+      "short": "Rejilla de acero con hueco para tres pastillas de pie, secas y aireadas, sin plástico",
+      "descripcion": "No todos los días te sientes igual ni necesitas lo mismo. Las ondas de esta rejilla dejan hueco para tres pastillas de pie, cada una en el suyo: una para los días de calma, otra para los que hay que despertar y otra para cuando toca limpieza a fondo. Cuáles, lo eliges tú. Y al estar de pie y en alto, escurren entre ducha y ducha, que es justo lo que hace que una pastilla dure el doble.",
+      "indicado": "Para quien usa más de un jabón y los quiere todos secos, a mano y sin que se toquen.",
+      "modoUso": "Coloca las pastillas de pie en los huecos de la rejilla, en un sitio donde el agua pueda caer. Enjuaga la jabonera de vez en cuando.",
       "features": [
+        "Hueco para tres pastillas",
         "Acero resistente",
-        "Drena y airea la pastilla",
+        "Drena y airea cada pastilla",
         "Sin bandeja de plástico",
-        "Fácil de limpiar",
         "Alarga la vida del jabón"
       ],
       "bullets": [
+        "TRES JABONES, TRES MOMENTOS: uno para la calma, otro para despertar y otro para una limpieza a fondo. Eliges tú cuáles, y los tienes los tres a mano.",
         "EL AGUA ES EL ENEMIGO: una pastilla que se queda en un charco se gasta al doble de velocidad.",
-        "REJILLA, NO BANDEJA: el agua cae y el jabón se seca entre ducha y ducha.",
+        "DE PIE Y SIN TOCARSE: cada pastilla en su onda, escurriendo, sin pegarse a la de al lado.",
         "SIN PLÁSTICO: solo acero, nada más.",
-        "SE LIMPIA EN UN SEGUNDO: un aclarado y lista.",
-        "SE AMORTIZA SOLA: lo que alarga una pastilla ya paga la jabonera."
+        "SE AMORTIZA SOLA: lo que alarga tus pastillas ya paga la jabonera."
       ],
       "proximamente": true
     },

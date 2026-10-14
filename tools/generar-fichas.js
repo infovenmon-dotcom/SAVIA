@@ -11,7 +11,7 @@ const SITIO = 'https://saviadealma.com';
 
 /* Sello de version de los assets: al cambiar un .js o .css hay que
    subirlo, o los navegadores siguen sirviendo la copia en cache. */
-const V = '20261014-2';
+const V = '20261014-3';
 
 /* --- cargar el catalogo sin navegador --- */
 const src = fs.readFileSync(path.join(RAIZ, 'assets/js/products.js'), 'utf8');
@@ -258,8 +258,8 @@ ${CABECERA}
       </ul>
     </section>` : ''}
 
-    ${sp.indicado ? `<section class="ficha-bloque"><h2>Indicado para</h2><p>${esc(sp.indicado)}</p></section>` : ''}
-    ${sp.modoUso ? `<section class="ficha-bloque"><h2>Modo de uso</h2><p>${esc(sp.modoUso)}</p></section>` : ''}
+    ${(p.indicado || sp.indicado) ? `<section class="ficha-bloque"><h2>Indicado para</h2><p>${esc(p.indicado || sp.indicado)}</p></section>` : ''}
+    ${(p.modoUso || sp.modoUso) ? `<section class="ficha-bloque"><h2>Modo de uso</h2><p>${esc(p.modoUso || sp.modoUso)}</p></section>` : ''}
 
     <section class="ficha-bloque">
       <h2>Ficha técnica</h2>
