@@ -16,6 +16,22 @@ new Function('window', src)(window);
 const DATA = window.SAVIA_DATA;
 const PRODUCTOS = DATA.products;
 
+/* Resenas reales de compradores de Amazon.es. Se muestran citando la
+   fuente; NO se marcan con schema Review: el marcado de resenas propias
+   en Product esta restringido por Google y aqui no aportaria nada. */
+const win2 = {};
+new Function('window', fs.readFileSync(path.join(RAIZ, 'assets/js/reviews.js'), 'utf8'))(win2);
+const RESENAS = win2.SAVIA_RESENAS || {};
+
+/* Un cosmetico no puede atribuirse el tratamiento o la curacion de una
+   enfermedad (Reg. 1223/2009 y Reg. 655/2013). Una resena es del cliente,
+   pero al destacarla en la ficha el claim pasa a ser de la marca. Por eso
+   las que nombran patologias o curacion no se publican aqui. */
+const CLAIM_MEDICO = /psoriasis|dermatitis|ecce?ma|eczema|alopecia|fungic|infecci|cur(a|o|ado)\b|milagro|brote|medicament/i;
+function resenasPublicables(handle) {
+  return (RESENAS[handle] || []).filter(rv => !CLAIM_MEDICO.test(rv.t));
+}
+
 const esc = s => String(s == null ? '' : s)
   .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
   .replace(/"/g, '&quot;').replace(/'/g, '&#39;');
@@ -222,6 +238,17 @@ ${CABECERA}
       </dl>
       ${sp.inci ? `<p class="ficha-inci"><strong>Ingredients:</strong> ${esc(sp.inci)}</p>` : ''}
     </section>
+
+    ${resenasPublicables(p.handle).length ? `<section class="ficha-bloque ficha-resenas">
+      <h2>⭐ Opiniones de clientes</h2>
+      <p class="fr-fuente">Opiniones de compradores verificados en
+        <a href="${esc(DATA.amazonStore)}" target="_blank" rel="noopener">Amazon.es</a></p>
+      ${resenasPublicables(p.handle).map(rv => `<div class="fr-item">
+        <div class="resena-estrellas">${'★'.repeat(rv.r || 5)}${'☆'.repeat(5 - (rv.r || 5))}</div>
+        <p>“${esc(rv.t)}”</p>
+        <cite>— ${esc(rv.n)}</cite>
+      </div>`).join('\n      ')}
+    </section>` : ''}
 
     <p class="ficha-volver"><a href="/tienda.html">← Ver todos los productos</a></p>
   </main>

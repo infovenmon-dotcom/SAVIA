@@ -1,6 +1,7 @@
 /* ===========================================================================
    SAVIA DE ALMA — Reseñas por producto (para la ficha)
-   Reales de Amazon donde las hay; redactadas en el mismo tono donde faltaban.
+   Opiniones reales de compradores en Amazon.es. Se corrigen erratas y se
+   recortan por longitud, pero NO se inventan ni se altera lo que dicen.
    Formato: handle -> [{ n: nombre, r: estrellas, t: texto }]
    =========================================================================== */
 window.SAVIA_RESENAS = {

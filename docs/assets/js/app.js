@@ -340,6 +340,8 @@ function abrirFicha(handle) {
   const reviewsBlock = reviews.length ? `
       <div class="ficha-resenas">
         <h4>⭐ Opiniones de clientes</h4>
+        <p class="fr-fuente">Opiniones de compradores verificados en
+          <a href="${DATA.amazonStore}" target="_blank" rel="noopener">Amazon.es</a></p>
         ${reviews.map(rv => `<div class="fr-item">
           <div class="resena-estrellas">${'★'.repeat(rv.r || 5)}${'☆'.repeat(5 - (rv.r || 5))}</div>
           <p>"${acc(rv.t)}"</p>

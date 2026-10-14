@@ -39,3 +39,10 @@
 .ficha-dato dd { margin: 2px 0 0; }
 .ficha-inci { margin-top: 16px; font-size: .85rem; color: #5b6050; line-height: 1.5; }
 .ficha-volver { margin-top: 40px; }
+
+/* Resenas: citar la fuente (Amazon) es lo que les da credibilidad. */
+.fr-fuente { font-size: .85rem; color: #6b705c; margin-bottom: 14px; }
+.ficha .fr-item { border-left: 2px solid var(--borde); padding-left: 12px; margin-bottom: 14px; }
+.ficha .fr-item p { margin: 3px 0; font-style: italic; }
+.ficha .fr-item cite { font-size: .85rem; color: #8a8f7a; font-style: normal; }
+.ficha .resena-estrellas { color: #d9a441; letter-spacing: .08em; }
