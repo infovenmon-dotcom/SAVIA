@@ -2370,43 +2370,43 @@ window.SAVIA_DATA = {
         "facial",
         "masaje",
         "ritual",
-        "vegano",
+        "contorno",
         "accesorio"
       ],
       "images": [
         "assets/img/products/set-contorno-facial.jpg"
       ],
       "specs": {
-        "peso": "~55 g el set",
+        "peso": "~110 g el set",
         "natural": "",
-        "fabricacion": "Set de dos piezas: gua sha y rodillo para contorno de ojos."
+        "fabricacion": "Set de tres piezas: cepillo de madera con cerdas, gua sha de piedra y varita para contorno de ojos."
       },
       "handle": "set-contorno-facial",
-      "title": "Set Contorno Facial · Gua Sha y Rodillo",
+      "title": "Set Contorno Facial · 3 piezas",
       "price": 9.99,
       "sku": "SDA-AC-CONTORNO",
       "type": "Accesorio facial",
       "collection": "accesorios",
       "collectionName": "Accesorios",
       "image": "assets/img/products/set-contorno-facial.jpg",
-      "lema": "Cinco minutos al día que se notan.",
-      "short": "Gua sha y rodillo de ojos, masaje facial, ritual de cinco minutos, vegano",
-      "descripcion": "Gua sha para recorrer el ovalo de la cara y rodillo pequeño para el contorno de ojos. Dos piezas para convertir tu crema o tu aceite en un masaje de verdad.",
+      "lema": "Tres gestos, cinco minutos, y se nota.",
+      "short": "Cepillo de madera, gua sha de piedra y varita de ojos. Para cara y cuello",
+      "descripcion": "Tres piezas para un ritual completo de cara y cuello: el cepillo de madera prepara la piel, la gua sha de piedra recorre el óvalo y la mandíbula, y la varita pequeña llega al contorno de ojos.",
       "indicado": "Para quien quiere sacar más partido a lo que ya se aplica en la cara.",
-      "modoUso": "Sobre la piel limpia y con tu aceite o crema, desliza el gua sha desde el centro hacia afuera, sin apretar. El rodillo, del lagrimal hacia la sien.",
+      "modoUso": "Siempre sobre aceite o crema, nunca en seco. 1) Prepara con el cepillo. 2) Recorre el óvalo con la gua sha, del centro hacia afuera. 3) Termina el contorno de ojos con la varita, del lagrimal a la sien.",
       "features": [
-        "Gua sha para el ovalo",
-        "Rodillo para el contorno de ojos",
-        "Masaje suave",
-        "Se guarda en cualquier sitio",
-        "Vegano"
+        "Tres piezas: cepillo, gua sha y varita de ojos",
+        "Cepillo de madera con cerdas",
+        "Gua sha de piedra",
+        "Varita fina para el contorno de ojos",
+        "Para cara y cuello"
       ],
       "bullets": [
-        "DOS PIEZAS: el gua sha para el ovalo y la mandibula, y el rodillo para los ojos.",
+        "TRES PIEZAS, TRES GESTOS: preparar con el cepillo, esculpir con la gua sha y rematar los ojos con la varita.",
         "SIEMPRE CON PRODUCTO: úsalo sobre aceite o crema para que deslice, nunca en seco.",
         "DEL CENTRO HACIA AFUERA: ese es el sentido, y sin apretar.",
-        "CINCO MINUTOS: es un ritual corto, de los que de verdad se mantienen.",
-        "FRÍO SI TE APETECE: guardado en la nevera, la sensación al despertar es otra."
+        "CARA Y CUELLO: la gua sha llega también a la mandíbula y al cuello.",
+        "FRÍO SI TE APETECE: guardadas en la nevera, la sensación al despertar es otra."
       ],
       "proximamente": true
     },
