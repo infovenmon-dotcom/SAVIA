@@ -65,7 +65,7 @@ window.SAVIA_DATA = {
     {
       "slug": "sales-epsom",
       "name": "Sales de Epsom",
-      "count": 2
+      "count": 1
     }
   ],
   "products": [
@@ -2778,56 +2778,6 @@ window.SAVIA_DATA = {
         "15-20 MINUTOS: ni mas ni menos; el ritual es tan importante como la sal.",
         "DE 1 A 3 VECES POR SEMANA: no hace falta mas.",
         "GUARDALA SECA: la humedad la apelmaza, aunque no la estropea."
-      ]
-    },
-    {
-      "emoji": "🛁",
-      "exclusiveWeb": true,
-      "bestSeller": false,
-      "tags": [
-        "sales",
-        "epsom",
-        "magnesio",
-        "bano",
-        "relax",
-        "vegano",
-        "formato grande"
-      ],
-      "images": [
-        "assets/img/products/sales-epsom-1kg.jpg"
-      ],
-      "specs": {
-        "peso": "1 kg",
-        "natural": "Sulfato de magnesio",
-        "fabricacion": "Envasado por Savia de Alma en bolsa kraft. Sulfato de magnesio 100 % puro."
-      },
-      "handle": "sales-epsom-1kg",
-      "title": "Sales de Epsom · 1 kg",
-      "price": 12.99,
-      "proximamente": true,
-      "sku": "SDA-SE-1000",
-      "type": "Sales de bano",
-      "collection": "sales-epsom",
-      "collectionName": "Sales de Epsom",
-      "image": "assets/img/products/sales-epsom-1kg.jpg",
-      "lema": "El formato de quien ya lo ha probado.",
-      "short": "Sulfato de magnesio 100 % puro, formato de 1 kg, mejor precio por bano",
-      "descripcion": "El mismo sulfato de magnesio puro en formato de un kilo. Para quien ya ha probado la bolsa pequena y quiere tenerlo siempre en casa.",
-      "indicado": "Para banos de pies y de cuerpo con regularidad.",
-      "modoUso": "Disuelve 2-3 punados (150-250 g) en agua caliente. Sumerge pies o cuerpo 15-20 minutos y aclara con agua templada. De 1 a 3 veces por semana.",
-      "features": [
-        "Sulfato de magnesio 100 % puro",
-        "Sin perfume ni colorante",
-        "Hasta 6 banos de pies",
-        "Mejor precio por bano",
-        "Vegano"
-      ],
-      "bullets": [
-        "EL DOBLE, MEJOR PRECIO: sale bastante mas a cuenta por bano que la bolsa de 500 g.",
-        "100 % PURA: solo sulfato de magnesio.",
-        "HASTA 6 BANOS DE PIES: o tres de cuerpo entero.",
-        "MISMO RITUAL: 2-3 punados, 15-20 minutos, aclarar.",
-        "GUARDALA SECA Y CERRADA: asi se mantiene suelta."
       ]
     }
   ]
