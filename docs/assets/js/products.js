@@ -2279,10 +2279,10 @@ window.SAVIA_DATA = {
       "specs": {
         "peso": "~18 g",
         "natural": "Mango de bambu",
-        "fabricacion": "Mango de bambu natural. Cerdas de nylon suave. Cambio recomendado cada 3 meses."
+        "fabricacion": "Mango de bambu natural. Cerdas de nylon suave. Se vende por unidad. Cambio recomendado cada 3 meses."
       },
       "handle": "cepillo-dientes-bambu",
-      "title": "Cepillo de Dientes de Bambú",
+      "title": "Cepillo de Dientes de Bambú · Unidad",
       "price": 3.99,
       "sku": "SDA-AC-CEPDIENTES",
       "type": "Accesorio",
@@ -2290,11 +2290,12 @@ window.SAVIA_DATA = {
       "collectionName": "Accesorios",
       "image": "assets/img/products/cepillo-dientes-bambu.jpg",
       "lema": "El gesto más pequeño del día, también sin plástico.",
-      "short": "Mango de bambu, cerdas suaves, sin plastico en el mango, vegano",
+      "short": "Unidad. Mango de bambu, cerdas suaves, sin plastico en el mango, vegano",
       "descripcion": "Mango de bambu natural que sustituye al plastico en uno de los gestos que repites tres veces al dia. Cerdas suaves, comodas para encias sensibles.",
       "indicado": "Para quien ya ha cambiado el champu y el jabon y quiere seguir por el bano.",
       "modoUso": "Cepilla dos o tres veces al dia. Enjuaga y deja secar de pie, al aire. Cambialo cada 3 meses.",
       "features": [
+        "Se vende por unidad",
         "Mango de bambu natural",
         "Cerdas suaves",
         "Sin plastico en el mango",
@@ -2305,7 +2306,8 @@ window.SAVIA_DATA = {
         "BAMBU EN LUGAR DE PLASTICO: el mango es de bambu, una de las plantas de crecimiento mas rapido.",
         "CERDAS SUAVES: comodas para encias sensibles sin renunciar a una limpieza a fondo.",
         "TRES VECES AL DIA: es el producto que mas repites, y por eso el que mas cambia tu huella.",
-        "DEJALO SECAR AL AIRE: de pie y fuera del vaso, el bambu dura mucho mas."
+        "DEJALO SECAR AL AIRE: de pie y fuera del vaso, el bambu dura mucho mas.",
+        "SE VENDE POR UNIDAD: anade los que necesites a la cesta."
       ]
     },
     {
@@ -2378,7 +2380,7 @@ window.SAVIA_DATA = {
       },
       "handle": "set-contorno-facial",
       "title": "Set Contorno Facial · Gua Sha y Rodillo",
-      "price": 6.99,
+      "price": 9.99,
       "sku": "SDA-AC-CONTORNO",
       "type": "Accesorio facial",
       "collection": "accesorios",
@@ -2397,7 +2399,7 @@ window.SAVIA_DATA = {
         "Vegano"
       ],
       "bullets": [
-        "DOS PIEZAS, DOS ZONAS: el gua sha para el ovalo y la mandibula; el rodillo para los ojos.",
+        "DOS PIEZAS: el gua sha para el ovalo y la mandibula, y el rodillo para los ojos.",
         "SIEMPRE CON PRODUCTO: usalo sobre aceite o crema para que deslice, nunca en seco.",
         "DEL CENTRO HACIA AFUERA: ese es el sentido, y sin apretar.",
         "CINCO MINUTOS: es un ritual corto, de los que de verdad se mantienen.",
@@ -2496,98 +2498,6 @@ window.SAVIA_DATA = {
         "CIRCULOS, SIN APRETAR: el gesto es de masaje, no de frotar.",
         "CON TU LIMPIADOR SOLIDO: hace mas espuma y reparte mejor el producto.",
         "SECALO BOCA ABAJO: con las cerdas hacia abajo escurre y dura mucho mas."
-      ]
-    },
-    {
-      "emoji": "👜",
-      "exclusiveWeb": true,
-      "bestSeller": false,
-      "tags": [
-        "neceser",
-        "viaje",
-        "accesorio",
-        "organizacion"
-      ],
-      "images": [
-        "assets/img/products/neceser-blanco-rosa.jpg"
-      ],
-      "specs": {
-        "peso": "~120 g el set",
-        "natural": "",
-        "fabricacion": "Set de dos neceseres con asa y bolsillo frontal."
-      },
-      "handle": "neceser-blanco-rosa",
-      "title": "Neceser · Set de 2 (blanco y rosa)",
-      "price": 12.99,
-      "sku": "SDA-AC-NECESER2",
-      "type": "Accesorio",
-      "collection": "accesorios",
-      "collectionName": "Accesorios",
-      "image": "assets/img/products/neceser-blanco-rosa.jpg",
-      "lema": "Tu ritual, siempre contigo.",
-      "short": "Set de dos neceseres, blanco y rosa, tamano de diario, ligeros y resistentes",
-      "descripcion": "Dos neceseres de tamano comodo, uno blanco y uno rosa. Con asa arriba y bolsillo frontal, para llevar tus solidos sin que se te pierdan por la maleta.",
-      "indicado": "Para viajar, para el gimnasio o para tener el bano recogido.",
-      "modoUso": "Guarda tus pastillas bien secas, mejor en una latita o jabonera, y listo.",
-      "features": [
-        "Set de dos: blanco y rosa",
-        "Asa superior",
-        "Bolsillo frontal",
-        "Ligero y resistente",
-        "Tamano de diario"
-      ],
-      "bullets": [
-        "VIENEN DOS: uno blanco y uno rosa, para ti y para quien tu quieras.",
-        "TAMANO DE DIARIO: cabe lo que usas de verdad, no lo que crees que vas a usar.",
-        "ASA Y BOLSILLO: se coge con una mano y lo pequeno no se pierde dentro.",
-        "PERFECTO PARA SOLIDOS: sin botes que se abran en la maleta.",
-        "LLEVA UN ESTAMPADO: el frontal viene con un diseno impreso; lo veras en la foto."
-      ]
-    },
-    {
-      "emoji": "👛",
-      "exclusiveWeb": true,
-      "bestSeller": false,
-      "tags": [
-        "neceser",
-        "espejo",
-        "viaje",
-        "accesorio"
-      ],
-      "images": [
-        "assets/img/products/neceser-rosa-espejo.jpg"
-      ],
-      "specs": {
-        "peso": "~130 g",
-        "natural": "",
-        "fabricacion": "Neceser con espejo incorporado, asa y bolsillo frontal."
-      },
-      "handle": "neceser-rosa-espejo",
-      "title": "Neceser Rosa con Espejo",
-      "price": 12.99,
-      "sku": "SDA-AC-NECESERESP",
-      "type": "Accesorio",
-      "collection": "accesorios",
-      "collectionName": "Accesorios",
-      "image": "assets/img/products/neceser-rosa-espejo.jpg",
-      "lema": "Todo dentro, y el espejo ya puesto.",
-      "short": "Neceser rosa con espejo incorporado, asa y bolsillo, ligero y resistente",
-      "descripcion": "Neceser rosa con espejo dentro, para no depender del que haya en el bano donde estes. Asa arriba y bolsillo frontal.",
-      "indicado": "Para viajes cortos y para tenerlo todo a mano fuera de casa.",
-      "modoUso": "Guarda tus solidos bien secos y el espejo queda listo al abrir.",
-      "features": [
-        "Espejo incorporado",
-        "Asa superior",
-        "Bolsillo frontal",
-        "Ligero y resistente",
-        "Tamano de diario"
-      ],
-      "bullets": [
-        "ESPEJO DENTRO: no dependes del bano en el que estes.",
-        "ABRE Y ESTA TODO: asa arriba, bolsillo delante y el espejo a la vista.",
-        "LIGERO: pesa poco lleno, que es cuando importa.",
-        "PARA SOLIDOS: ni liquidos que declarar ni botes que se abran.",
-        "LLEVA UN ESTAMPADO: el frontal viene con un diseno impreso; lo veras en la foto."
       ]
     },
     {
@@ -2701,10 +2611,10 @@ window.SAVIA_DATA = {
       "specs": {
         "peso": "~380 g el kit",
         "natural": "",
-        "fabricacion": "Conjunto de brocha, bol y soporte."
+        "fabricacion": "Conjunto de tres piezas: soporte, bol y brocha. Jabon de afeitar no incluido."
       },
       "handle": "kit-afeitado",
-      "title": "Kit de Afeitado · Brocha, Bol y Soporte",
+      "title": "Kit de Afeitado · Soporte, Bol y Brocha",
       "price": 19.99,
       "sku": "SDA-AF-KIT",
       "type": "Afeitado",
@@ -2712,22 +2622,22 @@ window.SAVIA_DATA = {
       "collectionName": "Accesorios",
       "image": "assets/img/products/kit-afeitado.jpg",
       "lema": "Un ritual esencial, de forma natural.",
-      "short": "Brocha, bol y soporte, para montar espuma de verdad, ideal con jabon solido",
-      "descripcion": "Brocha, bol y soporte en un conjunto. Monta la espuma en el bol, aplicala con la brocha y deja la brocha colgada en el soporte para que se seque bien.",
+      "short": "Soporte, bol y brocha. El jabon de afeitar se vende aparte",
+      "descripcion": "Soporte, bol y brocha en un conjunto. Monta la espuma en el bol, aplicala con la brocha y deja la brocha colgada en el soporte para que se seque bien. El jabon de afeitar solido no esta incluido: en la foto aparece para que veas el ritual completo.",
       "indicado": "Para quien se afeita con jabon o espuma solida y quiere hacerlo bien.",
       "modoUso": "Moja la brocha en agua caliente, gira sobre el jabon hasta que cargue y emulsiona en el bol. Aplica en circulos. Enjuaga y cuelga la brocha boca abajo.",
       "features": [
+        "Incluye soporte, bol y brocha",
+        "El jabon de afeitar NO esta incluido",
         "Brocha para montar espuma",
         "Bol para emulsionar",
-        "Soporte que la seca colgada",
-        "Conjunto completo",
-        "Perfecto con jabon de afeitar solido"
+        "Soporte que seca la brocha colgada"
       ],
       "bullets": [
-        "LA ESPUMA SE MONTA, NO SE APLICA: por eso hace falta un bol y una brocha.",
+        "QUE INCLUYE: soporte, bol y brocha. El jabon de afeitar se compra aparte.",
         "EN CIRCULOS: la brocha levanta el vello y la cuchilla trabaja mucho mejor.",
         "EL SOPORTE NO SOBRA: colgada boca abajo, la brocha se seca y conserva la forma.",
-        "CON JABON SOLIDO: se acabaron los botes de espuma de un solo uso.",
+        "CON NUESTRO JABON DE AFEITAR SOLIDO: lo tienes en la tienda, y es el de la foto.",
         "ES UN RITUAL: cinco minutos que convierten un tramite en un gusto."
       ]
     },
@@ -2778,6 +2688,100 @@ window.SAVIA_DATA = {
         "15-20 MINUTOS: ni mas ni menos; el ritual es tan importante como la sal.",
         "DE 1 A 3 VECES POR SEMANA: no hace falta mas.",
         "GUARDALA SECA: la humedad la apelmaza, aunque no la estropea."
+      ]
+    },
+    {
+      "emoji": "👜",
+      "exclusiveWeb": true,
+      "bestSeller": false,
+      "tags": [
+        "neceser",
+        "viaje",
+        "accesorio",
+        "organizacion",
+        "blanco"
+      ],
+      "images": [
+        "assets/img/products/neceser-blanco.jpg"
+      ],
+      "specs": {
+        "peso": "~60 g",
+        "natural": "",
+        "fabricacion": "Neceser con asa superior y bolsillo frontal. Se vende por unidad."
+      },
+      "handle": "neceser-blanco",
+      "title": "Neceser Blanco",
+      "price": 12.99,
+      "sku": "SDA-AC-NECESER-BLA",
+      "type": "Accesorio",
+      "collection": "accesorios",
+      "collectionName": "Accesorios",
+      "image": "assets/img/products/neceser-blanco.jpg",
+      "lema": "Tu ritual, siempre contigo.",
+      "short": "Neceser blanco, asa superior y bolsillo frontal, tamano de diario",
+      "descripcion": "Neceser blanco de tamano comodo, con asa arriba y bolsillo frontal. Para llevar tus solidos sin que se te pierdan por la maleta.",
+      "indicado": "Para viajar, para el gimnasio o para tener el bano recogido.",
+      "modoUso": "Guarda tus pastillas bien secas, mejor en una latita o jabonera, y listo.",
+      "features": [
+        "Color blanco",
+        "Asa superior",
+        "Bolsillo frontal",
+        "Ligero y resistente",
+        "Tamano de diario"
+      ],
+      "bullets": [
+        "TAMANO DE DIARIO: cabe lo que usas de verdad, no lo que crees que vas a usar.",
+        "ASA Y BOLSILLO: se coge con una mano y lo pequeno no se pierde dentro.",
+        "PERFECTO PARA SOLIDOS: sin botes que se abran en la maleta.",
+        "TAMBIEN EN ROSA: tienes los dos colores en la tienda.",
+        "LLEVA UN ESTAMPADO: el frontal viene con un diseno impreso; lo veras en la foto."
+      ]
+    },
+    {
+      "emoji": "👜",
+      "exclusiveWeb": true,
+      "bestSeller": false,
+      "tags": [
+        "neceser",
+        "viaje",
+        "accesorio",
+        "organizacion",
+        "rosa"
+      ],
+      "images": [
+        "assets/img/products/neceser-rosa.jpg"
+      ],
+      "specs": {
+        "peso": "~60 g",
+        "natural": "",
+        "fabricacion": "Neceser con asa superior y bolsillo frontal. Se vende por unidad."
+      },
+      "handle": "neceser-rosa",
+      "title": "Neceser Rosa",
+      "price": 12.99,
+      "sku": "SDA-AC-NECESER-ROS",
+      "type": "Accesorio",
+      "collection": "accesorios",
+      "collectionName": "Accesorios",
+      "image": "assets/img/products/neceser-rosa.jpg",
+      "lema": "Tu ritual, siempre contigo.",
+      "short": "Neceser rosa, asa superior y bolsillo frontal, tamano de diario",
+      "descripcion": "Neceser rosa de tamano comodo, con asa arriba y bolsillo frontal. Para llevar tus solidos sin que se te pierdan por la maleta.",
+      "indicado": "Para viajar, para el gimnasio o para tener el bano recogido.",
+      "modoUso": "Guarda tus pastillas bien secas, mejor en una latita o jabonera, y listo.",
+      "features": [
+        "Color rosa",
+        "Asa superior",
+        "Bolsillo frontal",
+        "Ligero y resistente",
+        "Tamano de diario"
+      ],
+      "bullets": [
+        "TAMANO DE DIARIO: cabe lo que usas de verdad, no lo que crees que vas a usar.",
+        "ASA Y BOLSILLO: se coge con una mano y lo pequeno no se pierde dentro.",
+        "PERFECTO PARA SOLIDOS: sin botes que se abran en la maleta.",
+        "TAMBIEN EN BLANCO: tienes los dos colores en la tienda.",
+        "LLEVA UN ESTAMPADO: el frontal viene con un diseno impreso; lo veras en la foto."
       ]
     }
   ]

@@ -281,16 +281,6 @@
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://saviadealma.com/producto/neceser-blanco-rosa/</loc>
-    <lastmod>2026-10-14</lastmod>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://saviadealma.com/producto/neceser-rosa-espejo/</loc>
-    <lastmod>2026-10-14</lastmod>
-    <priority>0.8</priority>
-  </url>
-  <url>
     <loc>https://saviadealma.com/producto/cepillo-pelo-madera/</loc>
     <lastmod>2026-10-14</lastmod>
     <priority>0.8</priority>
@@ -307,6 +297,16 @@
   </url>
   <url>
     <loc>https://saviadealma.com/producto/sales-epsom-500/</loc>
+    <lastmod>2026-10-14</lastmod>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://saviadealma.com/producto/neceser-blanco/</loc>
+    <lastmod>2026-10-14</lastmod>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://saviadealma.com/producto/neceser-rosa/</loc>
     <lastmod>2026-10-14</lastmod>
     <priority>0.8</priority>
   </url>
