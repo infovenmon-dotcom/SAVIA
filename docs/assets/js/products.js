@@ -2377,7 +2377,7 @@ window.SAVIA_DATA = {
       "specs": {
         "peso": "~110 g el set",
         "natural": "",
-        "fabricacion": "Set de tres piezas: cepillo de madera con cerdas, gua sha de piedra y varita para contorno de ojos."
+        "fabricacion": "Set de tres piezas: cepillo con cerdas suaves, gua sha de borde liso y varita para el contorno de ojos. Las piezas en tono ámbar son ligeras: no se rompen si se caen."
       },
       "handle": "set-contorno-facial",
       "title": "Set Contorno Facial · 3 piezas",
@@ -2387,14 +2387,14 @@ window.SAVIA_DATA = {
       "collectionName": "Accesorios",
       "image": "assets/img/products/set-contorno-facial.jpg",
       "lema": "Tres gestos, cinco minutos, y se nota.",
-      "short": "Cepillo de madera, gua sha de piedra y varita de ojos. Para cara y cuello",
-      "descripcion": "Tres piezas para un ritual completo de cara y cuello: el cepillo de madera prepara la piel, la gua sha de piedra recorre el óvalo y la mandíbula, y la varita pequeña llega al contorno de ojos.",
+      "short": "Cepillo de cerdas suaves, gua sha de borde liso y varita de ojos. Para cara y cuello",
+      "descripcion": "Tres piezas para un ritual completo de cara y cuello: el cepillo de cerdas suaves prepara la piel, la gua sha recorre el óvalo y la mandíbula, y la varita pequeña llega al contorno de ojos.",
       "indicado": "Para quien quiere sacar más partido a lo que ya se aplica en la cara.",
       "modoUso": "Siempre sobre aceite o crema, nunca en seco. 1) Prepara con el cepillo. 2) Recorre el óvalo con la gua sha, del centro hacia afuera. 3) Termina el contorno de ojos con la varita, del lagrimal a la sien.",
       "features": [
         "Tres piezas: cepillo, gua sha y varita de ojos",
-        "Cepillo de madera con cerdas",
-        "Gua sha de piedra",
+        "Cepillo con cerdas suaves",
+        "Gua sha de borde liso",
         "Varita fina para el contorno de ojos",
         "Para cara y cuello"
       ],
@@ -2474,7 +2474,7 @@ window.SAVIA_DATA = {
       "specs": {
         "peso": "~35 g",
         "natural": "",
-        "fabricacion": "Cepillo de madera con cerdas, 8 × 7 cm."
+        "fabricacion": "Cepillo de cerdas suaves con base curva en tono madera, 8 × 7 cm."
       },
       "handle": "cepillo-facial",
       "title": "Cepillo Facial de Limpieza · Unidad",
@@ -2484,13 +2484,13 @@ window.SAVIA_DATA = {
       "collectionName": "Accesorios",
       "image": "assets/img/products/cepillo-facial.jpg",
       "lema": "La cara también agradece un masaje.",
-      "short": "Unidad. Madera con cerdas suaves, forma curva, 8 × 7 cm",
-      "descripcion": "Cepillo de madera con cerdas suaves y forma curva, pensado para adaptarse al óvalo de la cara. Se agarra con la palma, sin mango, y recorre mejilla, mandíbula y cuello con un gesto suave.",
+      "short": "Unidad. Cerdas suaves y base curva en tono madera, 8 × 7 cm",
+      "descripcion": "Cepillo de cerdas suaves con base curva, pensada para adaptarse al óvalo de la cara. Se agarra con la palma, sin mango, y recorre mejilla, mandíbula y cuello con un gesto suave.",
       "indicado": "Para la limpieza diaria del rostro, solo o con tu limpiador facial sólido.",
       "modoUso": "Sobre la piel húmeda, apoya el cepillo en la palma y desliza desde el centro hacia afuera con movimientos suaves. Aclara y deja secar con las cerdas hacia abajo.",
       "features": [
         "Se vende por unidad",
-        "Madera con cerdas suaves",
+        "Cerdas suaves",
         "Forma curva, se agarra con la palma",
         "8 × 7 cm",
         "Uso diario"
