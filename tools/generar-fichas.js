@@ -129,13 +129,19 @@ function ficha(p) {
   const desc = (p.descripcion || p.short || '').trim();
   const metaDesc = (p.short || desc).slice(0, 155);
 
+  // Los "Proximamente" se anuncian sin precio: una Offer sin price es un dato
+  // invalido para Google, asi que en esos casos no se emite oferta ninguna.
+  const conPrecio = typeof p.price === 'number' && isFinite(p.price) && p.price > 0;
+
   const jsonld = {
     '@context': 'https://schema.org',
     '@type': 'Product',
     name: p.title,
     image: imgs.map(abs),
     brand: { '@type': 'Brand', name: 'Savia de Alma' },
-    offers: {
+  };
+  if (conPrecio) {
+    jsonld.offers = {
       '@type': 'Offer',
       url,
       priceCurrency: 'EUR',
@@ -145,8 +151,8 @@ function ficha(p) {
         : 'https://schema.org/InStock',
       itemCondition: 'https://schema.org/NewCondition',
       seller: { '@type': 'Organization', name: 'Savia de Alma' },
-    },
-  };
+    };
+  }
   if (desc) jsonld.description = desc;
   if (p.sku) jsonld.sku = p.sku;
   if (p.collectionName || p.type) jsonld.category = p.collectionName || p.type;
@@ -207,7 +213,9 @@ ${CABECERA}
         <p class="ficha-coleccion">${esc(p.collectionName || p.type || '')}</p>
         <h1>${esc(p.title)}</h1>
         ${p.lema ? `<p class="ficha-lema">${esc(p.lema)}</p>` : ''}
-        <p class="ficha-precio">${Number(p.price).toFixed(2).replace('.', ',')} €</p>
+        ${conPrecio
+          ? `<p class="ficha-precio">${Number(p.price).toFixed(2).replace('.', ',')} €</p>`
+          : '<p class="ficha-precio ficha-sin-precio">Precio por confirmar</p>'}
         <p class="ficha-corta">${esc(p.short || '')}</p>
         ${(p.colores && p.colores.length > 1) ? `<div class="ficha-colores">
           <span class="fc-eti">Color</span>
@@ -322,7 +330,12 @@ Tienda oficial: ${SITIO}/tienda.html
 - Envio a peninsula desde la web. Venta en Amazon.es para el resto de Europa.
 
 ## Productos
-${PRODUCTOS.map(p => `- [${p.title}](${SITIO}/producto/${p.handle}/): ${p.short || ''} ${Number(p.price).toFixed(2)} EUR`).join('\n')}
+${PRODUCTOS.map(p => {
+  const precio = (typeof p.price === 'number' && isFinite(p.price) && p.price > 0)
+    ? ` ${Number(p.price).toFixed(2)} EUR`
+    : ' Proximamente, precio sin confirmar.';
+  return `- [${p.title}](${SITIO}/producto/${p.handle}/): ${p.short || ''}${precio}`;
+}).join('\n')}
 `);
 
 console.log(`${n} fichas generadas`);

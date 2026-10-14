@@ -104,9 +104,21 @@ function precioAntesDe(p) {
 function dtoPorcentaje(antes, ahora) {
   return Math.max(1, Math.round((1 - ahora / antes) * 100));
 }
+/* Los productos anunciados como "Proximamente" todavia no tienen precio:
+   se publican sin cifra hasta que se decide, y nunca se pueden comprar. */
+function tienePrecio(p) {
+  const v = precioDe(p);
+  return typeof v === 'number' && isFinite(v) && v > 0;
+}
+
 /* Bloque de precio reutilizable: con oferta muestra precio anterior tachado,
-   precio actual y % de descuento; sin oferta, solo el precio. */
+   precio actual y % de descuento; sin oferta, solo el precio.
+   Sin precio todavia, un texto neutro en su lugar. */
 function bloquePrecio(p, { grande = false } = {}) {
+  const style0 = grande ? ' style="font-size:1.1rem"' : '';
+  if (!tienePrecio(p)) {
+    return `<div class="card-precio sin-precio"${style0}>Precio por confirmar</div>`;
+  }
   const ahora = precioDe(p);
   const antes = precioAntesDe(p);
   const style = grande ? ' style="font-size:1.4rem"' : '';
@@ -280,7 +292,7 @@ function relacionadosDe(p) {
   }
   return out.slice(0, 3);
 }
-function _precioTxt(p) { return (precioDe(p)).toFixed(2).replace('.', ',') + ' €'; }
+function _precioTxt(p) { return tienePrecio(p) ? precioDe(p).toFixed(2).replace('.', ',') + ' €' : ''; }
 
 function abrirFicha(handle) {
   const p = DATA.products.find(x => x.handle === handle);

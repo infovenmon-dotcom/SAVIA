@@ -377,7 +377,7 @@ function pintar(cfg) {
     const ago = agotados.indexOf(p.handle) !== -1;
     return `<tr data-handle="${p.handle}" data-nombre="${(p.title || '').toLowerCase()}" data-collection="${p.collection || ''}">
       <td><div class="prod-nombre">${p.title}</div><div class="prod-handle">${p.handle}${p.exclusiveWeb ? ' · exclusivo web' : ''}</div></td>
-      <td class="num"><input type="number" step="0.01" min="0" class="f-precio" value="${precio}" data-base="${p.price}"></td>
+      <td class="num"><input type="number" step="0.01" min="0" class="f-precio" value="${precio == null ? '' : precio}" data-base="${p.price == null ? '' : p.price}" placeholder="sin precio"></td>
       <td class="num"><input type="number" step="0.01" min="0" class="f-antes" value="${antes}" placeholder="—"></td>
       <td class="num"><input type="number" step="0.01" min="0" class="f-coste" value="${coste}" placeholder="—"></td>
       <td class="num"><input type="number" step="1" min="0" class="f-stock" value="${stk}" placeholder="∞"></td>

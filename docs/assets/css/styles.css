@@ -315,6 +315,13 @@ img { max-width: 100%; display: block; }
   margin-bottom: 12px;
 }
 .card-precio small { font-weight: 500; font-size: .72rem; color: var(--texto-suave); }
+/* "Precio por confirmar": no es una cifra, asi que no lleva el verde del dinero. */
+.card-precio.sin-precio {
+  font-size: .95rem;
+  font-weight: 600;
+  color: var(--texto-suave);
+  font-style: italic;
+}
 .card-acciones { display: flex; flex-direction: column; gap: 8px; }
 
 /* Oferta: precio anterior tachado + precio actual + % descuento */

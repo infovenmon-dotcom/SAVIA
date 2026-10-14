@@ -21,6 +21,12 @@
   line-height: 1.15; margin-bottom: 8px; }
 .ficha-lema { font-style: italic; color: #6b705c; margin-bottom: 12px; }
 .ficha-precio { font-size: 1.8rem; font-weight: 700; color: var(--verde-oscuro); margin: 10px 0; }
+.ficha-precio.ficha-sin-precio {
+  font-size: 1.05rem;
+  font-weight: 600;
+  font-style: italic;
+  color: var(--texto-suave); /* el verde esta reservado al dinero */
+}
 .ficha-corta { margin-bottom: 18px; }
 .ficha-nota { font-size: .85rem; color: #8a6d1f; margin-top: 10px; }
 .ficha-features { margin: 18px 0 0 18px; }

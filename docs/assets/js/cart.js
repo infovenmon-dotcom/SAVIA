@@ -65,13 +65,22 @@ const Carrito = {
   producto(handle) {
     return window.SAVIA_DATA.products.find(p => p.handle === handle);
   },
+  /* Sin precio publicado no se puede cobrar: el carrito no lo acepta. */
+  vendible(handle) {
+    const p = this.producto(handle);
+    if (!p) return false;
+    const v = _precioCarrito(p);
+    return typeof v === 'number' && isFinite(v) && v > 0;
+  },
   añadir(handle, n = 1) {
+    if (n > 0 && !this.vendible(handle)) return;
     this.items[handle] = (this.items[handle] || 0) + n;
     if (this.items[handle] <= 0) delete this.items[handle];
     this.guardar();
     this.render();
   },
   fijar(handle, n) {
+    if (n > 0 && !this.vendible(handle)) return;
     if (n <= 0) delete this.items[handle];
     else this.items[handle] = n;
     this.guardar();
