@@ -140,7 +140,9 @@ function ficha(p) {
       url,
       priceCurrency: 'EUR',
       price: Number(p.price).toFixed(2),
-      availability: 'https://schema.org/InStock',
+      availability: p.proximamente
+        ? 'https://schema.org/PreOrder'
+        : 'https://schema.org/InStock',
       itemCondition: 'https://schema.org/NewCondition',
       seller: { '@type': 'Organization', name: 'Savia de Alma' },
     },
@@ -207,8 +209,11 @@ ${CABECERA}
         ${p.lema ? `<p class="ficha-lema">${esc(p.lema)}</p>` : ''}
         <p class="ficha-precio">${Number(p.price).toFixed(2).replace('.', ',')} €</p>
         <p class="ficha-corta">${esc(p.short || '')}</p>
-        <button class="btn btn-primario btn-bloque" onclick="anadirDesdeFicha('${p.handle}')">Añadir al carrito</button>
-        <a class="btn btn-secundario btn-bloque" href="/tienda.html?producto=${encodeURIComponent(p.handle)}">Ver en la tienda</a>
+        ${p.proximamente
+          ? `<button class="btn btn-secundario btn-bloque" disabled>Próximamente</button>
+        <p class="ficha-nota">Estamos preparando este producto. Apúntate a la newsletter y te avisamos.</p>`
+          : `<button class="btn btn-primario btn-bloque" onclick="anadirDesdeFicha('${p.handle}')">Añadir al carrito</button>
+        <a class="btn btn-secundario btn-bloque" href="/tienda.html?producto=${encodeURIComponent(p.handle)}">Ver en la tienda</a>`}
         ${p.exclusiveWeb ? '<p class="ficha-nota">🌿 Exclusivo de la web</p>' : ''}
         ${(p.features && p.features.length) ? `<ul class="ficha-features">
           ${li(p.features)}
@@ -280,7 +285,10 @@ fs.writeFileSync(path.join(RAIZ, 'sitemap.xml'),
   + `\n</urlset>\n`);
 
 /* --- llms.txt: resumen legible por asistentes de IA --- */
-const noVeg = PRODUCTOS.filter(p => p.vegano === false).map(p => p.title);
+/* Solo los cosmeticos: en un cepillo o una jabonera la pregunta vegano/no
+   vegano no aplica, y afirmarlo sin saberlo seria inventarselo. */
+const COSMETICOS = PRODUCTOS.filter(p => p.collection !== 'accesorios');
+const noVeg = COSMETICOS.filter(p => p.vegano === false).map(p => p.title);
 fs.writeFileSync(path.join(RAIZ, 'llms.txt'),
 `# Savia de Alma
 
@@ -293,7 +301,7 @@ Tienda oficial: ${SITIO}/tienda.html
 - ${PRODUCTOS.length} productos: jabones, champus solidos, acondicionadores,
   desodorantes, exfoliantes, limpiadores faciales, depilacion y afeitado.
 - Elaboracion artesanal en Espana, saponificacion en frio.
-- Cruelty free. ${PRODUCTOS.length - noVeg.length} de ${PRODUCTOS.length} productos son veganos.
+- Cruelty free. ${COSMETICOS.length - noVeg.length} de ${COSMETICOS.length} cosmeticos son veganos.
 - NO son veganos: ${noVeg.join('; ')}.
 - Envio a peninsula desde la web. Venta en Amazon.es para el resto de Europa.
 

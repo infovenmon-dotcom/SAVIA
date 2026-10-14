@@ -11,7 +11,7 @@ window.SAVIA_DATA = {
     {
       "slug": "jabones",
       "name": "Jabones Artesanales",
-      "count": 17,
+      "count": 16,
       "exclusiveWeb": false
     },
     {
@@ -47,7 +47,7 @@ window.SAVIA_DATA = {
     {
       "slug": "accesorios",
       "name": "Accesorios",
-      "count": 2,
+      "count": 13,
       "exclusiveWeb": true
     },
     {
@@ -61,6 +61,11 @@ window.SAVIA_DATA = {
       "name": "Ceras de Peinado",
       "count": 1,
       "exclusiveWeb": true
+    },
+    {
+      "slug": "sales-epsom",
+      "name": "Sales de Epsom",
+      "count": 2
     }
   ],
   "products": [
@@ -2256,6 +2261,574 @@ window.SAVIA_DATA = {
         "peso": "~100 g",
         "fabricacion": "Elaborado a mano en España mediante saponificación en frío. Sin plástico (cero residuos). Vegano."
       }
+    },
+    {
+      "emoji": "🎍",
+      "exclusiveWeb": true,
+      "bestSeller": false,
+      "tags": [
+        "bambu",
+        "higiene",
+        "zero waste",
+        "vegano",
+        "accesorio"
+      ],
+      "images": [
+        "assets/img/products/cepillo-dientes-bambu.jpg"
+      ],
+      "specs": {
+        "peso": "~18 g",
+        "natural": "Mango de bambu",
+        "fabricacion": "Mango de bambu natural. Cerdas de nylon suave. Cambio recomendado cada 3 meses."
+      },
+      "handle": "cepillo-dientes-bambu",
+      "title": "Cepillo de Dientes de Bambú",
+      "price": 3.99,
+      "sku": "SDA-AC-CEPDIENTES",
+      "type": "Accesorio",
+      "collection": "accesorios",
+      "collectionName": "Accesorios",
+      "image": "assets/img/products/cepillo-dientes-bambu.jpg",
+      "lema": "El gesto más pequeño del día, también sin plástico.",
+      "short": "Mango de bambu, cerdas suaves, sin plastico en el mango, vegano",
+      "descripcion": "Mango de bambu natural que sustituye al plastico en uno de los gestos que repites tres veces al dia. Cerdas suaves, comodas para encias sensibles.",
+      "indicado": "Para quien ya ha cambiado el champu y el jabon y quiere seguir por el bano.",
+      "modoUso": "Cepilla dos o tres veces al dia. Enjuaga y deja secar de pie, al aire. Cambialo cada 3 meses.",
+      "features": [
+        "Mango de bambu natural",
+        "Cerdas suaves",
+        "Sin plastico en el mango",
+        "Ligero y comodo",
+        "Vegano"
+      ],
+      "bullets": [
+        "BAMBU EN LUGAR DE PLASTICO: el mango es de bambu, una de las plantas de crecimiento mas rapido.",
+        "CERDAS SUAVES: comodas para encias sensibles sin renunciar a una limpieza a fondo.",
+        "TRES VECES AL DIA: es el producto que mas repites, y por eso el que mas cambia tu huella.",
+        "DEJALO SECAR AL AIRE: de pie y fuera del vaso, el bambu dura mucho mas."
+      ]
+    },
+    {
+      "emoji": "🧽",
+      "exclusiveWeb": true,
+      "bestSeller": false,
+      "tags": [
+        "konjac",
+        "facial",
+        "limpieza",
+        "biodegradable",
+        "vegano",
+        "accesorio"
+      ],
+      "images": [
+        "assets/img/products/esponja-konjac.jpg"
+      ],
+      "specs": {
+        "peso": "~10 g",
+        "natural": "Raiz de konjac",
+        "fabricacion": "Raiz de konjac con nuez de nogal. Biodegradable. Vida util 6-8 semanas."
+      },
+      "handle": "esponja-konjac",
+      "title": "Esponja Facial de Konjac",
+      "price": 5.99,
+      "sku": "SDA-AC-KONJAC",
+      "type": "Accesorio facial",
+      "collection": "accesorios",
+      "collectionName": "Accesorios",
+      "image": "assets/img/products/esponja-konjac.jpg",
+      "lema": "Limpia la cara sin que la cara se entere.",
+      "short": "Raiz de konjac con nuez de nogal, limpieza suave diaria, vegano",
+      "descripcion": "Esponja de raiz de konjac con nuez de nogal. Seca esta dura como una piedra; al mojarla se vuelve blanda como una nube y limpia la piel sin arrastrarla.",
+      "indicado": "Ideal para pieles sensibles y para quien quiere limpiar a diario sin resecar.",
+      "modoUso": "Moja la esponja hasta que se ablande. Masajea el rostro en circulos, con o sin limpiador. Aclara, escurre sin retorcer y cuelga a secar.",
+      "features": [
+        "Raiz de konjac natural",
+        "Con nuez de nogal",
+        "Limpieza suave diaria",
+        "Biodegradable",
+        "Vegano"
+      ],
+      "bullets": [
+        "DE PIEDRA A NUBE: seca esta rigida; con agua se ablanda y se vuelve suavisima.",
+        "CON NUEZ DE NOGAL: aporta un punto de textura para una limpieza algo mas profunda.",
+        "SOLA O CON LIMPIADOR: funciona con agua, y multiplica tu limpiador facial solido.",
+        "BIODEGRADABLE: cuando termine su vida, al compost.",
+        "CUELGALA A SECAR: escurrida y al aire, te dura entre 6 y 8 semanas."
+      ]
+    },
+    {
+      "emoji": "💆",
+      "exclusiveWeb": true,
+      "bestSeller": false,
+      "tags": [
+        "gua sha",
+        "facial",
+        "masaje",
+        "ritual",
+        "vegano",
+        "accesorio"
+      ],
+      "images": [
+        "assets/img/products/set-contorno-facial.jpg"
+      ],
+      "specs": {
+        "peso": "~55 g el set",
+        "natural": "",
+        "fabricacion": "Set de dos piezas: gua sha y rodillo para contorno de ojos."
+      },
+      "handle": "set-contorno-facial",
+      "title": "Set Contorno Facial · Gua Sha y Rodillo",
+      "price": 6.99,
+      "sku": "SDA-AC-CONTORNO",
+      "type": "Accesorio facial",
+      "collection": "accesorios",
+      "collectionName": "Accesorios",
+      "image": "assets/img/products/set-contorno-facial.jpg",
+      "lema": "Cinco minutos al dia que se notan.",
+      "short": "Gua sha y rodillo de ojos, masaje facial, ritual de cinco minutos, vegano",
+      "descripcion": "Gua sha para recorrer el ovalo de la cara y rodillo pequeno para el contorno de ojos. Dos piezas para convertir tu crema o tu aceite en un masaje de verdad.",
+      "indicado": "Para quien quiere sacar mas partido a lo que ya se aplica en la cara.",
+      "modoUso": "Sobre la piel limpia y con tu aceite o crema, desliza el gua sha desde el centro hacia afuera, sin apretar. El rodillo, del lagrimal hacia la sien.",
+      "features": [
+        "Gua sha para el ovalo",
+        "Rodillo para el contorno de ojos",
+        "Masaje suave",
+        "Se guarda en cualquier sitio",
+        "Vegano"
+      ],
+      "bullets": [
+        "DOS PIEZAS, DOS ZONAS: el gua sha para el ovalo y la mandibula; el rodillo para los ojos.",
+        "SIEMPRE CON PRODUCTO: usalo sobre aceite o crema para que deslice, nunca en seco.",
+        "DEL CENTRO HACIA AFUERA: ese es el sentido, y sin apretar.",
+        "CINCO MINUTOS: es un ritual corto, de los que de verdad se mantienen.",
+        "FRIO SI TE APETECE: guardado en la nevera, la sensacion al despertar es otra."
+      ]
+    },
+    {
+      "emoji": "🧼",
+      "exclusiveWeb": true,
+      "bestSeller": false,
+      "tags": [
+        "jabonera",
+        "acero",
+        "zero waste",
+        "accesorio",
+        "bano"
+      ],
+      "images": [
+        "assets/img/products/jabonera-metalica.jpg"
+      ],
+      "specs": {
+        "peso": "~70 g",
+        "natural": "",
+        "fabricacion": "Rejilla de acero. Se vende sola, sin bandeja."
+      },
+      "handle": "jabonera-metalica",
+      "title": "Jabonera Metálica de Acero",
+      "price": 6.99,
+      "sku": "SDA-AC-JABMETAL",
+      "type": "Accesorio",
+      "collection": "accesorios",
+      "collectionName": "Accesorios",
+      "image": "assets/img/products/jabonera-metalica.jpg",
+      "lema": "Tu jabon dura el doble si respira.",
+      "short": "Rejilla de acero, drena y airea, alarga la vida de tu pastilla, sin plastico",
+      "descripcion": "Rejilla de acero que deja el jabon en alto para que escurra y se seque entre usos. Sin bandeja de plastico: el agua cae y ya esta.",
+      "indicado": "Para cualquiera de nuestras pastillas de jabon o champu solido.",
+      "modoUso": "Coloca la pastilla sobre la rejilla, en un sitio donde el agua pueda caer. Enjuaga la jabonera de vez en cuando.",
+      "features": [
+        "Acero resistente",
+        "Drena y airea la pastilla",
+        "Sin bandeja de plastico",
+        "Facil de limpiar",
+        "Alarga la vida del jabon"
+      ],
+      "bullets": [
+        "EL AGUA ES EL ENEMIGO: una pastilla que se queda en un charco se gasta al doble de velocidad.",
+        "REJILLA, NO BANDEJA: el agua cae y el jabon se seca entre ducha y ducha.",
+        "SIN PLASTICO: solo acero, nada mas.",
+        "SE LIMPIA EN UN SEGUNDO: un aclarado y lista.",
+        "SE AMORTIZA SOLA: lo que alarga una pastilla ya paga la jabonera."
+      ]
+    },
+    {
+      "emoji": "🪮",
+      "exclusiveWeb": true,
+      "bestSeller": false,
+      "tags": [
+        "cepillo",
+        "facial",
+        "limpieza",
+        "masaje",
+        "vegano",
+        "accesorio"
+      ],
+      "images": [
+        "assets/img/products/cepillo-facial.jpg"
+      ],
+      "specs": {
+        "peso": "~35 g",
+        "natural": "",
+        "fabricacion": "Cepillo facial de cerdas suaves con mango."
+      },
+      "handle": "cepillo-facial",
+      "title": "Cepillo Facial de Limpieza",
+      "price": 7.99,
+      "sku": "SDA-AC-CEPFACIAL",
+      "type": "Accesorio facial",
+      "collection": "accesorios",
+      "collectionName": "Accesorios",
+      "image": "assets/img/products/cepillo-facial.jpg",
+      "lema": "La cara tambien agradece un masaje.",
+      "short": "Cerdas suaves, masaje facial, limpieza diaria, mango comodo, vegano",
+      "descripcion": "Cepillo de cerdas suaves para masajear el rostro mientras limpias. El mango cabe en la mano y permite recorrer la cara sin esfuerzo.",
+      "indicado": "Para la limpieza diaria del rostro, solo o con tu limpiador facial solido.",
+      "modoUso": "Sobre la piel humeda, masajea en circulos suaves desde el centro hacia afuera. Aclara y deja secar con las cerdas hacia abajo.",
+      "features": [
+        "Cerdas suaves",
+        "Mango comodo",
+        "Masaje mientras limpias",
+        "Uso diario",
+        "Vegano"
+      ],
+      "bullets": [
+        "SUAVE DE VERDAD: las cerdas estan pensadas para la cara, no para el cuerpo.",
+        "CIRCULOS, SIN APRETAR: el gesto es de masaje, no de frotar.",
+        "CON TU LIMPIADOR SOLIDO: hace mas espuma y reparte mejor el producto.",
+        "SECALO BOCA ABAJO: con las cerdas hacia abajo escurre y dura mucho mas."
+      ]
+    },
+    {
+      "emoji": "👜",
+      "exclusiveWeb": true,
+      "bestSeller": false,
+      "tags": [
+        "neceser",
+        "viaje",
+        "accesorio",
+        "organizacion"
+      ],
+      "images": [
+        "assets/img/products/neceser-blanco-rosa.jpg"
+      ],
+      "specs": {
+        "peso": "~120 g el set",
+        "natural": "",
+        "fabricacion": "Set de dos neceseres con asa y bolsillo frontal."
+      },
+      "handle": "neceser-blanco-rosa",
+      "title": "Neceser · Set de 2 (blanco y rosa)",
+      "price": 12.99,
+      "sku": "SDA-AC-NECESER2",
+      "type": "Accesorio",
+      "collection": "accesorios",
+      "collectionName": "Accesorios",
+      "image": "assets/img/products/neceser-blanco-rosa.jpg",
+      "lema": "Tu ritual, siempre contigo.",
+      "short": "Set de dos neceseres, blanco y rosa, tamano de diario, ligeros y resistentes",
+      "descripcion": "Dos neceseres de tamano comodo, uno blanco y uno rosa. Con asa arriba y bolsillo frontal, para llevar tus solidos sin que se te pierdan por la maleta.",
+      "indicado": "Para viajar, para el gimnasio o para tener el bano recogido.",
+      "modoUso": "Guarda tus pastillas bien secas, mejor en una latita o jabonera, y listo.",
+      "features": [
+        "Set de dos: blanco y rosa",
+        "Asa superior",
+        "Bolsillo frontal",
+        "Ligero y resistente",
+        "Tamano de diario"
+      ],
+      "bullets": [
+        "VIENEN DOS: uno blanco y uno rosa, para ti y para quien tu quieras.",
+        "TAMANO DE DIARIO: cabe lo que usas de verdad, no lo que crees que vas a usar.",
+        "ASA Y BOLSILLO: se coge con una mano y lo pequeno no se pierde dentro.",
+        "PERFECTO PARA SOLIDOS: sin botes que se abran en la maleta.",
+        "LLEVA UN ESTAMPADO: el frontal viene con un diseno impreso; lo veras en la foto."
+      ]
+    },
+    {
+      "emoji": "👛",
+      "exclusiveWeb": true,
+      "bestSeller": false,
+      "tags": [
+        "neceser",
+        "espejo",
+        "viaje",
+        "accesorio"
+      ],
+      "images": [
+        "assets/img/products/neceser-rosa-espejo.jpg"
+      ],
+      "specs": {
+        "peso": "~130 g",
+        "natural": "",
+        "fabricacion": "Neceser con espejo incorporado, asa y bolsillo frontal."
+      },
+      "handle": "neceser-rosa-espejo",
+      "title": "Neceser Rosa con Espejo",
+      "price": 12.99,
+      "sku": "SDA-AC-NECESERESP",
+      "type": "Accesorio",
+      "collection": "accesorios",
+      "collectionName": "Accesorios",
+      "image": "assets/img/products/neceser-rosa-espejo.jpg",
+      "lema": "Todo dentro, y el espejo ya puesto.",
+      "short": "Neceser rosa con espejo incorporado, asa y bolsillo, ligero y resistente",
+      "descripcion": "Neceser rosa con espejo dentro, para no depender del que haya en el bano donde estes. Asa arriba y bolsillo frontal.",
+      "indicado": "Para viajes cortos y para tenerlo todo a mano fuera de casa.",
+      "modoUso": "Guarda tus solidos bien secos y el espejo queda listo al abrir.",
+      "features": [
+        "Espejo incorporado",
+        "Asa superior",
+        "Bolsillo frontal",
+        "Ligero y resistente",
+        "Tamano de diario"
+      ],
+      "bullets": [
+        "ESPEJO DENTRO: no dependes del bano en el que estes.",
+        "ABRE Y ESTA TODO: asa arriba, bolsillo delante y el espejo a la vista.",
+        "LIGERO: pesa poco lleno, que es cuando importa.",
+        "PARA SOLIDOS: ni liquidos que declarar ni botes que se abran.",
+        "LLEVA UN ESTAMPADO: el frontal viene con un diseno impreso; lo veras en la foto."
+      ]
+    },
+    {
+      "emoji": "🪵",
+      "exclusiveWeb": true,
+      "bestSeller": false,
+      "tags": [
+        "cepillo",
+        "madera",
+        "cabello",
+        "zero waste",
+        "accesorio"
+      ],
+      "images": [
+        "assets/img/products/cepillo-pelo-madera.jpg"
+      ],
+      "specs": {
+        "peso": "~95 g",
+        "natural": "Madera natural",
+        "fabricacion": "Cepillo de madera natural con puas de punta redondeada."
+      },
+      "handle": "cepillo-pelo-madera",
+      "title": "Cepillo de Pelo de Madera",
+      "price": 12.99,
+      "sku": "SDA-AC-CEPPELO",
+      "type": "Accesorio",
+      "collection": "accesorios",
+      "collectionName": "Accesorios",
+      "image": "assets/img/products/cepillo-pelo-madera.jpg",
+      "lema": "Desenreda sin tirones y sin electricidad estatica.",
+      "short": "Madera natural, puas redondeadas, desenreda sin tirones, sin plastico",
+      "descripcion": "Cepillo de madera natural con puas de punta redondeada. Desenreda sin arrastrar y, al no ser de plastico, no carga el pelo de electricidad estatica.",
+      "indicado": "Para todo tipo de cabello, y especialmente si se te encrespa al cepillarlo.",
+      "modoUso": "Empieza por las puntas y ve subiendo poco a poco hacia la raiz. Nunca al reves.",
+      "features": [
+        "Madera natural",
+        "Puas de punta redondeada",
+        "Sin electricidad estatica",
+        "Desenreda sin tirones",
+        "Sin plastico"
+      ],
+      "bullets": [
+        "DE LAS PUNTAS A LA RAIZ: ese es el orden, y por eso no hay tirones.",
+        "PUAS REDONDEADAS: no aranan el cuero cabelludo.",
+        "ADIOS AL ENCRESPADO: la madera no carga el pelo como el plastico.",
+        "REPARTE LO QUE YA TIENES: distribuye el sebo natural de la raiz a lo largo del pelo.",
+        "SE LIMPIA FACIL: retira el pelo con los dedos; la madera, mejor sin remojarla."
+      ]
+    },
+    {
+      "emoji": "💡",
+      "exclusiveWeb": true,
+      "bestSeller": false,
+      "tags": [
+        "espejo",
+        "led",
+        "viaje",
+        "accesorio",
+        "bolso"
+      ],
+      "images": [
+        "assets/img/products/espejo-led.jpg"
+      ],
+      "specs": {
+        "peso": "~250 g",
+        "natural": "",
+        "fabricacion": "Espejo plegable con luz LED de tres intensidades y aumento 2x."
+      },
+      "handle": "espejo-led",
+      "title": "Espejo de Bolsillo con Luz LED",
+      "price": 14.99,
+      "sku": "SDA-AC-ESPEJOLED",
+      "type": "Accesorio",
+      "collection": "accesorios",
+      "collectionName": "Accesorios",
+      "image": "assets/img/products/espejo-led.jpg",
+      "lema": "La luz buena, donde tu estes.",
+      "short": "Plegable, luz LED con tres intensidades, aumento 2x, cabe en el bolso",
+      "descripcion": "Espejo plegable con luz LED integrada y tres intensidades. Una cara normal y otra con aumento de 2x, para cuando el bano no acompana.",
+      "indicado": "Para el bolso, para viajar y para cualquier sitio con mala luz.",
+      "modoUso": "Abrelo y pulsa el boton tactil para encender; vuelve a pulsar para cambiar de intensidad.",
+      "features": [
+        "Luz LED integrada",
+        "Tres intensidades",
+        "Aumento 2x en una cara",
+        "Plegable y compacto",
+        "Boton tactil"
+      ],
+      "bullets": [
+        "TRES INTENSIDADES: de luz suave a luz de trabajo, segun donde estes.",
+        "DOS CARAS: una normal y otra con aumento de 2x para el detalle.",
+        "CABE EN EL BOLSO: plegado ocupa lo que una polvera.",
+        "BOTON TACTIL: se enciende con un toque, sin ruedas ni interruptores.",
+        "LA LUZ MANDA: el maquillaje que se ve bien con mala luz, luego no se ve bien."
+      ]
+    },
+    {
+      "emoji": "🪒",
+      "exclusiveWeb": true,
+      "bestSeller": true,
+      "tags": [
+        "afeitado",
+        "brocha",
+        "kit",
+        "ritual",
+        "accesorio"
+      ],
+      "images": [
+        "assets/img/products/kit-afeitado.jpg"
+      ],
+      "specs": {
+        "peso": "~380 g el kit",
+        "natural": "",
+        "fabricacion": "Conjunto de brocha, bol y soporte."
+      },
+      "handle": "kit-afeitado",
+      "title": "Kit de Afeitado · Brocha, Bol y Soporte",
+      "price": 19.99,
+      "sku": "SDA-AF-KIT",
+      "type": "Afeitado",
+      "collection": "accesorios",
+      "collectionName": "Accesorios",
+      "image": "assets/img/products/kit-afeitado.jpg",
+      "lema": "Un ritual esencial, de forma natural.",
+      "short": "Brocha, bol y soporte, para montar espuma de verdad, ideal con jabon solido",
+      "descripcion": "Brocha, bol y soporte en un conjunto. Monta la espuma en el bol, aplicala con la brocha y deja la brocha colgada en el soporte para que se seque bien.",
+      "indicado": "Para quien se afeita con jabon o espuma solida y quiere hacerlo bien.",
+      "modoUso": "Moja la brocha en agua caliente, gira sobre el jabon hasta que cargue y emulsiona en el bol. Aplica en circulos. Enjuaga y cuelga la brocha boca abajo.",
+      "features": [
+        "Brocha para montar espuma",
+        "Bol para emulsionar",
+        "Soporte que la seca colgada",
+        "Conjunto completo",
+        "Perfecto con jabon de afeitar solido"
+      ],
+      "bullets": [
+        "LA ESPUMA SE MONTA, NO SE APLICA: por eso hace falta un bol y una brocha.",
+        "EN CIRCULOS: la brocha levanta el vello y la cuchilla trabaja mucho mejor.",
+        "EL SOPORTE NO SOBRA: colgada boca abajo, la brocha se seca y conserva la forma.",
+        "CON JABON SOLIDO: se acabaron los botes de espuma de un solo uso.",
+        "ES UN RITUAL: cinco minutos que convierten un tramite en un gusto."
+      ]
+    },
+    {
+      "emoji": "🛁",
+      "exclusiveWeb": true,
+      "bestSeller": false,
+      "tags": [
+        "sales",
+        "epsom",
+        "magnesio",
+        "bano",
+        "relax",
+        "vegano"
+      ],
+      "images": [
+        "assets/img/products/sales-epsom-500.jpg"
+      ],
+      "specs": {
+        "peso": "500 g",
+        "natural": "Sulfato de magnesio",
+        "fabricacion": "Envasado por Savia de Alma en bolsa kraft. Sulfato de magnesio 100 % puro."
+      },
+      "handle": "sales-epsom-500",
+      "title": "Sales de Epsom · 500 g",
+      "price": 7.99,
+      "proximamente": true,
+      "sku": "SDA-SE-500",
+      "type": "Sales de bano",
+      "collection": "sales-epsom",
+      "collectionName": "Sales de Epsom",
+      "image": "assets/img/products/sales-epsom-500.jpg",
+      "lema": "Ritual de calma, en media hora.",
+      "short": "Sulfato de magnesio 100 % puro, bano de pies o de cuerpo, 500 g",
+      "descripcion": "Sulfato de magnesio puro, sin perfume ni colorante. Se disuelve en agua caliente y convierte un rato en el bano en un ritual de calma.",
+      "indicado": "Para banos de pies y para esos dias en los que el cuerpo pide parar.",
+      "modoUso": "Disuelve 2-3 punados (150-250 g) en agua caliente. Sumerge pies o cuerpo 15-20 minutos y aclara con agua templada. De 1 a 3 veces por semana.",
+      "features": [
+        "Sulfato de magnesio 100 % puro",
+        "Sin perfume ni colorante",
+        "2-3 banos de pies por bolsa",
+        "Bolsa kraft, sin plastico",
+        "Vegano"
+      ],
+      "bullets": [
+        "100 % PURA: solo sulfato de magnesio. Ni perfume, ni colorante, ni relleno.",
+        "2-3 PUNADOS POR BANO: 150-250 g en agua bien caliente.",
+        "15-20 MINUTOS: ni mas ni menos; el ritual es tan importante como la sal.",
+        "DE 1 A 3 VECES POR SEMANA: no hace falta mas.",
+        "GUARDALA SECA: la humedad la apelmaza, aunque no la estropea."
+      ]
+    },
+    {
+      "emoji": "🛁",
+      "exclusiveWeb": true,
+      "bestSeller": false,
+      "tags": [
+        "sales",
+        "epsom",
+        "magnesio",
+        "bano",
+        "relax",
+        "vegano",
+        "formato grande"
+      ],
+      "images": [
+        "assets/img/products/sales-epsom-1kg.jpg"
+      ],
+      "specs": {
+        "peso": "1 kg",
+        "natural": "Sulfato de magnesio",
+        "fabricacion": "Envasado por Savia de Alma en bolsa kraft. Sulfato de magnesio 100 % puro."
+      },
+      "handle": "sales-epsom-1kg",
+      "title": "Sales de Epsom · 1 kg",
+      "price": 12.99,
+      "proximamente": true,
+      "sku": "SDA-SE-1000",
+      "type": "Sales de bano",
+      "collection": "sales-epsom",
+      "collectionName": "Sales de Epsom",
+      "image": "assets/img/products/sales-epsom-1kg.jpg",
+      "lema": "El formato de quien ya lo ha probado.",
+      "short": "Sulfato de magnesio 100 % puro, formato de 1 kg, mejor precio por bano",
+      "descripcion": "El mismo sulfato de magnesio puro en formato de un kilo. Para quien ya ha probado la bolsa pequena y quiere tenerlo siempre en casa.",
+      "indicado": "Para banos de pies y de cuerpo con regularidad.",
+      "modoUso": "Disuelve 2-3 punados (150-250 g) en agua caliente. Sumerge pies o cuerpo 15-20 minutos y aclara con agua templada. De 1 a 3 veces por semana.",
+      "features": [
+        "Sulfato de magnesio 100 % puro",
+        "Sin perfume ni colorante",
+        "Hasta 6 banos de pies",
+        "Mejor precio por bano",
+        "Vegano"
+      ],
+      "bullets": [
+        "EL DOBLE, MEJOR PRECIO: sale bastante mas a cuenta por bano que la bolsa de 500 g.",
+        "100 % PURA: solo sulfato de magnesio.",
+        "HASTA 6 BANOS DE PIES: o tres de cuerpo entero.",
+        "MISMO RITUAL: 2-3 punados, 15-20 minutos, aclarar.",
+        "GUARDALA SECA Y CERRADA: asi se mantiene suelta."
+      ]
     }
   ]
 };
