@@ -209,6 +209,22 @@ ${CABECERA}
         ${p.lema ? `<p class="ficha-lema">${esc(p.lema)}</p>` : ''}
         <p class="ficha-precio">${Number(p.price).toFixed(2).replace('.', ',')} €</p>
         <p class="ficha-corta">${esc(p.short || '')}</p>
+        ${(p.colores && p.colores.length > 1) ? `<div class="ficha-colores">
+          <span class="fc-eti">Color</span>
+          <div class="fc-opciones">
+            ${p.colores.map(c => {
+              const otro = PRODUCTOS.find(x => x.handle === c.handle);
+              const img = otro ? '/' + otro.image : '';
+              return c.handle === p.handle
+                ? `<span class="fc-op fc-activa" aria-current="true">
+                     <img src="${esc(img)}" alt="${esc(c.nombre)}" width="56" height="56">
+                     <small>${esc(c.nombre)}</small></span>`
+                : `<a class="fc-op" href="/producto/${esc(c.handle)}/">
+                     <img src="${esc(img)}" alt="${esc(c.nombre)}" width="56" height="56" loading="lazy">
+                     <small>${esc(c.nombre)}</small></a>`;
+            }).join('\n            ')}
+          </div>
+        </div>` : ''}
         ${p.proximamente
           ? `<button class="btn btn-secundario btn-bloque" disabled>Próximamente</button>
         <p class="ficha-nota">Estamos preparando este producto. Apúntate a la newsletter y te avisamos.</p>`

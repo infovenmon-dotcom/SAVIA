@@ -46,3 +46,18 @@
 .ficha .fr-item p { margin: 3px 0; font-style: italic; }
 .ficha .fr-item cite { font-size: .85rem; color: #8a8f7a; font-style: normal; }
 .ficha .resena-estrellas { color: #d9a441; letter-spacing: .08em; }
+
+/* Selector de color: fichas distintas que se comportan como variantes. */
+.ficha-colores { margin: 16px 0 18px; }
+.fc-eti { display: block; font-size: .78rem; text-transform: uppercase;
+  letter-spacing: .08em; color: #8a8f7a; font-weight: 600; margin-bottom: 7px; }
+.fc-opciones { display: flex; gap: 10px; flex-wrap: wrap; }
+.fc-op { display: flex; flex-direction: column; align-items: center; gap: 4px;
+  text-decoration: none; color: inherit; padding: 4px; border-radius: 10px;
+  border: 2px solid transparent; }
+.fc-op img { width: 56px; height: 56px; object-fit: cover; border-radius: 8px;
+  background: #fff; display: block; }
+.fc-op small { font-size: .74rem; color: #6b705c; }
+.fc-op:hover { border-color: var(--borde); }
+.fc-activa { border-color: var(--verde-oscuro); }
+.fc-activa small { color: var(--verde-oscuro); font-weight: 600; }

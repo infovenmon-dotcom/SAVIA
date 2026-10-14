@@ -47,7 +47,7 @@ window.SAVIA_DATA = {
     {
       "slug": "accesorios",
       "name": "Accesorios",
-      "count": 13,
+      "count": 14,
       "exclusiveWeb": true
     },
     {
@@ -2290,25 +2290,26 @@ window.SAVIA_DATA = {
       "collectionName": "Accesorios",
       "image": "assets/img/products/cepillo-dientes-bambu.jpg",
       "lema": "El gesto más pequeño del día, también sin plástico.",
-      "short": "Unidad. Mango de bambu, cerdas suaves, sin plastico en el mango, vegano",
-      "descripcion": "Mango de bambu natural que sustituye al plastico en uno de los gestos que repites tres veces al dia. Cerdas suaves, comodas para encias sensibles.",
-      "indicado": "Para quien ya ha cambiado el champu y el jabon y quiere seguir por el bano.",
-      "modoUso": "Cepilla dos o tres veces al dia. Enjuaga y deja secar de pie, al aire. Cambialo cada 3 meses.",
+      "short": "Unidad. Mango de bambu, cerdas suaves, sin plástico en el mango, vegano",
+      "descripcion": "Mango de bambu natural que sustituye al plástico en uno de los gestos que repites tres veces al día. Cerdas suaves, comodas para encias sensibles.",
+      "indicado": "Para quien ya ha cambiado el champú y el jabón y quiere seguir por el baño.",
+      "modoUso": "Cepilla dos o tres veces al día. Enjuaga y deja secar de pie, al aire. Cambialo cada 3 meses.",
       "features": [
         "Se vende por unidad",
         "Mango de bambu natural",
         "Cerdas suaves",
-        "Sin plastico en el mango",
-        "Ligero y comodo",
+        "Sin plástico en el mango",
+        "Ligero y cómodo",
         "Vegano"
       ],
       "bullets": [
-        "BAMBU EN LUGAR DE PLASTICO: el mango es de bambu, una de las plantas de crecimiento mas rapido.",
+        "BAMBU EN LUGAR DE PLÁSTICO: el mango es de bambu, una de las plantas de crecimiento más rapido.",
         "CERDAS SUAVES: comodas para encias sensibles sin renunciar a una limpieza a fondo.",
-        "TRES VECES AL DIA: es el producto que mas repites, y por eso el que mas cambia tu huella.",
-        "DEJALO SECAR AL AIRE: de pie y fuera del vaso, el bambu dura mucho mas.",
-        "SE VENDE POR UNIDAD: anade los que necesites a la cesta."
-      ]
+        "TRES VECES AL DÍA: es el producto que más repites, y por eso el que más cambia tu huella.",
+        "DEJALO SECAR AL AIRE: de pie y fuera del vaso, el bambu dura mucho más.",
+        "SE VENDE POR UNIDAD: añade los que necesites a la cesta."
+      ],
+      "proximamente": true
     },
     {
       "emoji": "🧽",
@@ -2327,8 +2328,8 @@ window.SAVIA_DATA = {
       ],
       "specs": {
         "peso": "~10 g",
-        "natural": "Raiz de konjac",
-        "fabricacion": "Raiz de konjac con nuez de nogal. Biodegradable. Vida util 6-8 semanas."
+        "natural": "Raíz de konjac",
+        "fabricacion": "Raíz de konjac con nuez de nogal. Biodegradable. Vida util 6-8 semanas."
       },
       "handle": "esponja-konjac",
       "title": "Esponja Facial de Konjac",
@@ -2339,12 +2340,12 @@ window.SAVIA_DATA = {
       "collectionName": "Accesorios",
       "image": "assets/img/products/esponja-konjac.jpg",
       "lema": "Limpia la cara sin que la cara se entere.",
-      "short": "Raiz de konjac con nuez de nogal, limpieza suave diaria, vegano",
-      "descripcion": "Esponja de raiz de konjac con nuez de nogal. Seca esta dura como una piedra; al mojarla se vuelve blanda como una nube y limpia la piel sin arrastrarla.",
+      "short": "Raíz de konjac con nuez de nogal, limpieza suave diaria, vegano",
+      "descripcion": "Esponja de raíz de konjac con nuez de nogal. Seca esta dura como una piedra; al mojarla se vuelve blanda como una nube y limpia la piel sin arrastrarla.",
       "indicado": "Ideal para pieles sensibles y para quien quiere limpiar a diario sin resecar.",
       "modoUso": "Moja la esponja hasta que se ablande. Masajea el rostro en circulos, con o sin limpiador. Aclara, escurre sin retorcer y cuelga a secar.",
       "features": [
-        "Raiz de konjac natural",
+        "Raíz de konjac natural",
         "Con nuez de nogal",
         "Limpieza suave diaria",
         "Biodegradable",
@@ -2352,11 +2353,12 @@ window.SAVIA_DATA = {
       ],
       "bullets": [
         "DE PIEDRA A NUBE: seca esta rigida; con agua se ablanda y se vuelve suavisima.",
-        "CON NUEZ DE NOGAL: aporta un punto de textura para una limpieza algo mas profunda.",
-        "SOLA O CON LIMPIADOR: funciona con agua, y multiplica tu limpiador facial solido.",
+        "CON NUEZ DE NOGAL: aporta un punto de textura para una limpieza algo más profunda.",
+        "SOLA O CON LIMPIADOR: funciona con agua, y multiplica tu limpiador facial sólido.",
         "BIODEGRADABLE: cuando termine su vida, al compost.",
         "CUELGALA A SECAR: escurrida y al aire, te dura entre 6 y 8 semanas."
-      ]
+      ],
+      "proximamente": true
     },
     {
       "emoji": "💆",
@@ -2386,10 +2388,10 @@ window.SAVIA_DATA = {
       "collection": "accesorios",
       "collectionName": "Accesorios",
       "image": "assets/img/products/set-contorno-facial.jpg",
-      "lema": "Cinco minutos al dia que se notan.",
+      "lema": "Cinco minutos al día que se notan.",
       "short": "Gua sha y rodillo de ojos, masaje facial, ritual de cinco minutos, vegano",
-      "descripcion": "Gua sha para recorrer el ovalo de la cara y rodillo pequeno para el contorno de ojos. Dos piezas para convertir tu crema o tu aceite en un masaje de verdad.",
-      "indicado": "Para quien quiere sacar mas partido a lo que ya se aplica en la cara.",
+      "descripcion": "Gua sha para recorrer el ovalo de la cara y rodillo pequeño para el contorno de ojos. Dos piezas para convertir tu crema o tu aceite en un masaje de verdad.",
+      "indicado": "Para quien quiere sacar más partido a lo que ya se aplica en la cara.",
       "modoUso": "Sobre la piel limpia y con tu aceite o crema, desliza el gua sha desde el centro hacia afuera, sin apretar. El rodillo, del lagrimal hacia la sien.",
       "features": [
         "Gua sha para el ovalo",
@@ -2403,8 +2405,9 @@ window.SAVIA_DATA = {
         "SIEMPRE CON PRODUCTO: usalo sobre aceite o crema para que deslice, nunca en seco.",
         "DEL CENTRO HACIA AFUERA: ese es el sentido, y sin apretar.",
         "CINCO MINUTOS: es un ritual corto, de los que de verdad se mantienen.",
-        "FRIO SI TE APETECE: guardado en la nevera, la sensacion al despertar es otra."
-      ]
+        "FRÍO SI TE APETECE: guardado en la nevera, la sensación al despertar es otra."
+      ],
+      "proximamente": true
     },
     {
       "emoji": "🧼",
@@ -2433,25 +2436,26 @@ window.SAVIA_DATA = {
       "collection": "accesorios",
       "collectionName": "Accesorios",
       "image": "assets/img/products/jabonera-metalica.jpg",
-      "lema": "Tu jabon dura el doble si respira.",
-      "short": "Rejilla de acero, drena y airea, alarga la vida de tu pastilla, sin plastico",
-      "descripcion": "Rejilla de acero que deja el jabon en alto para que escurra y se seque entre usos. Sin bandeja de plastico: el agua cae y ya esta.",
-      "indicado": "Para cualquiera de nuestras pastillas de jabon o champu solido.",
+      "lema": "Tu jabón dura el doble si respira.",
+      "short": "Rejilla de acero, drena y airea, alarga la vida de tu pastilla, sin plástico",
+      "descripcion": "Rejilla de acero que deja el jabón en alto para que escurra y se seque entre usos. Sin bandeja de plástico: el agua cae y ya esta.",
+      "indicado": "Para cualquiera de nuestras pastillas de jabón o champú sólido.",
       "modoUso": "Coloca la pastilla sobre la rejilla, en un sitio donde el agua pueda caer. Enjuaga la jabonera de vez en cuando.",
       "features": [
         "Acero resistente",
         "Drena y airea la pastilla",
-        "Sin bandeja de plastico",
-        "Facil de limpiar",
-        "Alarga la vida del jabon"
+        "Sin bandeja de plástico",
+        "Fácil de limpiar",
+        "Alarga la vida del jabón"
       ],
       "bullets": [
         "EL AGUA ES EL ENEMIGO: una pastilla que se queda en un charco se gasta al doble de velocidad.",
-        "REJILLA, NO BANDEJA: el agua cae y el jabon se seca entre ducha y ducha.",
-        "SIN PLASTICO: solo acero, nada mas.",
+        "REJILLA, NO BANDEJA: el agua cae y el jabón se seca entre ducha y ducha.",
+        "SIN PLÁSTICO: solo acero, nada más.",
         "SE LIMPIA EN UN SEGUNDO: un aclarado y lista.",
         "SE AMORTIZA SOLA: lo que alarga una pastilla ya paga la jabonera."
-      ]
+      ],
+      "proximamente": true
     },
     {
       "emoji": "🪮",
@@ -2481,14 +2485,14 @@ window.SAVIA_DATA = {
       "collection": "accesorios",
       "collectionName": "Accesorios",
       "image": "assets/img/products/cepillo-facial.jpg",
-      "lema": "La cara tambien agradece un masaje.",
-      "short": "Cerdas suaves, masaje facial, limpieza diaria, mango comodo, vegano",
+      "lema": "La cara también agradece un masaje.",
+      "short": "Cerdas suaves, masaje facial, limpieza diaria, mango cómodo, vegano",
       "descripcion": "Cepillo de cerdas suaves para masajear el rostro mientras limpias. El mango cabe en la mano y permite recorrer la cara sin esfuerzo.",
-      "indicado": "Para la limpieza diaria del rostro, solo o con tu limpiador facial solido.",
+      "indicado": "Para la limpieza diaria del rostro, solo o con tu limpiador facial sólido.",
       "modoUso": "Sobre la piel humeda, masajea en circulos suaves desde el centro hacia afuera. Aclara y deja secar con las cerdas hacia abajo.",
       "features": [
         "Cerdas suaves",
-        "Mango comodo",
+        "Mango cómodo",
         "Masaje mientras limpias",
         "Uso diario",
         "Vegano"
@@ -2496,9 +2500,10 @@ window.SAVIA_DATA = {
       "bullets": [
         "SUAVE DE VERDAD: las cerdas estan pensadas para la cara, no para el cuerpo.",
         "CIRCULOS, SIN APRETAR: el gesto es de masaje, no de frotar.",
-        "CON TU LIMPIADOR SOLIDO: hace mas espuma y reparte mejor el producto.",
-        "SECALO BOCA ABAJO: con las cerdas hacia abajo escurre y dura mucho mas."
-      ]
+        "CON TU LIMPIADOR SÓLIDO: hace más espuma y reparte mejor el producto.",
+        "SECALO BOCA ABAJO: con las cerdas hacia abajo escurre y dura mucho más."
+      ],
+      "proximamente": true
     },
     {
       "emoji": "🪵",
@@ -2528,24 +2533,25 @@ window.SAVIA_DATA = {
       "collectionName": "Accesorios",
       "image": "assets/img/products/cepillo-pelo-madera.jpg",
       "lema": "Desenreda sin tirones y sin electricidad estatica.",
-      "short": "Madera natural, puas redondeadas, desenreda sin tirones, sin plastico",
-      "descripcion": "Cepillo de madera natural con puas de punta redondeada. Desenreda sin arrastrar y, al no ser de plastico, no carga el pelo de electricidad estatica.",
+      "short": "Madera natural, puas redondeadas, desenreda sin tirones, sin plástico",
+      "descripcion": "Cepillo de madera natural con puas de punta redondeada. Desenreda sin arrastrar y, al no ser de plástico, no carga el pelo de electricidad estatica.",
       "indicado": "Para todo tipo de cabello, y especialmente si se te encrespa al cepillarlo.",
-      "modoUso": "Empieza por las puntas y ve subiendo poco a poco hacia la raiz. Nunca al reves.",
+      "modoUso": "Empieza por las puntas y ve subiendo poco a poco hacia la raíz. Nunca al reves.",
       "features": [
         "Madera natural",
         "Puas de punta redondeada",
         "Sin electricidad estatica",
         "Desenreda sin tirones",
-        "Sin plastico"
+        "Sin plástico"
       ],
       "bullets": [
-        "DE LAS PUNTAS A LA RAIZ: ese es el orden, y por eso no hay tirones.",
+        "DE LAS PUNTAS A LA RAÍZ: ese es el orden, y por eso no hay tirones.",
         "PUAS REDONDEADAS: no aranan el cuero cabelludo.",
-        "ADIOS AL ENCRESPADO: la madera no carga el pelo como el plastico.",
-        "REPARTE LO QUE YA TIENES: distribuye el sebo natural de la raiz a lo largo del pelo.",
-        "SE LIMPIA FACIL: retira el pelo con los dedos; la madera, mejor sin remojarla."
-      ]
+        "ADIOS AL ENCRESPADO: la madera no carga el pelo como el plástico.",
+        "REPARTE LO QUE YA TIENES: distribuye el sebo natural de la raíz a lo largo del pelo.",
+        "SE LIMPIA FÁCIL: retira el pelo con los dedos; la madera, mejor sin remojarla."
+      ],
+      "proximamente": true
     },
     {
       "emoji": "💡",
@@ -2576,7 +2582,7 @@ window.SAVIA_DATA = {
       "image": "assets/img/products/espejo-led.jpg",
       "lema": "La luz buena, donde tu estes.",
       "short": "Plegable, luz LED con tres intensidades, aumento 2x, cabe en el bolso",
-      "descripcion": "Espejo plegable con luz LED integrada y tres intensidades. Una cara normal y otra con aumento de 2x, para cuando el bano no acompana.",
+      "descripcion": "Espejo plegable con luz LED integrada y tres intensidades. Una cara normal y otra con aumento de 2x, para cuando el baño no acompaña.",
       "indicado": "Para el bolso, para viajar y para cualquier sitio con mala luz.",
       "modoUso": "Abrelo y pulsa el boton tactil para encender; vuelve a pulsar para cambiar de intensidad.",
       "features": [
@@ -2592,12 +2598,13 @@ window.SAVIA_DATA = {
         "CABE EN EL BOLSO: plegado ocupa lo que una polvera.",
         "BOTON TACTIL: se enciende con un toque, sin ruedas ni interruptores.",
         "LA LUZ MANDA: el maquillaje que se ve bien con mala luz, luego no se ve bien."
-      ]
+      ],
+      "proximamente": true
     },
     {
       "emoji": "🪒",
       "exclusiveWeb": true,
-      "bestSeller": true,
+      "bestSeller": false,
       "tags": [
         "afeitado",
         "brocha",
@@ -2606,12 +2613,12 @@ window.SAVIA_DATA = {
         "accesorio"
       ],
       "images": [
-        "assets/img/products/kit-afeitado.jpg"
+        "assets/img/products/kit-afeitado-basico.jpg"
       ],
       "specs": {
         "peso": "~380 g el kit",
         "natural": "",
-        "fabricacion": "Conjunto de tres piezas: soporte, bol y brocha. Jabon de afeitar no incluido."
+        "fabricacion": "Conjunto de tres piezas: soporte, bol y brocha. Jabón de afeitar no incluido."
       },
       "handle": "kit-afeitado",
       "title": "Kit de Afeitado · Soporte, Bol y Brocha",
@@ -2620,26 +2627,27 @@ window.SAVIA_DATA = {
       "type": "Afeitado",
       "collection": "accesorios",
       "collectionName": "Accesorios",
-      "image": "assets/img/products/kit-afeitado.jpg",
+      "image": "assets/img/products/kit-afeitado-basico.jpg",
       "lema": "Un ritual esencial, de forma natural.",
-      "short": "Soporte, bol y brocha. El jabon de afeitar se vende aparte",
-      "descripcion": "Soporte, bol y brocha en un conjunto. Monta la espuma en el bol, aplicala con la brocha y deja la brocha colgada en el soporte para que se seque bien. El jabon de afeitar solido no esta incluido: en la foto aparece para que veas el ritual completo.",
-      "indicado": "Para quien se afeita con jabon o espuma solida y quiere hacerlo bien.",
-      "modoUso": "Moja la brocha en agua caliente, gira sobre el jabon hasta que cargue y emulsiona en el bol. Aplica en circulos. Enjuaga y cuelga la brocha boca abajo.",
+      "short": "Soporte, bol y brocha. El jabón de afeitar se vende aparte",
+      "descripcion": "Soporte, bol y brocha en un conjunto. Monta la espuma en el bol, aplicala con la brocha y deja la brocha colgada en el soporte para que se seque bien. Si quieres el ritual entero, tenemos el kit con nuestro jabón de afeitar incluido.",
+      "indicado": "Para quien se afeita con jabón o espuma sólida y quiere hacerlo bien.",
+      "modoUso": "Moja la brocha en agua caliente, gira sobre el jabón hasta que cargue y emulsiona en el bol. Aplica en circulos. Enjuaga y cuelga la brocha boca abajo.",
       "features": [
         "Incluye soporte, bol y brocha",
-        "El jabon de afeitar NO esta incluido",
+        "El jabón de afeitar NO esta incluido",
         "Brocha para montar espuma",
         "Bol para emulsionar",
         "Soporte que seca la brocha colgada"
       ],
       "bullets": [
-        "QUE INCLUYE: soporte, bol y brocha. El jabon de afeitar se compra aparte.",
+        "QUE INCLUYE: soporte, bol y brocha. El jabón de afeitar se compra aparte.",
         "EN CIRCULOS: la brocha levanta el vello y la cuchilla trabaja mucho mejor.",
         "EL SOPORTE NO SOBRA: colgada boca abajo, la brocha se seca y conserva la forma.",
-        "CON NUESTRO JABON DE AFEITAR SOLIDO: lo tienes en la tienda, y es el de la foto.",
+        "CON NUESTRO JABÓN DE AFEITAR SÓLIDO: lo tienes en la tienda, y es el de la foto.",
         "ES UN RITUAL: cinco minutos que convierten un tramite en un gusto."
-      ]
+      ],
+      "proximamente": true
     },
     {
       "emoji": "🛁",
@@ -2666,27 +2674,27 @@ window.SAVIA_DATA = {
       "price": 7.99,
       "proximamente": true,
       "sku": "SDA-SE-500",
-      "type": "Sales de bano",
+      "type": "Sales de baño",
       "collection": "sales-epsom",
       "collectionName": "Sales de Epsom",
       "image": "assets/img/products/sales-epsom-500.jpg",
       "lema": "Ritual de calma, en media hora.",
-      "short": "Sulfato de magnesio 100 % puro, bano de pies o de cuerpo, 500 g",
-      "descripcion": "Sulfato de magnesio puro, sin perfume ni colorante. Se disuelve en agua caliente y convierte un rato en el bano en un ritual de calma.",
-      "indicado": "Para banos de pies y para esos dias en los que el cuerpo pide parar.",
-      "modoUso": "Disuelve 2-3 punados (150-250 g) en agua caliente. Sumerge pies o cuerpo 15-20 minutos y aclara con agua templada. De 1 a 3 veces por semana.",
+      "short": "Sulfato de magnesio 100 % puro, baño de pies o de cuerpo, 500 g",
+      "descripcion": "Sulfato de magnesio puro, sin perfume ni colorante. Se disuelve en agua caliente y convierte un rato en el baño en un ritual de calma.",
+      "indicado": "Para baños de pies y para esos días en los que el cuerpo pide parar.",
+      "modoUso": "Disuelve 2-3 puñados (150-250 g) en agua caliente. Sumerge pies o cuerpo 15-20 minutos y aclara con agua templada. De 1 a 3 veces por semana.",
       "features": [
         "Sulfato de magnesio 100 % puro",
         "Sin perfume ni colorante",
-        "2-3 banos de pies por bolsa",
-        "Bolsa kraft, sin plastico",
+        "2-3 baños de pies por bolsa",
+        "Bolsa kraft, sin plástico",
         "Vegano"
       ],
       "bullets": [
         "100 % PURA: solo sulfato de magnesio. Ni perfume, ni colorante, ni relleno.",
-        "2-3 PUNADOS POR BANO: 150-250 g en agua bien caliente.",
-        "15-20 MINUTOS: ni mas ni menos; el ritual es tan importante como la sal.",
-        "DE 1 A 3 VECES POR SEMANA: no hace falta mas.",
+        "2-3 PUÑADOS POR BAÑO: 150-250 g en agua bien caliente.",
+        "15-20 MINUTOS: ni más ni menos; el ritual es tan importante como la sal.",
+        "DE 1 A 3 VECES POR SEMANA: no hace falta más.",
         "GUARDALA SECA: la humedad la apelmaza, aunque no la estropea."
       ]
     },
@@ -2718,24 +2726,34 @@ window.SAVIA_DATA = {
       "collectionName": "Accesorios",
       "image": "assets/img/products/neceser-blanco.jpg",
       "lema": "Tu ritual, siempre contigo.",
-      "short": "Neceser blanco, asa superior y bolsillo frontal, tamano de diario",
-      "descripcion": "Neceser blanco de tamano comodo, con asa arriba y bolsillo frontal. Para llevar tus solidos sin que se te pierdan por la maleta.",
-      "indicado": "Para viajar, para el gimnasio o para tener el bano recogido.",
+      "short": "Neceser blanco, asa superior y bolsillo frontal, tamaño de diario",
+      "descripcion": "Neceser blanco de tamaño cómodo, con asa arriba y bolsillo frontal. Para llevar tus sólidos sin que se te pierdan por la maleta.",
+      "indicado": "Para viajar, para el gimnasio o para tener el baño recogido.",
       "modoUso": "Guarda tus pastillas bien secas, mejor en una latita o jabonera, y listo.",
       "features": [
         "Color blanco",
         "Asa superior",
         "Bolsillo frontal",
         "Ligero y resistente",
-        "Tamano de diario"
+        "Tamaño de diario"
       ],
       "bullets": [
-        "TAMANO DE DIARIO: cabe lo que usas de verdad, no lo que crees que vas a usar.",
-        "ASA Y BOLSILLO: se coge con una mano y lo pequeno no se pierde dentro.",
-        "PERFECTO PARA SOLIDOS: sin botes que se abran en la maleta.",
-        "TAMBIEN EN ROSA: tienes los dos colores en la tienda.",
-        "LLEVA UN ESTAMPADO: el frontal viene con un diseno impreso; lo veras en la foto."
-      ]
+        "TAMAÑO DE DIARIO: cabe lo que usas de verdad, no lo que crees que vas a usar.",
+        "ASA Y BOLSILLO: se coge con una mano y lo pequeño no se pierde dentro.",
+        "PERFECTO PARA SÓLIDOS: sin botes que se abran en la maleta.",
+        "LLEVA UN ESTAMPADO: el frontal viene con un diseño impreso; lo veras en la foto."
+      ],
+      "colores": [
+        {
+          "handle": "neceser-blanco",
+          "nombre": "Blanco"
+        },
+        {
+          "handle": "neceser-rosa",
+          "nombre": "Rosa"
+        }
+      ],
+      "proximamente": true
     },
     {
       "emoji": "👜",
@@ -2765,24 +2783,83 @@ window.SAVIA_DATA = {
       "collectionName": "Accesorios",
       "image": "assets/img/products/neceser-rosa.jpg",
       "lema": "Tu ritual, siempre contigo.",
-      "short": "Neceser rosa, asa superior y bolsillo frontal, tamano de diario",
-      "descripcion": "Neceser rosa de tamano comodo, con asa arriba y bolsillo frontal. Para llevar tus solidos sin que se te pierdan por la maleta.",
-      "indicado": "Para viajar, para el gimnasio o para tener el bano recogido.",
+      "short": "Neceser rosa, asa superior y bolsillo frontal, tamaño de diario",
+      "descripcion": "Neceser rosa de tamaño cómodo, con asa arriba y bolsillo frontal. Para llevar tus sólidos sin que se te pierdan por la maleta.",
+      "indicado": "Para viajar, para el gimnasio o para tener el baño recogido.",
       "modoUso": "Guarda tus pastillas bien secas, mejor en una latita o jabonera, y listo.",
       "features": [
         "Color rosa",
         "Asa superior",
         "Bolsillo frontal",
         "Ligero y resistente",
-        "Tamano de diario"
+        "Tamaño de diario"
       ],
       "bullets": [
-        "TAMANO DE DIARIO: cabe lo que usas de verdad, no lo que crees que vas a usar.",
-        "ASA Y BOLSILLO: se coge con una mano y lo pequeno no se pierde dentro.",
-        "PERFECTO PARA SOLIDOS: sin botes que se abran en la maleta.",
-        "TAMBIEN EN BLANCO: tienes los dos colores en la tienda.",
-        "LLEVA UN ESTAMPADO: el frontal viene con un diseno impreso; lo veras en la foto."
-      ]
+        "TAMAÑO DE DIARIO: cabe lo que usas de verdad, no lo que crees que vas a usar.",
+        "ASA Y BOLSILLO: se coge con una mano y lo pequeño no se pierde dentro.",
+        "PERFECTO PARA SÓLIDOS: sin botes que se abran en la maleta.",
+        "LLEVA UN ESTAMPADO: el frontal viene con un diseño impreso; lo veras en la foto."
+      ],
+      "colores": [
+        {
+          "handle": "neceser-blanco",
+          "nombre": "Blanco"
+        },
+        {
+          "handle": "neceser-rosa",
+          "nombre": "Rosa"
+        }
+      ],
+      "proximamente": true
+    },
+    {
+      "emoji": "🪒",
+      "exclusiveWeb": true,
+      "bestSeller": true,
+      "tags": [
+        "afeitado",
+        "kit",
+        "ritual",
+        "regalo",
+        "solido",
+        "zero waste"
+      ],
+      "images": [
+        "assets/img/products/kit-afeitado.jpg"
+      ],
+      "specs": {
+        "peso": "~460 g el kit",
+        "natural": "",
+        "fabricacion": "Soporte, bol y brocha, más Espuma de Afeitar Sólida de Aceite de Avellana (100 g)."
+      },
+      "handle": "kit-afeitado-completo",
+      "title": "Ritual de Afeitado Completo",
+      "price": 25.99,
+      "sku": "SDA-AF-KITFULL",
+      "type": "Afeitado",
+      "collection": "accesorios",
+      "collectionName": "Accesorios",
+      "image": "assets/img/products/kit-afeitado.jpg",
+      "lema": "Cuidado, confort y bienestar en cada detalle.",
+      "short": "Soporte, bol, brocha y nuestra Espuma de Afeitar Sólida de Aceite de Avellana",
+      "descripcion": "El kit de afeitado al completo: soporte, bol y brocha, más nuestra Espuma de Afeitar Sólida de Aceite de Avellana. Todo lo que hace falta para montar una espuma de verdad y dejar de comprar botes de un solo uso.",
+      "indicado": "Para quien quiere el ritual entero de una vez, y como regalo.",
+      "modoUso": "Moja la brocha en agua caliente, girala sobre el jabón hasta que cargue y emulsiona en el bol. Aplica en circulos. Enjuaga y cuelga la brocha boca abajo en el soporte.",
+      "features": [
+        "Soporte, bol y brocha",
+        "Espuma de Afeitar Sólida de Aceite de Avellana incluida",
+        "Sin botes de un solo uso",
+        "Todo el ritual en una compra",
+        "Ideal para regalar"
+      ],
+      "bullets": [
+        "TODO INCLUIDO: soporte, bol, brocha y nuestra espuma de afeitar sólida.",
+        "MÁS BARATO QUE POR SEPARADO: comprado suelto serian 19,99 + 11,99 = 31,98 EUR.",
+        "LA ESPUMA SE MONTA, NO SE APLICA: por eso hacen falta el bol y la brocha.",
+        "SIN PLÁSTICO: el jabón es sólido, se acabaron los botes de espuma.",
+        "PARA REGALAR: llega como un conjunto, no como piezas sueltas."
+      ],
+      "proximamente": true
     }
   ]
 };
