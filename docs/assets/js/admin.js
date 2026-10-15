@@ -380,12 +380,28 @@ function pintar(cfg) {
       <td class="num"><input type="number" step="0.01" min="0" class="f-precio" value="${precio == null ? '' : precio}" data-base="${p.price == null ? '' : p.price}" placeholder="sin precio"></td>
       <td class="num"><input type="number" step="0.01" min="0" class="f-antes" value="${antes}" placeholder="—"></td>
       <td class="num"><input type="number" step="0.01" min="0" class="f-coste" value="${coste}" placeholder="—"></td>
+      <td class="num f-margen" title="Margen sobre el precio sin IVA, ya con el descuento de la categoría">—</td>
       <td class="num"><input type="number" step="1" min="0" class="f-stock" value="${stk}" placeholder="∞"></td>
       <td><input type="checkbox" class="f-agotado" ${ago ? 'checked' : ''}></td>
     </tr>`;
   }).join('');
   poblarCategorias();
   pintarOfertasCategoria(cfg);
+  recalcularMargenes();
+  // Un solo oyente en cada contenedor: las filas se repintan y los oyentes
+  // por casilla se perderian en cada recarga.
+  const _t = document.getElementById('filas');
+  if (_t && !_t.dataset.oyenteMargen) {
+    _t.addEventListener('input', e => {
+      if (e.target.closest('.f-precio, .f-coste')) recalcularMargenes();
+    });
+    _t.dataset.oyenteMargen = '1';
+  }
+  const _o = document.getElementById('ofertas-categoria');
+  if (_o && !_o.dataset.oyenteMargen) {
+    _o.addEventListener('input', e => { if (e.target.closest('.f-desc-cat')) recalcularMargenes(); });
+    _o.dataset.oyenteMargen = '1';
+  }
   filtrar();
   _msg(document.getElementById('msg'), '', '');
 }
@@ -404,6 +420,51 @@ function pintarOfertasCategoria(cfg) {
       <input type="number" min="0" max="90" step="1" class="f-desc-cat" data-collection="${c}" value="${v}" placeholder="0" style="width:64px;text-align:right"> %
     </label>`;
   }).join('');
+}
+
+/* ---------- Margen en vivo ----------
+   Margen = (precio sin IVA - coste) / precio sin IVA, sobre el precio que se
+   va a cobrar de verdad: el de la casilla MENOS el descuento de la categoria,
+   redondeado igual que en la tienda. El "antes" de oferta no entra: es el
+   precio tachado, no lo que cobras.
+   El coste se mete tal y como se paga. En los articulos de Temu va con el IVA
+   incluido porque no lo facturan y no se recupera; en los de proveedor con
+   factura, neto. Asi el margen sale bueno en los dos casos. */
+function _dtoDeCategoria() {
+  const d = {};
+  document.querySelectorAll('.f-desc-cat').forEach(el => {
+    const v = parseFloat(el.value);
+    if (isFinite(v) && v > 0 && v <= 90) d[el.dataset.collection] = v;
+  });
+  return d;
+}
+function recalcularMargenes() {
+  const dc = _dtoDeCategoria();
+  let suma = 0, n = 0;
+  document.querySelectorAll('#filas tr').forEach(tr => {
+    const celda = tr.querySelector('.f-margen');
+    if (!celda) return;
+    const precio = parseFloat(tr.querySelector('.f-precio').value);
+    const coste = parseFloat(tr.querySelector('.f-coste').value);
+    if (!isFinite(precio) || precio <= 0 || !isFinite(coste)) {
+      celda.textContent = '—';
+      celda.style.color = '#9a9a90';
+      celda.title = !isFinite(coste) ? 'Falta el coste interno' : 'Falta el precio';
+      return;
+    }
+    const pct = dc[tr.dataset.collection] || 0;
+    const efectivo = pct ? Math.round(precio * (1 - pct / 100) * 100) / 100 : precio;
+    const sinIva = efectivo / 1.21;
+    const eur = sinIva - coste;
+    const margen = (eur / sinIva) * 100;
+    celda.innerHTML = `<strong>${margen.toFixed(0)} %</strong><br><span class="nota">${eur.toFixed(2).replace('.', ',')} €${pct ? ' · −' + pct + '%' : ''}</span>`;
+    // El verde es para el dinero que entra; el rojo, para el que se va.
+    celda.style.color = eur < 0 ? '#b3261e' : margen >= 70 ? '#1d6b50' : margen >= 55 ? '#8a6d1f' : '#b3261e';
+    celda.title = `Precio cobrado ${efectivo.toFixed(2)} € · sin IVA ${sinIva.toFixed(2)} € · coste ${coste.toFixed(2)} €`;
+    suma += margen; n++;
+  });
+  const res = document.getElementById('margen-resumen');
+  if (res) res.textContent = n ? `Margen medio de los ${n} productos con coste y precio: ${(suma / n).toFixed(1)} %` : '';
 }
 
 function filtrar() {

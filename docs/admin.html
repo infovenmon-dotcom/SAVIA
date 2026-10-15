@@ -134,14 +134,17 @@
               <th>Precio (€)</th>
               <th>Antes (€) <span class="nota">oferta</span></th>
               <th>Coste (€) <span class="nota">interno</span></th>
+              <th title="Margen sobre el precio sin IVA, con el descuento de categoría ya aplicado">Margen</th>
               <th>Stock</th>
               <th>Agotado</th>
             </tr>
           </thead>
           <tbody id="filas"></tbody>
         </table>
+        <p id="margen-resumen" class="nota" style="margin-top:10px;font-weight:600;color:#1d6b50"></p>
         <p class="nota" style="margin-top:10px">
           • <strong>Precio</strong>: déjalo en el precio normal o cámbialo.<br>
+          • <strong>Margen</strong>: se recalcula solo al tocar el precio, el coste o el descuento de una categoría. Es el margen sobre el precio sin IVA, ya con el descuento aplicado. Mete el coste tal y como lo pagas: con IVA si el proveedor no factura, neto si sí lo hace.<br>
           • <strong>Antes</strong>: para una oferta, pon aquí el precio anterior (mayor que el actual). Se mostrará tachado con el % de descuento. Vacío = sin oferta.<br>
           • <strong>Stock</strong>: vacío = no se controla; un número se irá descontando con cada venta; al llegar a 0 ese producto se vende en Amazon.<br>
           • <strong>Agotado</strong>: fuerza "Comprar en Amazon" sin tocar el stock.
@@ -316,6 +319,6 @@
 
   <script src="assets/js/config.js"></script>
   <script src="assets/js/products.js?v=20261015-7"></script>
-  <script src="assets/js/admin.js?v=20261015-7"></script>
+  <script src="assets/js/admin.js?v=20261015-8"></script>
 </body>
 </html>
