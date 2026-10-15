@@ -65,10 +65,14 @@ const Carrito = {
   producto(handle) {
     return window.SAVIA_DATA.products.find(p => p.handle === handle);
   },
-  /* Sin precio publicado no se puede cobrar: el carrito no lo acepta. */
+  /* Lo que el carrito no acepta: sin precio no se puede cobrar, y un
+     "proximamente" tiene precio pero todavia no esta a la venta. Antes
+     bastaba con mirar el precio porque los proximamente no lo tenian;
+     al ponerselo, ese filtro dejo de proteger nada. */
   vendible(handle) {
     const p = this.producto(handle);
-    if (!p) return false;
+    if (!p || p.proximamente) return false;
+    if (typeof estaAgotado === 'function' && estaAgotado(p)) return false;
     const v = _precioCarrito(p);
     return typeof v === 'number' && isFinite(v) && v > 0;
   },
