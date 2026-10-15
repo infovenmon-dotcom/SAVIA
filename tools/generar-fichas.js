@@ -11,7 +11,7 @@ const SITIO = 'https://saviadealma.com';
 
 /* Sello de version de los assets: al cambiar un .js o .css hay que
    subirlo, o los navegadores siguen sirviendo la copia en cache. */
-const V = '20261015-1';
+const V = '20261015-3';
 
 /* --- cargar el catalogo sin navegador --- */
 const src = fs.readFileSync(path.join(RAIZ, 'assets/js/products.js'), 'utf8');
@@ -217,6 +217,7 @@ ${CABECERA}
         <p class="ficha-coleccion">${esc(p.collectionName || p.type || '')}</p>
         <h1>${esc(p.title)}</h1>
         ${p.lema ? `<p class="ficha-lema">${esc(p.lema)}</p>` : ''}
+        ${p.destacado ? `<p class="ficha-destacado">${esc(p.destacado)}</p>` : ''}
         ${conPrecio
           ? `<p class="ficha-precio">${Number(p.price).toFixed(2).replace('.', ',')} €</p>`
           : '<p class="ficha-precio ficha-sin-precio">Precio por confirmar</p>'}
@@ -260,6 +261,7 @@ ${CABECERA}
 
     ${(p.indicado || sp.indicado) ? `<section class="ficha-bloque"><h2>Indicado para</h2><p>${esc(p.indicado || sp.indicado)}</p></section>` : ''}
     ${(p.modoUso || sp.modoUso) ? `<section class="ficha-bloque"><h2>Modo de uso</h2><p>${esc(p.modoUso || sp.modoUso)}</p></section>` : ''}
+    ${p.precauciones ? `<section class="ficha-bloque ficha-precauciones"><h2>Precauciones</h2><p>${esc(p.precauciones)}</p></section>` : ''}
 
     <section class="ficha-bloque">
       <h2>Ficha técnica</h2>

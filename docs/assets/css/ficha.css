@@ -27,6 +27,17 @@
   font-style: italic;
   color: var(--texto-suave); /* el verde esta reservado al dinero */
 }
+.ficha-destacado {
+  background: var(--beige, #F7F2EC);
+  border-left: 3px solid var(--dorado, #B8860B);
+  border-radius: 0 10px 10px 0;
+  padding: 10px 14px;
+  margin: 10px 0 14px;
+  font-size: .94rem;
+  line-height: 1.45;
+  color: var(--verde-oscuro);
+}
+.ficha-precauciones p { font-size: .9rem; color: var(--texto-suave); }
 .ficha-corta { margin-bottom: 18px; }
 .ficha-nota { font-size: .85rem; color: #8a6d1f; margin-top: 10px; }
 .ficha-features { margin: 18px 0 0 18px; }

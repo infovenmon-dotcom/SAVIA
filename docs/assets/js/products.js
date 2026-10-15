@@ -2279,7 +2279,7 @@ window.SAVIA_DATA = {
       "specs": {
         "peso": "~18 g",
         "natural": "Mango de bambú natural",
-        "fabricacion": "Bambú; cerdas de nailon suave (beige o carbón). Tamaño adulto estándar. Se vende por unidad."
+        "fabricacion": "Mango de bambú · Cerdas suaves de nailon · Tamaño adulto · Se vende por unidad"
       },
       "handle": "cepillo-dientes-bambu",
       "title": "Cepillo de Dientes de Bambú · Unidad",
@@ -2288,25 +2288,23 @@ window.SAVIA_DATA = {
       "collection": "accesorios",
       "collectionName": "Accesorios",
       "image": "assets/img/products/cepillo-dientes-bambu.jpg",
-      "lema": "El gesto más pequeño del día, también sin plástico.",
-      "short": "Mango de bambú natural y biodegradable para cambiar uno de los plásticos que más usamos cada día.",
-      "descripcion": "El cepillo de dientes es uno de los objetos de plástico que más tiramos a lo largo del año. Este lo cambia en lo más grande: el mango es de bambú, una planta de crecimiento muy rápido que no necesita replantarse y que es biodegradable. Las cerdas son de nailon suave, que hoy es lo que garantiza una limpieza higiénica. Cuando lo renueves, corta el cabezal y el mango puede ir al compost.",
+      "lema": "Pequeños gestos, grandes cambios.",
+      "short": "Mango de bambú natural: el gesto de cada día, con mucho menos plástico.",
+      "descripcion": "Cada año tiramos varios cepillos de plástico por persona. Este cambia el mango de plástico por bambú, un material vegetal, renovable y de crecimiento rápido, ligero y cálido al tacto. Sus cerdas suaves limpian con cuidado en el día a día. Un cambio pequeño que, repetido mañana y noche, reduce mucho el plástico de tu baño.",
       "indicado": "Para quien ya ha cambiado el champú y el jabón y quiere seguir por el baño.",
-      "modoUso": "Úsalo como tu cepillo habitual. Déjalo secar en vertical, al aire, y cámbialo cada 2-3 meses.",
+      "modoUso": "Úsalo como tu cepillo habitual. Acláralo después de cada uso y déjalo secar en vertical, en un lugar ventilado. Sustitúyelo cada 2-3 meses.",
+      "destacado": "🌿 Mango de bambú natural, una planta renovable que crece muy rápido.",
       "features": [
-        "Se vende por unidad",
-        "Mango de bambu natural",
-        "Cerdas suaves de nylon",
-        "Sin plástico en el mango",
-        "Ligero y cómodo",
-        "Vegano"
+        "Mango de bambú",
+        "Cerdas suaves de nailon",
+        "Tamaño adulto",
+        "Se vende por unidad"
       ],
       "bullets": [
-        "BAMBU EN LUGAR DE PLÁSTICO: el mango es de bambu, una de las plantas de crecimiento más rápido.",
-        "CERDAS SUAVES DE NYLON: comodas para encias sensibles sin renunciar a una limpieza a fondo.",
-        "TRES VECES AL DÍA: es el producto que más repites, y por eso el que más cambia tu huella.",
-        "DÉJALO SECAR AL AIRE: de pie y fuera del vaso, el bambu dura mucho más.",
-        "SE VENDE POR UNIDAD: añade los que necesites a la cesta."
+        "MANGO DE BAMBÚ: vegetal, renovable y de crecimiento rápido.",
+        "MENOS PLÁSTICO: sustituye el mango de plástico de tu cepillo habitual.",
+        "CERDAS SUAVES: limpieza cuidadosa para el día a día.",
+        "LIGERO Y AGRADABLE: cálido al tacto y cómodo de sujetar."
       ],
       "proximamente": true
     },
@@ -2328,34 +2326,33 @@ window.SAVIA_DATA = {
       "specs": {
         "peso": "~10 g",
         "natural": "Fibra vegetal de konjac y cáscara de nuez; biodegradable",
-        "fabricacion": "Konjac y cáscara de nuez molida, con cordón para colgar. Forma de gota, 7,5 × 5,5 cm. Se vende por unidad."
+        "fabricacion": "Fibra de raíz de konjac · Cáscara de nuez molida · Cordón para colgar · Biodegradable · Se vende por unidad"
       },
       "handle": "esponja-konjac",
-      "title": "Esponja Facial de Konjac · Unidad",
+      "title": "Esponja Facial de Konjac con Nuez",
       "sku": "SDA-AC-KONJAC",
       "type": "Accesorio facial",
       "collection": "accesorios",
       "collectionName": "Accesorios",
       "image": "assets/img/products/esponja-konjac.jpg",
-      "lema": "Limpia la cara sin que la cara se entere.",
-      "short": "Esponja 100 % vegetal de raíz de konjac con cáscara de nuez: limpieza suave y biodegradable.",
-      "descripcion": "De todos los accesorios, es el más natural. Está hecha con la fibra de la raíz de konjac y lleva cáscara de nuez molida, que le da un toque exfoliante suave. Seca es firme; al mojarla se vuelve blanda y elástica. Úsala sola o con tu limpiador facial sólido. Al terminar su vida útil es biodegradable.",
+      "lema": "Limpieza natural, suave como el agua.",
+      "short": "100 % vegetal y biodegradable: fibra de konjac con nuez molida para una limpieza suave.",
+      "descripcion": "Hecha con la fibra de la raíz de konjac, una planta asiática, y nuez molida, esta esponja es 100 % de origen vegetal y biodegradable. Seca es firme; al humedecerla se vuelve blanda y elástica, y limpia la piel con una ligera exfoliación. Úsala sola o con tu limpiador facial sólido. Cuando termina su vida útil, puede volver a la tierra.",
       "indicado": "Ideal para pieles sensibles y para quien quiere limpiar a diario sin resecar.",
-      "modoUso": "Remójala en agua templada hasta que se ablande, escúrrela sin retorcer y masajea el rostro con movimientos circulares. Cuélgala para que se seque y cámbiala cada 6-8 semanas.",
+      "modoUso": "1) Sumérgela en agua templada hasta que se ablande. 2) Escúrrela con suavidad, sin retorcerla. 3) Masajea el rostro con movimientos circulares, sola o con tu limpiador. 4) Aclárala y cuélgala por el cordón para que se seque. 5) Sustitúyela cada 6-8 semanas.",
+      "destacado": "🌿 100 % de origen vegetal y biodegradable.",
       "features": [
-        "Se vende por unidad",
-        "Raíz de konjac natural",
-        "Con nuez de nogal molida",
-        "Forma de gota, 7,5 × 5,5 cm",
+        "Fibra de raíz de konjac",
+        "Cáscara de nuez molida",
+        "Cordón para colgar",
         "Biodegradable",
-        "Vegano"
+        "Se vende por unidad"
       ],
       "bullets": [
-        "SE VENDE POR UNIDAD: añade las que necesites a la cesta; cada una dura entre 6 y 8 semanas.",
-        "CON NUEZ DE NOGAL: aporta un punto de textura para una limpieza algo más profunda.",
-        "SOLA O CON LIMPIADOR: funciona con agua, y multiplica tu limpiador facial sólido.",
-        "BIODEGRADABLE: cuando termine su vida, al compost.",
-        "CUELGALA A SECAR: escurrida y al aire, te dura entre 6 y 8 semanas."
+        "100 % VEGETAL: fibra de la raíz de konjac.",
+        "BIODEGRADABLE: sin plásticos ni fibras sintéticas.",
+        "CON NUEZ MOLIDA: exfoliación suave de origen natural.",
+        "CON CORDÓN: cuélgala para que se seque bien."
       ],
       "proximamente": true
     },
@@ -2377,33 +2374,34 @@ window.SAVIA_DATA = {
       "specs": {
         "peso": "~110 g el set",
         "natural": "Un ritual de masaje manual, sin pilas ni electricidad",
-        "fabricacion": "Resina en tono ámbar (gua sha y varilla) y cepillo con base efecto madera y cerdas de nailon. Gua sha 9 cm, varilla 12 cm, cepillo 8 × 7 cm."
+        "fabricacion": "Cepillo (8 × 7 cm), gua sha (9 cm) y varilla de ojos (12 cm) · Acabado efecto madera · Uso manual"
       },
       "handle": "set-contorno-facial",
-      "title": "Set Contorno Facial · 3 piezas",
+      "title": "Set de Contorno Facial · Cepillo, Gua Sha y Varilla",
       "sku": "SDA-AC-CONTORNO",
       "type": "Accesorio facial",
       "collection": "accesorios",
       "collectionName": "Accesorios",
       "image": "assets/img/products/set-contorno-facial.jpg",
-      "lema": "Tres gestos, cinco minutos, y se nota.",
-      "short": "Cepillo, gua sha y varilla de ojos: tu ritual completo de masaje facial en 5 minutos.",
-      "descripcion": "Tres herramientas que se complementan para un masaje facial completo. El cepillo de cerdas suaves prepara y activa la piel. El gua sha, una técnica tradicional de masaje que consiste en deslizar una pieza de borde liso sobre el rostro, trabaja mejillas, mandíbula y cuello. La varilla fina llega al contorno de ojos. Las piezas en tono ámbar son de resina: ligeras y no se rompen si se caen, como pasaría con una piedra.",
+      "lema": "Pequeños detalles, grandes rituales.",
+      "short": "El masaje facial de siempre, sin aparatos: cepillo, gua sha y varilla de ojos.",
+      "descripcion": "El gua sha es una técnica tradicional de masaje que solo necesita tus manos y una herramienta. Este set reúne tres, sin pilas ni enchufes: un cepillo para el masaje en seco, un gua sha para mandíbula, pómulos y frente, y una varilla para el contorno de ojos. Son ligeras, fáciles de limpiar y para usar durante años.",
       "indicado": "Para quien quiere sacar más partido a lo que ya se aplica en la cara.",
-      "modoUso": "1) Cepillo, sobre la piel limpia y seca, del centro del rostro hacia fuera y del cuello hacia la clavícula. 2) Aplica unas gotas de aceite o tu crema para que el gua sha deslice sin tirar. 3) Gua sha, con el borde largo casi plano: barbilla a oreja, nariz a sien, entrecejo a sien, 3-5 pasadas por zona. 4) Varilla, con toques muy suaves del lagrimal a la sien. 5) Termina bajando por el cuello hacia la clavícula. Lava las piezas después de cada uso. No las uses sobre piel irritada.",
+      "modoUso": "Ritual de 5 minutos. 1) Cepillo, en seco (1-2 min): con la piel seca y limpia, haz pasadas suaves hacia fuera y hacia el cuello: de la barbilla a las orejas, de la nariz a las sienes y de la frente al nacimiento del pelo. 2) Gua sha (2-3 min): aplica unas gotas de aceite o tu crema para que la piel deslice, apoya el borde casi plano y desliza del centro hacia fuera: mandíbula, de la barbilla a la oreja; pómulo, de la nariz a la sien; frente, del centro a las sienes. 5-6 pasadas por zona, lentas y sin presionar. 3) Varilla (1 min): con un toque de crema de contorno, da pasadas muy suaves del lagrimal a la sien, bajo el ojo y por el párpado fijo. Por la mañana para despertar el rostro, o por la noche como momento de pausa. Limpia las piezas con agua y jabón después de cada uso.",
+      "destacado": "♻️ Tres herramientas manuales y duraderas, sin pilas ni aparatos eléctricos.",
+      "precauciones": "No usar sobre piel irritada, con heridas o justo después de un tratamiento facial.",
       "features": [
-        "Tres piezas: cepillo, gua sha y varita de ojos",
-        "Cepillo con cerdas suaves",
-        "Gua sha de borde liso",
-        "Varita fina para el contorno de ojos",
-        "Para cara y cuello"
+        "Cepillo de 8 × 7 cm",
+        "Gua sha de 9 cm",
+        "Varilla de ojos de 12 cm",
+        "Acabado efecto madera",
+        "Uso manual"
       ],
       "bullets": [
-        "TRES PIEZAS, TRES GESTOS: preparar con el cepillo, esculpir con la gua sha y rematar los ojos con la varita.",
-        "SIEMPRE CON PRODUCTO: úsalo sobre aceite o crema para que deslice, nunca en seco.",
-        "DEL CENTRO HACIA AFUERA: ese es el sentido, y sin apretar.",
-        "CARA Y CUELLO: la gua sha llega también a la mandíbula y al cuello.",
-        "FRÍO SI TE APETECE: guardadas en la nevera, la sensación al despertar es otra."
+        "SIN PILAS NI ENCHUFE: un ritual 100 % manual.",
+        "TÉCNICA TRADICIONAL: el masaje gua sha de toda la vida.",
+        "DURADERAS: se limpian con agua y jabón.",
+        "SET DE 3 PIEZAS: cepillo, gua sha y varilla de ojos."
       ],
       "proximamente": true
     },
@@ -2424,35 +2422,33 @@ window.SAVIA_DATA = {
       ],
       "specs": {
         "peso": "~70 g",
-        "natural": "",
-        "fabricacion": "Rejilla de acero en forma de onda, con hueco para tres pastillas de pie. Se vende sola: en las fotos aparece sobre nuestra Jabonera de Bambú, que va aparte."
+        "natural": "Base de bambú natural y renovable; rejilla de acero inoxidable, duradera y reciclable",
+        "fabricacion": "Rejilla ondulada de acero inoxidable sobre base de bambú · 14,5 cm de largo × 5,2 cm de alto · Capacidad: 3 pastillas"
       },
       "handle": "jabonera-metalica",
-      "title": "Jabonera Metálica de Acero",
+      "title": "Jabonera Trío de Acero sobre Base de Bambú",
       "sku": "SDA-AC-JABMETAL",
       "type": "Accesorio",
       "collection": "accesorios",
       "collectionName": "Accesorios",
       "image": "assets/img/products/jabonera-metalica.jpg",
-      "lema": "No todos los días necesitas el mismo jabón.",
-      "short": "Rejilla de acero con hueco para tres pastillas de pie, secas y aireadas, sin plástico",
-      "descripcion": "No todos los días te sientes igual ni necesitas lo mismo. Las ondas de esta rejilla dejan hueco para tres pastillas de pie, cada una en el suyo: una para los días de calma, otra para los que hay que despertar y otra para cuando toca limpieza a fondo. Cuáles, lo eliges tú. Y al estar de pie y en alto, escurren entre ducha y ducha, que es justo lo que hace que una pastilla dure el doble. La rejilla se vende sola; encaja sobre nuestra Jabonera de Bambú, que recoge el agua.",
-      "indicado": "Para quien usa más de un jabón y los quiere todos secos, a mano y sin que se toquen.",
-      "modoUso": "Coloca las pastillas de pie en los huecos de la rejilla, en un sitio donde el agua pueda caer, o sobre una jabonera de bambú que la recoja. Enjuaga la rejilla de vez en cuando.",
+      "lema": "Elige cada día lo que necesitas.",
+      "short": "No todos los días te sientes igual ni necesitas lo mismo. Tres jabones, tres momentos, cero plástico.",
+      "descripcion": "No todos los días te sientes igual ni necesitas lo mismo. Por eso esta jabonera tiene sitio para tres pastillas: lavanda, para los momentos de calma; pepita de uva, cuando necesitas energía; árbol de té, para una limpieza profunda. Está hecha de bambú y acero inoxidable, sin nada de plástico. Su rejilla ondulada mantiene los jabones en alto para que el agua escurra y se sequen entre usos, así duran mucho más.",
+      "indicado": "Para quien usa más de un jabón y quiere elegir cada día según cómo se siente.",
+      "modoUso": "Coloca tus pastillas sobre la rejilla después de cada uso, en un lugar donde el agua pueda escurrir. Seca la base de bambú si se acumula agua y aclara la rejilla de vez en cuando para retirar restos de jabón.",
+      "destacado": "🌿 Bambú y acero inoxidable, cero plástico, y tus jabones duran más.",
       "features": [
-        "Hueco para tres pastillas",
-        "Acero resistente",
-        "Drena y airea cada pastilla",
-        "Sin bandeja de plástico",
-        "Alarga la vida del jabón"
+        "Medidas: 14,5 cm de largo × 5,2 cm de alto",
+        "Capacidad: 3 pastillas",
+        "Rejilla ondulada de acero inoxidable",
+        "Base de bambú"
       ],
       "bullets": [
-        "TRES JABONES, TRES MOMENTOS: uno para la calma, otro para despertar y otro para una limpieza a fondo. Eliges tú cuáles, y los tienes los tres a mano.",
-        "EL AGUA ES EL ENEMIGO: una pastilla que se queda en un charco se gasta al doble de velocidad.",
-        "DE PIE Y SIN TOCARSE: cada pastilla en su onda, escurriendo, sin pegarse a la de al lado.",
-        "SIN PLÁSTICO: solo acero, nada más.",
-        "SOBRE LA JABONERA DE BAMBÚ: la rejilla va suelta y encaja encima de la nuestra, que recoge el agua. Se vende aparte.",
-        "SE AMORTIZA SOLA: lo que alarga tus pastillas ya paga la jabonera."
+        "CERO PLÁSTICO: bambú y acero inoxidable.",
+        "TUS JABONES DURAN MÁS: se secan entre usos y no se deshacen.",
+        "TRES JABONES, TRES MOMENTOS: calma, energía y limpieza profunda.",
+        "ELIGE CADA DÍA: el jabón que te pide el cuerpo."
       ],
       "proximamente": true
     },
@@ -2474,33 +2470,34 @@ window.SAVIA_DATA = {
       "specs": {
         "peso": "~35 g",
         "natural": "Masaje manual, sin pilas ni electricidad",
-        "fabricacion": "Base efecto madera y cerdas de nailon suave. 8 × 7 cm. Se vende por unidad."
+        "fabricacion": "Base efecto madera · Cerdas suaves · 8 × 7 cm · Uso manual · Se vende por unidad"
       },
       "handle": "cepillo-facial",
-      "title": "Cepillo Facial de Limpieza · Unidad",
+      "title": "Cepillo Linfático Facial",
       "sku": "SDA-AC-CEPFACIAL",
       "type": "Accesorio facial",
       "collection": "accesorios",
       "collectionName": "Accesorios",
       "image": "assets/img/products/cepillo-facial.jpg",
-      "lema": "La cara también agradece un masaje.",
-      "short": "Cepillo de cerdas suaves con forma curva para un masaje facial que relaja y despierta el rostro.",
-      "descripcion": "Su base curva se adapta a la mano y a los contornos de la cara, el cuello y el escote. Sus cerdas suaves permiten un cepillado en seco que activa la piel y deja una sensación de frescor, o repartir la espuma de tu limpiador facial. Sin pilas ni electricidad: solo tus manos.",
+      "lema": "Tu rostro, en buenas manos.",
+      "short": "Un masaje facial sin aparatos ni productos: solo el cepillo, tus manos y dos minutos.",
+      "descripcion": "Un ritual de cuidado que no necesita pilas, enchufes ni cosméticos: solo este cepillo y dos minutos de masaje en seco, siguiendo los contornos del rostro hacia el cuello. También puedes usarlo con tu limpiador sólido para limpiar con suavidad. Reutilizable durante mucho tiempo.",
       "indicado": "Para la limpieza diaria del rostro, solo o con tu limpiador facial sólido.",
-      "modoUso": "Con la piel limpia y seca: 1) Cuello, de abajo hacia la clavícula, 5-6 pasadas por lado. 2) Mandíbula, del centro de la barbilla hacia la oreja. 3) Mejillas, de la nariz hacia la sien. 4) Frente, del centro hacia las sienes. 5) Termina bajando por el lateral del cuello. Presión muy suave, 2-3 minutos. Lava las cerdas con agua y jabón y déjalo secar boca abajo. No lo uses sobre heridas o piel irritada.",
+      "modoUso": "Masaje en seco (2-3 minutos): 1) Con la piel seca y limpia, haz pasadas suaves y cortas, siempre hacia fuera y hacia el cuello. 2) De la barbilla hacia las orejas. 3) De los lados de la nariz hacia las sienes. 4) De la frente hacia el nacimiento del pelo. 5) Termina con pasadas descendentes por los laterales del cuello. Sin presionar: el cepillo solo debe deslizarse. Para limpiar el rostro, humedece las cerdas, aplica tu limpiador sólido y haz círculos suaves. Aclara el cepillo después de cada uso y déjalo secar con las cerdas hacia abajo.",
+      "destacado": "♻️ Herramienta manual y reutilizable: sin pilas, sin enchufe y sin necesidad de productos.",
+      "precauciones": "No usar sobre piel irritada, con heridas o con granos inflamados.",
       "features": [
-        "Se vende por unidad",
+        "Medidas: 8 × 7 cm",
+        "Base efecto madera",
         "Cerdas suaves",
-        "Forma curva, se agarra con la palma",
-        "8 × 7 cm",
-        "Uso diario"
+        "Uso manual",
+        "Se vende por unidad"
       ],
       "bullets": [
-        "SE VENDE POR UNIDAD: añade el tuyo a la cesta, sin packs que no necesitas.",
-        "SIN MANGO: se agarra con la palma, y por eso recorre la cara sin forzar la muñeca.",
-        "CIRCULOS SUAVES: el gesto es de masaje, no de frotar.",
-        "CON TU LIMPIADOR SÓLIDO: hace más espuma y reparte mejor el producto.",
-        "SÉCALO BOCA ABAJO: con las cerdas hacia abajo escurre y dura mucho más."
+        "SIN PILAS NI ENCHUFE: masaje 100 % manual.",
+        "SIN PRODUCTOS: el masaje en seco no necesita cosméticos.",
+        "REUTILIZABLE: muchos meses de uso con un simple aclarado.",
+        "TAMAÑO PALMA: 8 × 7 cm, con cerdas suaves."
       ],
       "proximamente": true
     },
@@ -2521,7 +2518,7 @@ window.SAVIA_DATA = {
       "specs": {
         "peso": "~95 g",
         "natural": "Cuerpo y púas de madera natural",
-        "fabricacion": "Madera natural de 24 × 8 cm, con púas de punta redondeada, base acolchada y orificio para colgar."
+        "fabricacion": "Cuerpo de madera · Púas de madera con punta redondeada · Base acolchada"
       },
       "handle": "cepillo-pelo-madera",
       "title": "Cepillo de Pelo de Madera",
@@ -2530,26 +2527,22 @@ window.SAVIA_DATA = {
       "collection": "accesorios",
       "collectionName": "Accesorios",
       "image": "assets/img/products/cepillo-pelo-madera.jpg",
-      "lema": "Desenreda sin tirones y sin electricidad estática.",
-      "short": "Cuerpo y púas de madera natural: desenreda sin tirones y masajea el cuero cabelludo.",
-      "descripcion": "Un cepillo de madera natural con púas también de madera, redondeadas en la punta para no arañar el cuero cabelludo. La madera genera menos electricidad estática que el plástico, así que el pelo queda con menos encrespamiento. Ligero, duradero y el compañero ideal de tu champú sólido.",
+      "lema": "Cuidado natural para tu cabello.",
+      "short": "Madera natural de cuerpo a púas: desenreda sin tirones y sin plástico en las púas.",
+      "descripcion": "Cuerpo y púas de madera natural, redondeadas en la punta para desenredar sin tirones y masajear el cuero cabelludo. La madera genera menos electricidad estática que el plástico, así que el pelo se encrespa menos. Bien cuidado, te acompañará muchos años.",
       "indicado": "Para todo tipo de cabello, y especialmente si se te encrespa al cepillarlo.",
-      "modoUso": "Cepilla por mechones, de puntas a raíces. Retira el pelo después de cada uso. No lo sumerjas: límpialo con un paño húmedo.",
+      "modoUso": "Cepilla de puntas a raíces, por mechones. Retira el pelo después de cada uso y límpialo de vez en cuando con un paño húmedo, sin sumergirlo en agua.",
+      "destacado": "🌿 Cuerpo y púas de madera natural.",
       "features": [
-        "Madera natural",
-        "24 × 8 cm",
-        "Púas de punta redondeada",
-        "Sin electricidad estática",
-        "Desenreda sin tirones",
-        "Sin plástico"
+        "Cuerpo de madera",
+        "Púas de madera con punta redondeada",
+        "Base acolchada"
       ],
       "bullets": [
-        "DE LAS PUNTAS A LA RAÍZ: ese es el orden, y por eso no hay tirones.",
-        "PÚAS REDONDEADAS: no aranan el cuero cabelludo.",
-        "ADIOS AL ENCRESPADO: la madera no carga el pelo como el plástico.",
-        "REPARTE LO QUE YA TIENES: distribuye el sebo natural de la raíz a lo largo del pelo.",
-        "SE LIMPIA FÁCIL: retira el pelo con los dedos; la madera, mejor sin remojarla.",
-        "CON ORIFICIO PARA COLGAR: se guarda a la vista y seco, no en un cajón."
+        "MADERA NATURAL: cuerpo y púas.",
+        "MENOS ESTÁTICA: menos encrespamiento que con un cepillo de plástico.",
+        "PÚAS REDONDEADAS: masaje suave del cuero cabelludo.",
+        "PARA MUCHOS AÑOS: duradero y fácil de cuidar."
       ],
       "proximamente": true
     },
@@ -2570,7 +2563,7 @@ window.SAVIA_DATA = {
       "specs": {
         "peso": "~250 g",
         "natural": "No es natural: es recargable, sin pilas desechables",
-        "fabricacion": "Marco de plástico, espejo de cristal y batería de litio de 300 mAh recargable por USB. Formato de bolsillo."
+        "fabricacion": "Espejo de doble cara (normal y aumento 2x) · Luz LED con 3 intensidades · Botón táctil · Batería recargable por USB · Plegable"
       },
       "handle": "espejo-led",
       "title": "Espejo de Bolsillo con Luz LED",
@@ -2579,24 +2572,24 @@ window.SAVIA_DATA = {
       "collection": "accesorios",
       "collectionName": "Accesorios",
       "image": "assets/img/products/espejo-led.jpg",
-      "lema": "La luz buena, donde tu estes.",
-      "short": "Espejo plegable de doble cara con luz LED recargable: sin pilas desechables.",
-      "descripcion": "Un espejo compacto con un aro de luz LED que regulas en 3 intensidades con un toque. Tiene dos caras: una normal y otra con aumento 2x para los detalles. Funciona con batería recargable por USB, así que no necesitas pilas de usar y tirar. Cerrado ocupa muy poco.",
+      "lema": "Tu ritual de belleza, con la luz perfecta.",
+      "short": "Luz perfecta donde estés, recargable por USB y sin pilas de usar y tirar.",
+      "descripcion": "Un espejo pequeño que se recarga por USB, así que nunca tendrás que comprar ni tirar pilas. Su aro de luz LED, de bajo consumo, tiene tres intensidades, y sus dos caras, normal y con aumento 2x, te dejan ver cada detalle. Plegable y compacto, va contigo en el bolso o el neceser.",
       "indicado": "Para el bolso, para viajar y para cualquier sitio con mala luz.",
-      "modoUso": "Toca el botón para encender y para cambiar la intensidad; mantenlo pulsado para apagar. Cárgalo por USB.",
+      "modoUso": "Abre el espejo y toca el botón para encender la luz. Vuelve a tocar para cambiar la intensidad y mantén pulsado para apagar. Recárgalo con el cable USB cuando la luz pierda intensidad. Límpialo con un paño suave y seco.",
+      "destacado": "♻️ Recargable por USB: sin pilas desechables y con luz LED de bajo consumo.",
       "features": [
-        "Luz LED integrada",
-        "Tres intensidades",
-        "Aumento 2x en una cara",
-        "Plegable y compacto",
-        "Boton tactil"
+        "Doble cara: normal y aumento 2x",
+        "Luz LED con 3 intensidades",
+        "Botón táctil",
+        "Batería recargable por USB",
+        "Plegable"
       ],
       "bullets": [
-        "TRES INTENSIDADES: de luz suave a luz de trabajo, segun donde estes.",
-        "DOS CARAS: una normal y otra con aumento de 2x para el detalle.",
-        "CABE EN EL BOLSO: plegado ocupa lo que una polvera.",
-        "BOTON TACTIL: se enciende con un toque, sin ruedas ni interruptores.",
-        "LA LUZ MANDA: el maquillaje que se ve bien con mala luz, luego no se ve bien."
+        "RECARGABLE POR USB: sin pilas desechables.",
+        "LUZ LED DE BAJO CONSUMO: tres intensidades.",
+        "DOBLE CARA: normal y aumento 2x.",
+        "PLEGABLE: protege el espejo y cabe en cualquier bolso."
       ],
       "proximamente": true
     },
@@ -2617,33 +2610,32 @@ window.SAVIA_DATA = {
       "specs": {
         "peso": "~380 g el kit",
         "natural": "Sustituye la espuma en aerosol por una sólida; brocha sin pelo animal",
-        "fabricacion": "Conjunto de tres piezas: soporte, bol y brocha de cerdas sintéticas. Jabón de afeitar no incluido."
+        "fabricacion": "Brocha, bol y soporte · Bol y soporte de cerámica · Cerdas sintéticas · Acabado negro · Jabón de afeitar no incluido"
       },
       "handle": "kit-afeitado",
-      "title": "Kit de Afeitado · Soporte, Bol y Brocha",
+      "title": "Ritual de Afeitado · Brocha, Bol y Soporte",
       "sku": "SDA-AF-KIT",
       "type": "Afeitado",
       "collection": "accesorios",
       "collectionName": "Accesorios",
       "image": "assets/img/products/kit-afeitado-basico.jpg",
       "lema": "Un ritual esencial, de forma natural.",
-      "short": "El afeitado clásico de toda la vida con tu espuma sólida, sin botes de aerosol.",
-      "descripcion": "Con la brocha montas la espuma en el bol a partir de nuestra espuma de afeitar sólida, sin aerosoles ni botes de plástico. Al aplicarla con movimientos circulares, la brocha levanta el vello y prepara la piel. Al terminar, la cuelgas en el soporte para que se seque y conserve su forma. Sus cerdas son sintéticas, sin pelo animal.",
+      "short": "Adiós al bote de espuma en aerosol: brocha, bol y soporte para tu espuma sólida.",
+      "descripcion": "Cada bote de espuma de afeitar en aerosol es un envase que se tira. Con este kit montas la espuma con tu jabón de afeitar sólido, en un bol de cerámica y con una brocha de cerdas suaves y sin origen animal. Al terminar, la brocha se seca colgada en su soporte y conserva su forma. Combínalo con nuestra espuma de afeitar sólida para un ritual completo.",
       "indicado": "Para quien se afeita con jabón o espuma sólida y quiere hacerlo bien.",
-      "modoUso": "Humedece la brocha, frótala sobre la espuma sólida, monta la espuma en el bol, aplícala en círculos y aféitate. Aclárala y déjala colgada boca abajo en el soporte.",
+      "modoUso": "1) Humedece la brocha en agua templada. 2) Frótala sobre tu espuma de afeitar sólida. 3) Monta la espuma en el bol con movimientos circulares hasta que quede cremosa. 4) Aplícala sobre la piel con la brocha, en círculos, y aféitate. 5) Aclara bien la brocha y déjala secar colgada boca abajo en el soporte.",
+      "destacado": "♻️ Sin aerosoles: se usa con jabón de afeitar sólido, con bol de cerámica duradera y cerdas sin origen animal.",
       "features": [
-        "Incluye soporte, bol y brocha",
-        "El jabón de afeitar NO esta incluido",
-        "Brocha para montar espuma",
-        "Bol para emulsionar",
-        "Soporte que seca la brocha colgada"
+        "Incluye brocha, bol y soporte",
+        "Bol y soporte de cerámica",
+        "Cerdas sintéticas",
+        "Acabado negro"
       ],
       "bullets": [
-        "QUE INCLUYE: soporte, bol y brocha. El jabón de afeitar se compra aparte.",
-        "EN CIRCULOS: la brocha levanta el vello y la cuchilla trabaja mucho mejor.",
-        "EL SOPORTE NO SOBRA: colgada boca abajo, la brocha se seca y conserva la forma.",
-        "CON NUESTRO JABÓN DE AFEITAR SÓLIDO: lo tienes en la tienda, y es el de la foto.",
-        "ES UN RITUAL: cinco minutos que convierten un tramite en un gusto."
+        "ADIÓS AL AEROSOL: se usa con espuma de afeitar sólida.",
+        "CERÁMICA DURADERA: bol y soporte para años.",
+        "SIN ORIGEN ANIMAL: cerdas sintéticas suaves.",
+        "KIT COMPLETO: brocha, bol y soporte."
       ],
       "proximamente": true
     },
@@ -2665,34 +2657,35 @@ window.SAVIA_DATA = {
       "specs": {
         "peso": "500 g",
         "natural": "Mineral 100 % puro, sin nada añadido",
-        "fabricacion": "Sulfato de magnesio. 500 g en bolsa doypack de papel kraft con cierre zip."
+        "fabricacion": "Sulfato de magnesio (INCI: Magnesium Sulfate) · 500 g · Bolsa doypack de papel kraft con cierre zip · Envasado en España"
       },
       "handle": "sales-epsom-500",
-      "title": "Sales de Epsom · 500 g",
+      "title": "Sales de Epsom · 500 g · Ritual de Calma",
       "proximamente": true,
       "sku": "SDA-SE-500",
       "type": "Sales de baño",
       "collection": "sales-epsom",
       "collectionName": "Sales de Epsom",
       "image": "assets/img/products/sales-epsom-500.jpg",
-      "lema": "Ritual de calma, en media hora.",
-      "short": "Sulfato de magnesio 100 % puro, sin perfumes ni aditivos, en bolsa doypack de kraft resellable.",
-      "descripcion": "Las sales de Epsom son un mineral, sulfato de magnesio en cristales, y un clásico para preparar un baño reconfortante al final del día. Las nuestras son 100 % puras, sin fragancias ni colorantes, de origen español. Vienen en una bolsa doypack de papel kraft que se mantiene de pie y se cierra con zip, para que se conserven secas.",
+      "lema": "Un momento solo para ti.",
+      "short": "Un solo ingrediente, 100 % puro: sulfato de magnesio sin perfume ni aditivos, para un baño de pura calma.",
+      "descripcion": "Nuestras sales de Epsom tienen un único ingrediente: sulfato de magnesio 100 % puro. Nada más. Se disuelven fácilmente en agua caliente para convertir tu baño o tu baño de pies en un momento de pausa. Vienen en una bolsa kraft con cierre zip que las mantiene secas uso tras uso.",
       "indicado": "Para baños de pies y para esos días en los que el cuerpo pide parar.",
-      "modoUso": "En la bañera, unos 250 g en agua templada durante 15-20 minutos. Para un baño de pies, 2 cucharadas en un barreño. Solo uso externo. A partir de 14 años. Mantener fuera del alcance de los niños.",
+      "modoUso": "Baño: disuelve unos 215 g (aproximadamente la mitad de la bolsa) bajo el chorro del grifo, con el agua entre 37 y 39 °C. Sumérgete unos 20 minutos, una o dos veces por semana. Baño de pies: disuelve 2-3 cucharadas en un barreño con agua caliente y mete los pies 15-20 minutos. Después, aclárate con agua templada e hidrata la piel.",
+      "destacado": "🌿 Un único ingrediente: sulfato de magnesio 100 % puro, sin perfume, colorantes ni aditivos.",
+      "precauciones": "Uso externo. No ingerir. Evita el contacto con los ojos; si ocurre, aclara con abundante agua. No usar sobre heridas o piel irritada. Mantener fuera del alcance de los niños. Conservar en lugar seco con la bolsa bien cerrada.",
       "features": [
-        "Sulfato de magnesio 100 % puro",
-        "Sin perfume ni colorante",
-        "2-3 baños de pies por bolsa",
-        "Bolsa kraft, sin plástico",
-        "Vegano"
+        "Contenido: 500 g",
+        "Ingredientes (INCI): Magnesium Sulfate",
+        "Sin perfume ni aditivos",
+        "Producto vegano",
+        "Envasado en España"
       ],
       "bullets": [
-        "100 % PURA: solo sulfato de magnesio. Ni perfume, ni colorante, ni relleno.",
-        "2-3 PUÑADOS POR BAÑO: 150-250 g en agua bien caliente.",
-        "15-20 MINUTOS: ni más ni menos; el ritual es tan importante como la sal.",
-        "DE 1 A 3 VECES POR SEMANA: no hace falta más.",
-        "GUARDALA SECA: la humedad la apelmaza, aunque no la estropea."
+        "UN SOLO INGREDIENTE: sulfato de magnesio 100 % puro.",
+        "SIN PERFUME NI ADITIVOS: nada que no necesites.",
+        "BOLSA KRAFT CON ZIP: se cierra para conservarlas secas.",
+        "BAÑO O PIES: para la bañera o para un barreño."
       ]
     },
     {
@@ -2712,37 +2705,37 @@ window.SAVIA_DATA = {
       "specs": {
         "peso": "~60 g",
         "natural": "No es natural: es duradero y reutilizable",
-        "fabricacion": "Polipiel (PU) con cremallera y asa superior. 20 × 14 × 11 cm. Se vende por unidad, a elegir color."
+        "fabricacion": "Exterior en polipiel, con cremallera y asa superior · 20 × 14 × 11 cm · Color crema"
       },
       "handle": "neceser-blanco",
-      "title": "Neceser Blanco",
+      "title": "Neceser Savia de Alma · Crema",
       "sku": "SDA-AC-NECESER-BLA",
       "type": "Accesorio",
       "collection": "accesorios",
       "collectionName": "Accesorios",
       "image": "assets/img/products/neceser-blanco.jpg",
       "lema": "Tu ritual, siempre contigo.",
-      "short": "Un neceser bonito y resistente para llevar tu rutina sólida a todas partes, durante años.",
-      "descripcion": "Este neceser no es de fibra natural, y preferimos decirlo claro: es de polipiel (PU), resistente al agua y muy fácil de limpiar. Lo hemos elegido porque dura y te acompaña en cada viaje, sustituyendo bolsas de plástico y botes de un solo uso. Dentro caben tus pastillas, cepillos y accesorios, bien recogidos.",
+      "short": "El neceser para tu rutina sólida: sin botes, sin derrames y sin minibotellas de usar y tirar.",
+      "descripcion": "Con los cosméticos sólidos no necesitas botes de plástico ni miniaturas de viaje: jabón, champú y cepillo caben aquí, sin riesgo de derrames. Este neceser con asa y cremallera está pensado para durar. Su exterior se limpia con un paño húmedo, así que lo usarás viaje tras viaje.",
       "indicado": "Para viajar, para el gimnasio o para tener el baño recogido.",
-      "modoUso": "Guarda dentro tus sólidos, cepillos y accesorios. Límpialo con un paño o una toallita húmeda.",
+      "modoUso": "Guarda tus sólidos en sus cajitas o jaboneras de viaje. Límpialo con un paño húmedo y déjalo secar abierto.",
+      "destacado": "♻️ Pensado para tus cosméticos sólidos: adiós a los botes de plástico y a las minibotellas de viaje.",
       "features": [
-        "Color blanco",
-        "Asa superior",
-        "Bolsillo frontal",
-        "Ligero y resistente",
-        "Tamaño de diario"
+        "Medidas: 20 × 14 × 11 cm",
+        "Exterior en polipiel",
+        "Cremallera y asa superior",
+        "Color crema"
       ],
       "bullets": [
-        "TAMAÑO DE DIARIO: cabe lo que usas de verdad, no lo que crees que vas a usar.",
-        "ASA Y BOLSILLO: se coge con una mano y lo pequeño no se pierde dentro.",
-        "PERFECTO PARA SÓLIDOS: sin botes que se abran en la maleta.",
-        "LLEVA UN ESTAMPADO: el frontal viene con un diseño impreso; lo veras en la foto."
+        "ADIÓS A LAS MINIBOTELLAS: tu rutina sólida, lista para viajar sin plástico de usar y tirar.",
+        "SIN DERRAMES: los sólidos no gotean ni se abren en la maleta.",
+        "DURADERO Y FÁCIL DE LIMPIAR: un paño húmedo y como nuevo.",
+        "TAMAÑO PRÁCTICO: 20 × 14 × 11 cm, con asa y cremallera."
       ],
       "colores": [
         {
           "handle": "neceser-blanco",
-          "nombre": "Blanco"
+          "nombre": "Crema"
         },
         {
           "handle": "neceser-rosa",
@@ -2768,37 +2761,37 @@ window.SAVIA_DATA = {
       "specs": {
         "peso": "~60 g",
         "natural": "No es natural: es duradero y reutilizable",
-        "fabricacion": "Polipiel (PU) con cremallera y asa superior. 20 × 14 × 11 cm. Se vende por unidad, a elegir color."
+        "fabricacion": "Exterior en polipiel, con cremallera y asa superior · 20 × 14 × 11 cm · Color rosa empolvado"
       },
       "handle": "neceser-rosa",
-      "title": "Neceser Rosa",
+      "title": "Neceser Savia de Alma · Rosa",
       "sku": "SDA-AC-NECESER-ROS",
       "type": "Accesorio",
       "collection": "accesorios",
       "collectionName": "Accesorios",
       "image": "assets/img/products/neceser-rosa.jpg",
       "lema": "Tu ritual, siempre contigo.",
-      "short": "Un neceser bonito y resistente para llevar tu rutina sólida a todas partes, durante años.",
-      "descripcion": "Este neceser no es de fibra natural, y preferimos decirlo claro: es de polipiel (PU), resistente al agua y muy fácil de limpiar. Lo hemos elegido porque dura y te acompaña en cada viaje, sustituyendo bolsas de plástico y botes de un solo uso. Dentro caben tus pastillas, cepillos y accesorios, bien recogidos.",
+      "short": "El neceser para tu rutina sólida: sin botes, sin derrames y sin minibotellas de usar y tirar.",
+      "descripcion": "Con los cosméticos sólidos no necesitas botes de plástico ni miniaturas de viaje: jabón, champú y cepillo caben aquí, sin riesgo de derrames. Este neceser en rosa empolvado, con asa y cremallera, está pensado para durar. Su exterior se limpia con un paño húmedo, así que lo usarás viaje tras viaje.",
       "indicado": "Para viajar, para el gimnasio o para tener el baño recogido.",
-      "modoUso": "Guarda dentro tus sólidos, cepillos y accesorios. Límpialo con un paño o una toallita húmeda.",
+      "modoUso": "Guarda tus sólidos en sus cajitas o jaboneras de viaje. Límpialo con un paño húmedo y déjalo secar abierto.",
+      "destacado": "♻️ Pensado para tus cosméticos sólidos: adiós a los botes de plástico y a las minibotellas de viaje.",
       "features": [
-        "Color rosa",
-        "Asa superior",
-        "Bolsillo frontal",
-        "Ligero y resistente",
-        "Tamaño de diario"
+        "Medidas: 20 × 14 × 11 cm",
+        "Exterior en polipiel",
+        "Cremallera y asa superior",
+        "Color rosa empolvado"
       ],
       "bullets": [
-        "TAMAÑO DE DIARIO: cabe lo que usas de verdad, no lo que crees que vas a usar.",
-        "ASA Y BOLSILLO: se coge con una mano y lo pequeño no se pierde dentro.",
-        "PERFECTO PARA SÓLIDOS: sin botes que se abran en la maleta.",
-        "LLEVA UN ESTAMPADO: el frontal viene con un diseño impreso; lo veras en la foto."
+        "ADIÓS A LAS MINIBOTELLAS: tu rutina sólida, lista para viajar sin plástico de usar y tirar.",
+        "SIN DERRAMES: los sólidos no gotean ni se abren en la maleta.",
+        "DURADERO Y FÁCIL DE LIMPIAR: un paño húmedo y como nuevo.",
+        "TAMAÑO PRÁCTICO: 20 × 14 × 11 cm, con asa y cremallera."
       ],
       "colores": [
         {
           "handle": "neceser-blanco",
-          "nombre": "Blanco"
+          "nombre": "Crema"
         },
         {
           "handle": "neceser-rosa",

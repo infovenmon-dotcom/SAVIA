@@ -337,23 +337,11 @@ function bloqueCross(slug) {
    otros productos concretos, mandan estos y no los de su categoria.
    La jabonera de acero tiene hueco para tres pastillas: el que la mira tiene
    que ver cuales tres. */
-/* La jabonera no vende un trio cerrado: vende tener tres jabones a mano.
-   Por eso se propone un momento (calma / despertar / limpieza a fondo) y
-   dentro de cada uno va rotando el jabon sugerido, para que no parezca un
-   lote fijo. Rota por dia, no al azar, para que no baile en cada recarga. */
-const TRIO_JABONERA = [
-  ['jabon-lavanda', 'jabon-karite', 'jabon-cbd'],
-  ['jabon-pepita-uva', 'jabon-naranja-canela'],
-  ['jabon-arbol-te', 'jabon-carbon-activo'],
-];
-function trioJabonera() {
-  const dia = Math.floor(Date.now() / 86400000);
-  return TRIO_JABONERA.map((grupo, i) => grupo[(dia + i) % grupo.length]);
-}
+/* La descripcion de la jabonera nombra estos tres jabones por su momento
+   (calma, energia y limpieza a fondo), asi que el carrusel ensena justo esos:
+   si rotara entre otros, el texto y las fotos se contradirian. */
 const COMBINA_PROD = {
-  // Los tres jabones del dia, y debajo la base de bambu que recoge el agua:
-  // es la pareja que sale en las fotos del producto.
-  'jabonera-metalica': () => trioJabonera().concat('jabonera-bambu'),
+  'jabonera-metalica': ['jabon-lavanda', 'jabon-pepita-uva', 'jabon-arbol-te'],
 };
 function relacionadosDe(p) {
   const def = COMBINA_PROD[p.handle];
@@ -486,6 +474,7 @@ function abrirFicha(handle) {
       <h2>${acc(p.title)}</h2>
       ${bloquePrecio(p, { grande: true })}
       ${(!_agotado && !p.proximamente) ? '<p class="ficha-envio">🚚 Envío en 24/48&nbsp;h · Gratis desde 20&nbsp;€</p>' : ''}
+      ${p.destacado ? `<p class="ficha-destacado">${acc(p.destacado)}</p>` : ''}
       <p class="ficha-desc">${acc(p.descripcion || p.short)}</p>
       ${sellosBlock}
       ${bulletsBlock}
@@ -493,6 +482,7 @@ function abrirFicha(handle) {
 
       ${p.indicado ? `<div class="ficha-bloque"><h4>✨ Para qué es bueno</h4><p>${acc(p.indicado)}</p></div>` : ''}
       ${p.modoUso ? `<div class="ficha-bloque"><h4>💧 Modo de uso</h4><p>${acc(p.modoUso)}</p></div>` : ''}
+      ${p.precauciones ? `<div class="ficha-bloque ficha-precauciones"><h4>⚠️ Precauciones</h4><p>${acc(p.precauciones)}</p></div>` : ''}
       ${features ? `<div class="ficha-bloque"><h4>🌿 Características</h4><ul class="ficha-features">${features}</ul></div>` : ''}
       ${specsBlock}
       ${reviewsBlock}

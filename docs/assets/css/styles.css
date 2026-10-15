@@ -382,6 +382,20 @@ img { max-width: 100%; display: block; }
 @keyframes graciasPop { from { transform: scale(.9); opacity: 0; } to { transform: scale(1); opacity: 1; } }
 
 /* ---------- Secciones ---------- */
+/* Destacado: la frase de sostenibilidad con emoji que abre cada ficha. */
+.ficha-destacado {
+  background: var(--beige);
+  border-left: 3px solid var(--dorado);
+  border-radius: 0 var(--radio-sm) var(--radio-sm) 0;
+  padding: 10px 14px;
+  margin: 0 0 14px;
+  font-size: .94rem;
+  line-height: 1.45;
+  color: var(--verde-oscuro);
+}
+/* Precauciones: avisos de seguridad, en tono sobrio y sin alarmar. */
+.ficha-precauciones p { font-size: .9rem; color: var(--texto-suave); }
+
 .seccion { padding: 48px 0; }
 
 /* Venta cruzada al final de cada categoria de la tienda. Va sobre beige y
