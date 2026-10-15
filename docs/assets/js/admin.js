@@ -447,9 +447,10 @@ function recalcularMargenes() {
     const precio = parseFloat(tr.querySelector('.f-precio').value);
     const coste = parseFloat(tr.querySelector('.f-coste').value);
     if (!isFinite(precio) || precio <= 0 || !isFinite(coste)) {
-      celda.textContent = '—';
+      // Decir que falta, no una raya muda: la duda tipica es por que no sale.
+      celda.innerHTML = `<span class="nota">falta ${!isFinite(coste) ? 'el coste' : 'el precio'}</span>`;
       celda.style.color = '#9a9a90';
-      celda.title = !isFinite(coste) ? 'Falta el coste interno' : 'Falta el precio';
+      celda.title = 'Escribe el coste y el margen aparece al momento, antes de guardar';
       return;
     }
     const pct = dc[tr.dataset.collection] || 0;
