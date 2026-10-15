@@ -475,6 +475,7 @@ function abrirFicha(handle) {
       ${bloquePrecio(p, { grande: true })}
       ${(!_agotado && !p.proximamente) ? '<p class="ficha-envio">🚚 Envío en 24/48&nbsp;h · Gratis desde 20&nbsp;€</p>' : ''}
       ${p.destacado ? `<p class="ficha-destacado">${acc(p.destacado)}</p>` : ''}
+      ${p.guia ? `<p class="ficha-guia"><a href="${p.guia.url}">${acc(p.guia.texto)}</a></p>` : ''}
       <p class="ficha-desc">${acc(p.descripcion || p.short)}</p>
       ${sellosBlock}
       ${bulletsBlock}

@@ -37,6 +37,10 @@
   line-height: 1.45;
   color: var(--verde-oscuro);
 }
+/* Enlace a una guia propia desde la ficha del producto que la regala. */
+.ficha-guia { margin: -6px 0 14px; font-size: .94rem; }
+.ficha-guia a { font-weight: 600; color: var(--verde-oscuro); text-decoration: underline; text-underline-offset: 3px; }
+.ficha-guia a::before { content: "📖 "; text-decoration: none; }
 .ficha-precauciones p { font-size: .9rem; color: var(--texto-suave); }
 .ficha-corta { margin-bottom: 18px; }
 .ficha-nota { font-size: .85rem; color: #8a6d1f; margin-top: 10px; }

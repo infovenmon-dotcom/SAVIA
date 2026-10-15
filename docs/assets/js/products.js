@@ -2674,6 +2674,10 @@ window.SAVIA_DATA = {
       "modoUso": "Baño: disuelve unos 215 g (aproximadamente la mitad de la bolsa) bajo el chorro del grifo, con el agua entre 37 y 39 °C. Sumérgete unos 20 minutos, una o dos veces por semana. Baño de pies: disuelve 2-3 cucharadas en un barreño con agua caliente y mete los pies 15-20 minutos. Después, aclárate con agua templada e hidrata la piel.",
       "destacado": "🎁 Incluye la guía «Ritual de Calma»: escanea el QR de la etiqueta y descárgate gratis tres rituales de baño.",
       "precauciones": "Uso tópico: no ingerir. Evita el contacto con los ojos; si ocurre, aclara con abundante agua. No usar sobre heridas o piel irritada. Mantener fuera del alcance de los niños. Conservar en lugar seco con la bolsa bien cerrada.",
+      "guia": {
+        "url": "/ritual-de-calma",
+        "texto": "Lee la guía Ritual de Calma: tres rituales de baño, gratis"
+      },
       "features": [
         "Contenido neto: 500 g ℮",
         "Ingredientes (INCI): Magnesium Sulfate",

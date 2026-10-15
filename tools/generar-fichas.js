@@ -11,7 +11,7 @@ const SITIO = 'https://saviadealma.com';
 
 /* Sello de version de los assets: al cambiar un .js o .css hay que
    subirlo, o los navegadores siguen sirviendo la copia en cache. */
-const V = '20261015-4';
+const V = '20261015-5';
 
 /* --- cargar el catalogo sin navegador --- */
 const src = fs.readFileSync(path.join(RAIZ, 'assets/js/products.js'), 'utf8');
@@ -68,6 +68,7 @@ const PIE = `  <footer class="pie">
         <a href="/index.html">Inicio</a>
         <a href="/tienda.html">Tienda</a>
         <a href="/index.html#contacto">Contacto</a>
+        <a href="/ritual-de-calma">Guía Ritual de Calma</a>
       </nav>
       <nav class="pie-col">
         <h4>Legales</h4>
@@ -218,6 +219,7 @@ ${CABECERA}
         <h1>${esc(p.title)}</h1>
         ${p.lema ? `<p class="ficha-lema">${esc(p.lema)}</p>` : ''}
         ${p.destacado ? `<p class="ficha-destacado">${esc(p.destacado)}</p>` : ''}
+        ${p.guia ? `<p class="ficha-guia"><a href="${esc(p.guia.url)}">${esc(p.guia.texto)}</a></p>` : ''}
         ${conPrecio
           ? `<p class="ficha-precio">${Number(p.price).toFixed(2).replace('.', ',')} €</p>`
           : '<p class="ficha-precio ficha-sin-precio">Precio por confirmar</p>'}
@@ -303,7 +305,8 @@ for (const p of PRODUCTOS) {
 
 /* --- sitemap: paginas fijas + una por producto --- */
 const FIJAS = ['/', '/tienda.html', '/envios.html', '/devoluciones.html',
-  '/condiciones-venta.html', '/aviso-legal.html', '/privacidad.html', '/accesibilidad.html'];
+  '/condiciones-venta.html', '/aviso-legal.html', '/privacidad.html', '/accesibilidad.html',
+  '/ritual-de-calma'];
 const hoy = new Date().toISOString().slice(0, 10);
 const urls = [
   ...FIJAS.map(u => ({ loc: SITIO + u, pri: u === '/' ? '1.0' : '0.6' })),
