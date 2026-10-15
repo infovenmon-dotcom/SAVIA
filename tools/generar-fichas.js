@@ -11,7 +11,7 @@ const SITIO = 'https://saviadealma.com';
 
 /* Sello de version de los assets: al cambiar un .js o .css hay que
    subirlo, o los navegadores siguen sirviendo la copia en cache. */
-const V = '20261015-3';
+const V = '20261015-4';
 
 /* --- cargar el catalogo sin navegador --- */
 const src = fs.readFileSync(path.join(RAIZ, 'assets/js/products.js'), 'utf8');
@@ -303,7 +303,8 @@ for (const p of PRODUCTOS) {
 
 /* --- sitemap: paginas fijas + una por producto --- */
 const FIJAS = ['/', '/tienda.html', '/envios.html', '/devoluciones.html',
-  '/condiciones-venta.html', '/aviso-legal.html', '/privacidad.html', '/accesibilidad.html'];
+  '/condiciones-venta.html', '/aviso-legal.html', '/privacidad.html', '/accesibilidad.html',
+  '/ritual-de-calma/'];
 const hoy = new Date().toISOString().slice(0, 10);
 const urls = [
   ...FIJAS.map(u => ({ loc: SITIO + u, pri: u === '/' ? '1.0' : '0.6' })),
