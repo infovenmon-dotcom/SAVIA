@@ -47,7 +47,7 @@ window.SAVIA_DATA = {
     {
       "slug": "accesorios",
       "name": "Accesorios",
-      "count": 14,
+      "count": 15,
       "exclusiveWeb": true
     },
     {
@@ -2808,6 +2808,55 @@ window.SAVIA_DATA = {
           "nombre": "Rosa"
         }
       ]
+    },
+    {
+      "emoji": "💄",
+      "exclusiveWeb": true,
+      "bestSeller": false,
+      "tags": [
+        "neceser",
+        "organizador",
+        "espejo",
+        "viaje",
+        "accesorio"
+      ],
+      "images": [
+        "assets/img/products/neceser-organizador-espejo.jpg"
+      ],
+      "specs": {
+        "peso": "~230 g",
+        "natural": "No es natural: es duradero y reutilizable",
+        "fabricacion": "Exterior en polipiel con forro de poliéster · Separadores ajustables · Espejo en la tapa · Cremallera y asa · 22,5 × 10,5 × 11 cm"
+      },
+      "handle": "neceser-organizador-espejo",
+      "title": "Neceser Organizador con Espejo · Rosa",
+      "price": 12.99,
+      "sku": "SDA-AC-NECESER-ORG",
+      "type": "Accesorio",
+      "collection": "accesorios",
+      "collectionName": "Accesorios",
+      "image": "assets/img/products/neceser-organizador-espejo.jpg",
+      "lema": "Tu ritual, siempre contigo.",
+      "short": "Tu rutina sólida ordenada y lista para viajar, con espejo en la tapa.",
+      "destacado": "♻️ Reutilizable y pensado para tu rutina sólida, sin botes ni miniaturas de plástico.",
+      "descripcion": "Pensado para quien ha cambiado los botes por cosméticos sólidos y lo quiere todo en su sitio. Sus separadores ajustables guardan cada pastilla, cepillo y accesorio por separado, y en la tapa tiene un espejo para retoques rápidos. Es duradero y se limpia fácilmente, para acompañarte viaje tras viaje.",
+      "indicado": "Para quien viaja a menudo y quiere llevar su rutina entera sin botes de viaje.",
+      "modoUso": "Coloca los separadores a tu medida y guarda tus productos en sus cajitas de viaje. Límpialo con un paño húmedo y déjalo secar abierto.",
+      "features": [
+        "Medidas: 22,5 × 10,5 × 11 cm",
+        "Exterior en polipiel",
+        "Forro interior",
+        "Separadores ajustables",
+        "Espejo en la tapa",
+        "Cremallera y asa"
+      ],
+      "bullets": [
+        "PARA TU RUTINA SÓLIDA: sin botes ni miniaturas de plástico.",
+        "TODO ORDENADO: separadores interiores ajustables.",
+        "ESPEJO INTEGRADO: en la tapa, para retoques donde estés.",
+        "DURADERO: se limpia con un paño húmedo."
+      ],
+      "proximamente": true
     },
     {
       "emoji": "🪒",
