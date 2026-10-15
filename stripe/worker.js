@@ -1644,6 +1644,8 @@ async function manejarSuscripcion(request, env, cors) {
   try { body = await request.json(); } catch { return jsonResp({ ok: false, error: 'json' }, 400, cors); }
   const email = String(body.email || '').trim().toLowerCase();
   if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)) return jsonResp({ ok: false, error: 'email' }, 400, cors);
+  // Origen del alta (ventana de regalo / formulario + red de procedencia), saneado.
+  const origen = String(body.origen || 'Formulario de la portada').replace(/[^\p{L}\p{N} ·.\-]/gu, '').slice(0, 40) || 'Formulario de la portada';
 
   // Guardar el lead + índice de suscriptor (sub:<email>). Si volvía a apuntarse
   // tras darse de baja, se reactiva. Detectamos si YA recibió el regalo.
@@ -1651,12 +1653,12 @@ async function manejarSuscripcion(request, env, cors) {
   try {
     if (env.SAVIA_KV) {
       const ts = Math.floor(Date.now() / 1000);
-      await env.SAVIA_KV.put('lead:' + ts + ':' + email, JSON.stringify({ email, ts }));
+      await env.SAVIA_KV.put('lead:' + ts + ':' + email, JSON.stringify({ email, ts, origen }));
       await env.SAVIA_KV.put('sub:' + email, '1');
       await env.SAVIA_KV.delete('unsub:' + email);
       // Alta en Brevo (lista newsletter) para los flujos automáticos. No bloquea
       // la suscripción si Brevo falla: el lead ya queda guardado en KV.
-      await sincronizarBrevo(env, email, { FUENTE: 'web-newsletter' });
+      await sincronizarBrevo(env, email, { FUENTE: 'web-newsletter · ' + origen });
       yaRegalo = await env.SAVIA_KV.get('regalo:' + email);
       if (yaRegalo) {
         const up = await env.SAVIA_KV.get('ultimopedido:' + email);
@@ -2379,6 +2381,7 @@ async function manejarNewsletter(request, env, cors) {
   if (accion === 'suscriptores') {
     if (!env.SAVIA_KV) return jsonResp({ total: 0, suscriptores: [] }, 200, cors);
     const map = new Map(); // email -> ts (fecha de alta más reciente)
+    const keyDe = new Map(); // email -> clave KV de esa alta (para leer el origen)
     let cursor;
     for (let i = 0; i < 50; i++) {
       const res = await env.SAVIA_KV.list({ prefix: 'lead:', cursor });
@@ -2386,14 +2389,17 @@ async function manejarNewsletter(request, env, cors) {
         const parts = k.name.split(':');            // lead : <ts> : <email>
         const ts = Number(parts[1]) || 0;
         const email = parts.slice(2).join(':').toLowerCase();
-        if (email && (!map.has(email) || ts > map.get(email))) map.set(email, ts);
+        if (email && (!map.has(email) || ts > map.get(email))) { map.set(email, ts); keyDe.set(email, k.name); }
       }
       if (res.list_complete) break;
       cursor = res.cursor;
     }
     const suscriptores = [];
     for (const [email, ts] of map) {
-      if (!(await env.SAVIA_KV.get('unsub:' + email))) suscriptores.push({ email, ts });
+      if (await env.SAVIA_KV.get('unsub:' + email)) continue;
+      let origen = 'Formulario de la portada';
+      try { const v = JSON.parse((await env.SAVIA_KV.get(keyDe.get(email))) || '{}'); if (v.origen) origen = v.origen; } catch { /* lead antiguo */ }
+      suscriptores.push({ email, ts, origen });
     }
     suscriptores.sort((a, b) => b.ts - a.ts);       // más recientes primero
     return jsonResp({ total: suscriptores.length, suscriptores }, 200, cors);

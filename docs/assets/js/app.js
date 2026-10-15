@@ -249,7 +249,7 @@ function suscribirNewsletter(e) {
     fetch(ep + '/subscribe', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ email }),
+      body: JSON.stringify({ email, origen: 'Formulario · ' + (typeof window.saviaOrigen === 'function' ? window.saviaOrigen() : 'directo') }),
     }).catch(() => { /* sin conexión: no molestamos al usuario */ });
   }
   return false;
