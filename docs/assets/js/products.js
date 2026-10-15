@@ -2278,8 +2278,8 @@ window.SAVIA_DATA = {
       ],
       "specs": {
         "peso": "~18 g",
-        "natural": "Mango de bambu",
-        "fabricacion": "Mango de bambu natural. Cerdas de nylon suave. Se vende por unidad. Cambio recomendado cada 3 meses."
+        "natural": "Mango de bambú natural",
+        "fabricacion": "Bambú; cerdas de nailon suave (beige o carbón). Tamaño adulto estándar. Se vende por unidad."
       },
       "handle": "cepillo-dientes-bambu",
       "title": "Cepillo de Dientes de Bambú · Unidad",
@@ -2289,10 +2289,10 @@ window.SAVIA_DATA = {
       "collectionName": "Accesorios",
       "image": "assets/img/products/cepillo-dientes-bambu.jpg",
       "lema": "El gesto más pequeño del día, también sin plástico.",
-      "short": "Unidad. Mango de bambu, cerdas suaves, sin plástico en el mango, vegano",
-      "descripcion": "Mango de bambu natural que sustituye al plástico en uno de los gestos que repites tres veces al día. Cerdas suaves, comodas para encias sensibles.",
+      "short": "Mango de bambú natural y biodegradable para cambiar uno de los plásticos que más usamos cada día.",
+      "descripcion": "El cepillo de dientes es uno de los objetos de plástico que más tiramos a lo largo del año. Este lo cambia en lo más grande: el mango es de bambú, una planta de crecimiento muy rápido que no necesita replantarse y que es biodegradable. Las cerdas son de nailon suave, que hoy es lo que garantiza una limpieza higiénica. Cuando lo renueves, corta el cabezal y el mango puede ir al compost.",
       "indicado": "Para quien ya ha cambiado el champú y el jabón y quiere seguir por el baño.",
-      "modoUso": "Cepilla dos o tres veces al día. Enjuaga y deja secar de pie, al aire. Cambialo cada 3 meses.",
+      "modoUso": "Úsalo como tu cepillo habitual. Déjalo secar en vertical, al aire, y cámbialo cada 2-3 meses.",
       "features": [
         "Se vende por unidad",
         "Mango de bambu natural",
@@ -2327,8 +2327,8 @@ window.SAVIA_DATA = {
       ],
       "specs": {
         "peso": "~10 g",
-        "natural": "Raíz de konjac",
-        "fabricacion": "Esponja de raíz de konjac con nuez de nogal molida. 7,5 × 5,5 cm. Biodegradable. Vida útil de 6 a 8 semanas."
+        "natural": "Fibra vegetal de konjac y cáscara de nuez; biodegradable",
+        "fabricacion": "Konjac y cáscara de nuez molida, con cordón para colgar. Forma de gota, 7,5 × 5,5 cm. Se vende por unidad."
       },
       "handle": "esponja-konjac",
       "title": "Esponja Facial de Konjac · Unidad",
@@ -2338,10 +2338,10 @@ window.SAVIA_DATA = {
       "collectionName": "Accesorios",
       "image": "assets/img/products/esponja-konjac.jpg",
       "lema": "Limpia la cara sin que la cara se entere.",
-      "short": "Unidad. Raíz de konjac con nuez de nogal, forma de gota, 7,5 × 5,5 cm",
-      "descripcion": "Esponja de raíz de konjac con nuez de nogal molida. Seca está dura como una piedra; al mojarla se vuelve blanda como una nube y limpia la piel sin arrastrarla. Cada esponja dura entre 6 y 8 semanas.",
+      "short": "Esponja 100 % vegetal de raíz de konjac con cáscara de nuez: limpieza suave y biodegradable.",
+      "descripcion": "De todos los accesorios, es el más natural. Está hecha con la fibra de la raíz de konjac y lleva cáscara de nuez molida, que le da un toque exfoliante suave. Seca es firme; al mojarla se vuelve blanda y elástica. Úsala sola o con tu limpiador facial sólido. Al terminar su vida útil es biodegradable.",
       "indicado": "Ideal para pieles sensibles y para quien quiere limpiar a diario sin resecar.",
-      "modoUso": "Moja la esponja hasta que se ablande. Masajea el rostro en circulos, con o sin limpiador. Aclara, escurre sin retorcer y cuelga a secar.",
+      "modoUso": "Remójala en agua templada hasta que se ablande, escúrrela sin retorcer y masajea el rostro con movimientos circulares. Cuélgala para que se seque y cámbiala cada 6-8 semanas.",
       "features": [
         "Se vende por unidad",
         "Raíz de konjac natural",
@@ -2376,8 +2376,8 @@ window.SAVIA_DATA = {
       ],
       "specs": {
         "peso": "~110 g el set",
-        "natural": "",
-        "fabricacion": "Set de tres piezas: cepillo con cerdas suaves, gua sha de borde liso y varita para el contorno de ojos. Las piezas en tono ámbar son ligeras: no se rompen si se caen."
+        "natural": "Un ritual de masaje manual, sin pilas ni electricidad",
+        "fabricacion": "Resina en tono ámbar (gua sha y varilla) y cepillo con base efecto madera y cerdas de nailon. Gua sha 9 cm, varilla 12 cm, cepillo 8 × 7 cm."
       },
       "handle": "set-contorno-facial",
       "title": "Set Contorno Facial · 3 piezas",
@@ -2387,10 +2387,10 @@ window.SAVIA_DATA = {
       "collectionName": "Accesorios",
       "image": "assets/img/products/set-contorno-facial.jpg",
       "lema": "Tres gestos, cinco minutos, y se nota.",
-      "short": "Cepillo de cerdas suaves, gua sha de borde liso y varita de ojos. Para cara y cuello",
-      "descripcion": "Tres piezas para un ritual completo de cara y cuello: el cepillo de cerdas suaves prepara la piel, la gua sha recorre el óvalo y la mandíbula, y la varita pequeña llega al contorno de ojos.",
+      "short": "Cepillo, gua sha y varilla de ojos: tu ritual completo de masaje facial en 5 minutos.",
+      "descripcion": "Tres herramientas que se complementan para un masaje facial completo. El cepillo de cerdas suaves prepara y activa la piel. El gua sha, una técnica tradicional de masaje que consiste en deslizar una pieza de borde liso sobre el rostro, trabaja mejillas, mandíbula y cuello. La varilla fina llega al contorno de ojos. Las piezas en tono ámbar son de resina: ligeras y no se rompen si se caen, como pasaría con una piedra.",
       "indicado": "Para quien quiere sacar más partido a lo que ya se aplica en la cara.",
-      "modoUso": "Siempre sobre aceite o crema, nunca en seco. 1) Prepara con el cepillo. 2) Recorre el óvalo con la gua sha, del centro hacia afuera. 3) Termina el contorno de ojos con la varita, del lagrimal a la sien.",
+      "modoUso": "1) Cepillo, sobre la piel limpia y seca, del centro del rostro hacia fuera y del cuello hacia la clavícula. 2) Aplica unas gotas de aceite o tu crema para que el gua sha deslice sin tirar. 3) Gua sha, con el borde largo casi plano: barbilla a oreja, nariz a sien, entrecejo a sien, 3-5 pasadas por zona. 4) Varilla, con toques muy suaves del lagrimal a la sien. 5) Termina bajando por el cuello hacia la clavícula. Lava las piezas después de cada uso. No las uses sobre piel irritada.",
       "features": [
         "Tres piezas: cepillo, gua sha y varita de ojos",
         "Cepillo con cerdas suaves",
@@ -2473,8 +2473,8 @@ window.SAVIA_DATA = {
       ],
       "specs": {
         "peso": "~35 g",
-        "natural": "",
-        "fabricacion": "Cepillo de cerdas suaves con base curva en tono madera, 8 × 7 cm."
+        "natural": "Masaje manual, sin pilas ni electricidad",
+        "fabricacion": "Base efecto madera y cerdas de nailon suave. 8 × 7 cm. Se vende por unidad."
       },
       "handle": "cepillo-facial",
       "title": "Cepillo Facial de Limpieza · Unidad",
@@ -2484,10 +2484,10 @@ window.SAVIA_DATA = {
       "collectionName": "Accesorios",
       "image": "assets/img/products/cepillo-facial.jpg",
       "lema": "La cara también agradece un masaje.",
-      "short": "Unidad. Cerdas suaves y base curva en tono madera, 8 × 7 cm",
-      "descripcion": "Cepillo de cerdas suaves con base curva, pensada para adaptarse al óvalo de la cara. Se agarra con la palma, sin mango, y recorre mejilla, mandíbula y cuello con un gesto suave.",
+      "short": "Cepillo de cerdas suaves con forma curva para un masaje facial que relaja y despierta el rostro.",
+      "descripcion": "Su base curva se adapta a la mano y a los contornos de la cara, el cuello y el escote. Sus cerdas suaves permiten un cepillado en seco que activa la piel y deja una sensación de frescor, o repartir la espuma de tu limpiador facial. Sin pilas ni electricidad: solo tus manos.",
       "indicado": "Para la limpieza diaria del rostro, solo o con tu limpiador facial sólido.",
-      "modoUso": "Sobre la piel húmeda, apoya el cepillo en la palma y desliza desde el centro hacia afuera con movimientos suaves. Aclara y deja secar con las cerdas hacia abajo.",
+      "modoUso": "Con la piel limpia y seca: 1) Cuello, de abajo hacia la clavícula, 5-6 pasadas por lado. 2) Mandíbula, del centro de la barbilla hacia la oreja. 3) Mejillas, de la nariz hacia la sien. 4) Frente, del centro hacia las sienes. 5) Termina bajando por el lateral del cuello. Presión muy suave, 2-3 minutos. Lava las cerdas con agua y jabón y déjalo secar boca abajo. No lo uses sobre heridas o piel irritada.",
       "features": [
         "Se vende por unidad",
         "Cerdas suaves",
@@ -2520,8 +2520,8 @@ window.SAVIA_DATA = {
       ],
       "specs": {
         "peso": "~95 g",
-        "natural": "Madera natural",
-        "fabricacion": "Cepillo de madera natural de 24 × 8 cm, con púas de punta redondeada y orificio para colgar."
+        "natural": "Cuerpo y púas de madera natural",
+        "fabricacion": "Madera natural de 24 × 8 cm, con púas de punta redondeada, base acolchada y orificio para colgar."
       },
       "handle": "cepillo-pelo-madera",
       "title": "Cepillo de Pelo de Madera",
@@ -2531,10 +2531,10 @@ window.SAVIA_DATA = {
       "collectionName": "Accesorios",
       "image": "assets/img/products/cepillo-pelo-madera.jpg",
       "lema": "Desenreda sin tirones y sin electricidad estática.",
-      "short": "Madera natural, 24 × 8 cm, púas redondeadas, desenreda sin tirones, sin plástico",
-      "descripcion": "Cepillo de madera natural con púas de punta redondeada. Desenreda sin arrastrar y, al no ser de plástico, no carga el pelo de electricidad estática.",
+      "short": "Cuerpo y púas de madera natural: desenreda sin tirones y masajea el cuero cabelludo.",
+      "descripcion": "Un cepillo de madera natural con púas también de madera, redondeadas en la punta para no arañar el cuero cabelludo. La madera genera menos electricidad estática que el plástico, así que el pelo queda con menos encrespamiento. Ligero, duradero y el compañero ideal de tu champú sólido.",
       "indicado": "Para todo tipo de cabello, y especialmente si se te encrespa al cepillarlo.",
-      "modoUso": "Empieza por las puntas y ve subiendo poco a poco hacia la raíz. Nunca al reves.",
+      "modoUso": "Cepilla por mechones, de puntas a raíces. Retira el pelo después de cada uso. No lo sumerjas: límpialo con un paño húmedo.",
       "features": [
         "Madera natural",
         "24 × 8 cm",
@@ -2569,8 +2569,8 @@ window.SAVIA_DATA = {
       ],
       "specs": {
         "peso": "~250 g",
-        "natural": "",
-        "fabricacion": "Espejo plegable con luz LED de tres intensidades y aumento 2x."
+        "natural": "No es natural: es recargable, sin pilas desechables",
+        "fabricacion": "Marco de plástico, espejo de cristal y batería de litio de 300 mAh recargable por USB. Formato de bolsillo."
       },
       "handle": "espejo-led",
       "title": "Espejo de Bolsillo con Luz LED",
@@ -2580,10 +2580,10 @@ window.SAVIA_DATA = {
       "collectionName": "Accesorios",
       "image": "assets/img/products/espejo-led.jpg",
       "lema": "La luz buena, donde tu estes.",
-      "short": "Plegable, luz LED con tres intensidades, aumento 2x, cabe en el bolso",
-      "descripcion": "Espejo plegable con luz LED integrada y tres intensidades. Una cara normal y otra con aumento de 2x, para cuando el baño no acompaña.",
+      "short": "Espejo plegable de doble cara con luz LED recargable: sin pilas desechables.",
+      "descripcion": "Un espejo compacto con un aro de luz LED que regulas en 3 intensidades con un toque. Tiene dos caras: una normal y otra con aumento 2x para los detalles. Funciona con batería recargable por USB, así que no necesitas pilas de usar y tirar. Cerrado ocupa muy poco.",
       "indicado": "Para el bolso, para viajar y para cualquier sitio con mala luz.",
-      "modoUso": "Abrelo y pulsa el boton tactil para encender; vuelve a pulsar para cambiar de intensidad.",
+      "modoUso": "Toca el botón para encender y para cambiar la intensidad; mantenlo pulsado para apagar. Cárgalo por USB.",
       "features": [
         "Luz LED integrada",
         "Tres intensidades",
@@ -2616,8 +2616,8 @@ window.SAVIA_DATA = {
       ],
       "specs": {
         "peso": "~380 g el kit",
-        "natural": "",
-        "fabricacion": "Conjunto de tres piezas: soporte, bol y brocha. Jabón de afeitar no incluido."
+        "natural": "Sustituye la espuma en aerosol por una sólida; brocha sin pelo animal",
+        "fabricacion": "Conjunto de tres piezas: soporte, bol y brocha de cerdas sintéticas. Jabón de afeitar no incluido."
       },
       "handle": "kit-afeitado",
       "title": "Kit de Afeitado · Soporte, Bol y Brocha",
@@ -2627,10 +2627,10 @@ window.SAVIA_DATA = {
       "collectionName": "Accesorios",
       "image": "assets/img/products/kit-afeitado-basico.jpg",
       "lema": "Un ritual esencial, de forma natural.",
-      "short": "Soporte, bol y brocha. El jabón de afeitar se vende aparte",
-      "descripcion": "Soporte, bol y brocha en un conjunto. Monta la espuma en el bol, aplicala con la brocha y deja la brocha colgada en el soporte para que se seque bien. Si quieres el ritual entero, tenemos el kit con nuestro jabón de afeitar incluido.",
+      "short": "El afeitado clásico de toda la vida con tu espuma sólida, sin botes de aerosol.",
+      "descripcion": "Con la brocha montas la espuma en el bol a partir de nuestra espuma de afeitar sólida, sin aerosoles ni botes de plástico. Al aplicarla con movimientos circulares, la brocha levanta el vello y prepara la piel. Al terminar, la cuelgas en el soporte para que se seque y conserve su forma. Sus cerdas son sintéticas, sin pelo animal.",
       "indicado": "Para quien se afeita con jabón o espuma sólida y quiere hacerlo bien.",
-      "modoUso": "Moja la brocha en agua caliente, gira sobre el jabón hasta que cargue y emulsiona en el bol. Aplica en circulos. Enjuaga y cuelga la brocha boca abajo.",
+      "modoUso": "Humedece la brocha, frótala sobre la espuma sólida, monta la espuma en el bol, aplícala en círculos y aféitate. Aclárala y déjala colgada boca abajo en el soporte.",
       "features": [
         "Incluye soporte, bol y brocha",
         "El jabón de afeitar NO esta incluido",
@@ -2664,8 +2664,8 @@ window.SAVIA_DATA = {
       ],
       "specs": {
         "peso": "500 g",
-        "natural": "Sulfato de magnesio",
-        "fabricacion": "Envasado por Savia de Alma en bolsa kraft. Sulfato de magnesio 100 % puro."
+        "natural": "Mineral 100 % puro, sin nada añadido",
+        "fabricacion": "Sulfato de magnesio. 500 g en bolsa doypack de papel kraft con cierre zip."
       },
       "handle": "sales-epsom-500",
       "title": "Sales de Epsom · 500 g",
@@ -2676,10 +2676,10 @@ window.SAVIA_DATA = {
       "collectionName": "Sales de Epsom",
       "image": "assets/img/products/sales-epsom-500.jpg",
       "lema": "Ritual de calma, en media hora.",
-      "short": "Sulfato de magnesio 100 % puro, baño de pies o de cuerpo, 500 g",
-      "descripcion": "Sulfato de magnesio puro, sin perfume ni colorante. Se disuelve en agua caliente y convierte un rato en el baño en un ritual de calma.",
+      "short": "Sulfato de magnesio 100 % puro, sin perfumes ni aditivos, en bolsa doypack de kraft resellable.",
+      "descripcion": "Las sales de Epsom son un mineral, sulfato de magnesio en cristales, y un clásico para preparar un baño reconfortante al final del día. Las nuestras son 100 % puras, sin fragancias ni colorantes, de origen español. Vienen en una bolsa doypack de papel kraft que se mantiene de pie y se cierra con zip, para que se conserven secas.",
       "indicado": "Para baños de pies y para esos días en los que el cuerpo pide parar.",
-      "modoUso": "Disuelve 2-3 puñados (150-250 g) en agua caliente. Sumerge pies o cuerpo 15-20 minutos y aclara con agua templada. De 1 a 3 veces por semana.",
+      "modoUso": "En la bañera, unos 250 g en agua templada durante 15-20 minutos. Para un baño de pies, 2 cucharadas en un barreño. Solo uso externo. A partir de 14 años. Mantener fuera del alcance de los niños.",
       "features": [
         "Sulfato de magnesio 100 % puro",
         "Sin perfume ni colorante",
@@ -2711,8 +2711,8 @@ window.SAVIA_DATA = {
       ],
       "specs": {
         "peso": "~60 g",
-        "natural": "",
-        "fabricacion": "Neceser con asa superior y bolsillo frontal. Se vende por unidad."
+        "natural": "No es natural: es duradero y reutilizable",
+        "fabricacion": "Polipiel (PU) con cremallera y asa superior. 20 × 14 × 11 cm. Se vende por unidad, a elegir color."
       },
       "handle": "neceser-blanco",
       "title": "Neceser Blanco",
@@ -2722,10 +2722,10 @@ window.SAVIA_DATA = {
       "collectionName": "Accesorios",
       "image": "assets/img/products/neceser-blanco.jpg",
       "lema": "Tu ritual, siempre contigo.",
-      "short": "Neceser blanco, asa superior y bolsillo frontal, tamaño de diario",
-      "descripcion": "Neceser blanco de tamaño cómodo, con asa arriba y bolsillo frontal. Para llevar tus sólidos sin que se te pierdan por la maleta.",
+      "short": "Un neceser bonito y resistente para llevar tu rutina sólida a todas partes, durante años.",
+      "descripcion": "Este neceser no es de fibra natural, y preferimos decirlo claro: es de polipiel (PU), resistente al agua y muy fácil de limpiar. Lo hemos elegido porque dura y te acompaña en cada viaje, sustituyendo bolsas de plástico y botes de un solo uso. Dentro caben tus pastillas, cepillos y accesorios, bien recogidos.",
       "indicado": "Para viajar, para el gimnasio o para tener el baño recogido.",
-      "modoUso": "Guarda tus pastillas bien secas, mejor en una latita o jabonera, y listo.",
+      "modoUso": "Guarda dentro tus sólidos, cepillos y accesorios. Límpialo con un paño o una toallita húmeda.",
       "features": [
         "Color blanco",
         "Asa superior",
@@ -2767,8 +2767,8 @@ window.SAVIA_DATA = {
       ],
       "specs": {
         "peso": "~60 g",
-        "natural": "",
-        "fabricacion": "Neceser con asa superior y bolsillo frontal. Se vende por unidad."
+        "natural": "No es natural: es duradero y reutilizable",
+        "fabricacion": "Polipiel (PU) con cremallera y asa superior. 20 × 14 × 11 cm. Se vende por unidad, a elegir color."
       },
       "handle": "neceser-rosa",
       "title": "Neceser Rosa",
@@ -2778,10 +2778,10 @@ window.SAVIA_DATA = {
       "collectionName": "Accesorios",
       "image": "assets/img/products/neceser-rosa.jpg",
       "lema": "Tu ritual, siempre contigo.",
-      "short": "Neceser rosa, asa superior y bolsillo frontal, tamaño de diario",
-      "descripcion": "Neceser rosa de tamaño cómodo, con asa arriba y bolsillo frontal. Para llevar tus sólidos sin que se te pierdan por la maleta.",
+      "short": "Un neceser bonito y resistente para llevar tu rutina sólida a todas partes, durante años.",
+      "descripcion": "Este neceser no es de fibra natural, y preferimos decirlo claro: es de polipiel (PU), resistente al agua y muy fácil de limpiar. Lo hemos elegido porque dura y te acompaña en cada viaje, sustituyendo bolsas de plástico y botes de un solo uso. Dentro caben tus pastillas, cepillos y accesorios, bien recogidos.",
       "indicado": "Para viajar, para el gimnasio o para tener el baño recogido.",
-      "modoUso": "Guarda tus pastillas bien secas, mejor en una latita o jabonera, y listo.",
+      "modoUso": "Guarda dentro tus sólidos, cepillos y accesorios. Límpialo con un paño o una toallita húmeda.",
       "features": [
         "Color rosa",
         "Asa superior",
