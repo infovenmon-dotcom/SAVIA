@@ -2306,8 +2306,7 @@ window.SAVIA_DATA = {
         "MENOS PLÁSTICO: sustituye el mango de plástico de tu cepillo habitual.",
         "CERDAS SUAVES: limpieza cuidadosa para el día a día.",
         "LIGERO Y AGRADABLE: cálido al tacto y cómodo de sujetar."
-      ],
-      "proximamente": true
+      ]
     },
     {
       "emoji": "🧽",
@@ -2453,8 +2452,7 @@ window.SAVIA_DATA = {
         "TUS JABONES DURAN MÁS: se secan entre usos y no se deshacen.",
         "TRES JABONES, TRES MOMENTOS: calma, energía y limpieza profunda.",
         "ELIGE CADA DÍA: el jabón que te pide el cuerpo."
-      ],
-      "proximamente": true
+      ]
     },
     {
       "emoji": "🪮",
@@ -2549,8 +2547,7 @@ window.SAVIA_DATA = {
         "MENOS ESTÁTICA: menos encrespamiento que con un cepillo de plástico.",
         "PÚAS REDONDEADAS: masaje suave del cuero cabelludo.",
         "PARA MUCHOS AÑOS: duradero y fácil de cuidar."
-      ],
-      "proximamente": true
+      ]
     },
     {
       "emoji": "💡",
@@ -2597,8 +2594,7 @@ window.SAVIA_DATA = {
         "LUZ LED DE BAJO CONSUMO: tres intensidades.",
         "DOBLE CARA: normal y aumento 2x.",
         "PLEGABLE: protege el espejo y cabe en cualquier bolso."
-      ],
-      "proximamente": true
+      ]
     },
     {
       "emoji": "🪒",
@@ -2644,8 +2640,7 @@ window.SAVIA_DATA = {
         "CERÁMICA DURADERA: bol y soporte para años.",
         "SIN ORIGEN ANIMAL: cerdas sintéticas suaves.",
         "KIT COMPLETO: brocha, bol y soporte."
-      ],
-      "proximamente": true
+      ]
     },
     {
       "emoji": "🛁",
@@ -2670,7 +2665,6 @@ window.SAVIA_DATA = {
       "handle": "sales-epsom-500",
       "title": "Sales de Epsom · 500 g · Ritual de Calma",
       "price": 8.99,
-      "proximamente": true,
       "sku": "SDA-SE-500",
       "type": "Sales de baño",
       "collection": "sales-epsom",
@@ -2757,8 +2751,7 @@ window.SAVIA_DATA = {
           "handle": "neceser-rosa",
           "nombre": "Rosa"
         }
-      ],
-      "proximamente": true
+      ]
     },
     {
       "emoji": "👜",
@@ -2814,8 +2807,7 @@ window.SAVIA_DATA = {
           "handle": "neceser-rosa",
           "nombre": "Rosa"
         }
-      ],
-      "proximamente": true
+      ]
     },
     {
       "emoji": "🪒",
