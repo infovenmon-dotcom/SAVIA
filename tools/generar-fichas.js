@@ -303,8 +303,7 @@ for (const p of PRODUCTOS) {
 
 /* --- sitemap: paginas fijas + una por producto --- */
 const FIJAS = ['/', '/tienda.html', '/envios.html', '/devoluciones.html',
-  '/condiciones-venta.html', '/aviso-legal.html', '/privacidad.html', '/accesibilidad.html',
-  '/ritual-de-calma/'];
+  '/condiciones-venta.html', '/aviso-legal.html', '/privacidad.html', '/accesibilidad.html'];
 const hoy = new Date().toISOString().slice(0, 10);
 const urls = [
   ...FIJAS.map(u => ({ loc: SITIO + u, pri: u === '/' ? '1.0' : '0.6' })),
