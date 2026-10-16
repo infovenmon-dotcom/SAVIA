@@ -1505,6 +1505,8 @@ html.motion-ready .reveal { transition: none; }
 }
 .contacto-form button { justify-self: center; min-width: 220px; margin-top: 4px; }
 .contacto-ok { color: var(--verde-oscuro); font-weight: 600; }
+.contacto-error { color: #a33; font-weight: 600; margin-top: 10px; }
+.contacto-error a { color: inherit; }
 .contacto-alt { color: var(--texto-suave); font-size: .9rem; margin-top: 16px; }
 .contacto-alt a { color: var(--verde-oscuro); text-decoration: underline; }
 

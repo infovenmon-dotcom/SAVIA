@@ -192,14 +192,49 @@ function suscribirNewsletter(e) {
   return false;
 }
 
-/* Formulario de contacto. Sin backend muestra confirmacion; para recibir los
-   mensajes de verdad, conecta el form a Formspree/Brevo (action + method POST). */
+/* Formulario de contacto: lo manda al Worker (/contacto), que avisa por email
+   a info@saviadealma.com (con "Responder a" = el cliente) y guarda una copia.
+   Solo se da las gracias si el Worker confirma; si falla, se dice al cliente
+   y se le ofrece el email directo, para que ninguna consulta se pierda. */
 function enviarContacto(e) {
   e.preventDefault();
   const f = e.target;
   const ok = document.getElementById('contacto-ok');
-  if (f) f.style.display = 'none';
-  if (ok) ok.hidden = false;
+  const err = document.getElementById('contacto-error');
+  const btn = f.querySelector('button[type="submit"]');
+  const ep = ((window.SAVIA_CONFIG || {}).checkoutEndpoint || '').trim().replace(/\/+$/, '');
+  const datos = {
+    nombre: (f.nombre.value || '').trim(),
+    email: (f.email.value || '').trim(),
+    mensaje: (f.mensaje.value || '').trim(),
+    web: f.web ? f.web.value : '',
+  };
+  const fallo = (txt) => {
+    if (btn) { btn.disabled = false; btn.textContent = 'Enviar consulta'; }
+    if (err) {
+      err.innerHTML = txt + ' Si lo prefieres, escríbenos a <a href="mailto:info@saviadealma.com">info@saviadealma.com</a>.';
+      err.hidden = false;
+    }
+  };
+  if (err) err.hidden = true;
+  if (!ep) { fallo('No hemos podido enviar tu mensaje.'); return false; }
+  if (btn) { btn.disabled = true; btn.textContent = 'Enviando…'; }
+  fetch(ep + '/contacto', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(datos),
+  }).then(r => r.json().catch(() => ({})).then(j => ({ status: r.status, j })))
+    .then(({ status, j }) => {
+      if (j && j.ok) {
+        f.style.display = 'none';
+        if (ok) ok.hidden = false;
+        return;
+      }
+      if (status === 429) return fallo('Has enviado varios mensajes seguidos; inténtalo de nuevo en un rato.');
+      if (j && j.error === 'email') return fallo('Revisa tu correo electrónico: parece que no es válido.');
+      fallo('No hemos podido enviar tu mensaje.');
+    })
+    .catch(() => fallo('No hay conexión y no hemos podido enviar tu mensaje.'));
   return false;
 }
 

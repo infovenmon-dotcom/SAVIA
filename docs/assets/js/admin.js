@@ -41,12 +41,13 @@ async function entrar() {
 
 /* Cambiar entre pestañas */
 function mostrarTab(t) {
-  ['prod', 'envios', 'cuentas', 'beneficio', 'facturas', 'embudo'].forEach(x => {
+  ['prod', 'envios', 'cuentas', 'beneficio', 'facturas', 'embudo', 'mensajes'].forEach(x => {
     document.getElementById('tab-' + x).classList.toggle('oculto', x !== t);
     document.getElementById('tb-' + x).classList.toggle('activo', x === t);
   });
   if (t === 'envios') { manInit(); if (!ENVIOS.length) cargarEnvios(); }
   if (t === 'embudo' && !document.getElementById('em-desde').value) rangoEmbudo(7);
+  if (t === 'mensajes') cargarMensajes();
 }
 
 /* ---------- Facturas ---------- */
@@ -1150,4 +1151,33 @@ function pintarEmbudo(d) {
          <tbody>${errs.map(e => `<tr><td>${_escEm(e.dia)}</td><td>${_escEm(e.h)}</td><td>${e.m === 'movil' ? '📱' : '💻'}</td><td>${_escEm(e.c)}${e.d ? ' · ' + _escEm(e.d) : ''}</td><td>${_escEm(e.p)}</td></tr>`).join('')}</tbody>
        </table>`
     : '<p class="nota">Sin errores al abrir el pago en estas fechas.</p>';
+}
+
+
+/* ---------- Mensajes del formulario de contacto ---------- */
+async function cargarMensajes() {
+  const msg = document.getElementById('msj-msg');
+  const caja = document.getElementById('msj-lista');
+  _msg(msg, 'Cargando…', '');
+  try {
+    const r = await fetch(_base() + '/admin/contactos', {
+      method: 'POST', headers: { 'Authorization': 'Bearer ' + PASS },
+    });
+    if (r.status === 401) { _msg(msg, 'Contraseña incorrecta.', 'err'); return; }
+    if (!r.ok) throw new Error('HTTP ' + r.status);
+    const { mensajes = [] } = await r.json();
+    _msg(msg, mensajes.length ? mensajes.length + ' mensaje(s)' : '', 'ok');
+    const esc = t => String(t || '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+    caja.innerHTML = mensajes.length ? mensajes.map(m => `
+      <div style="border:1px solid #e5e0d5;border-radius:10px;padding:12px 14px;margin-bottom:10px;background:#fff">
+        <div style="display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;font-size:.85rem">
+          <strong>${esc(m.nombre)}</strong>
+          <span style="color:#888">${new Date((m.ts || 0) * 1000).toLocaleString('es-ES')}</span>
+        </div>
+        <a href="mailto:${esc(m.email)}?subject=${encodeURIComponent('Re: tu consulta a Savia de Alma')}" style="font-size:.85rem">${esc(m.email)}</a>
+        <p style="white-space:pre-wrap;margin:8px 0 0">${esc(m.mensaje)}</p>
+      </div>`).join('') : '<p class="nota">Todavía no hay mensajes.</p>';
+  } catch (e) {
+    _msg(msg, 'No se han podido cargar: ' + e.message, 'err');
+  }
 }

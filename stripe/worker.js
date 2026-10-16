@@ -2496,6 +2496,77 @@ async function manejarEmbudo(request, env, cors) {
   return jsonResp({ pasos: PASOS_EMBUDO, totales, porDia, errores: errores.slice(0, 100) }, 200, cors);
 }
 
+/* ---------- Formulario de contacto (público) ----------
+   Recibe { nombre, email, mensaje, web } desde la portada. "web" es un campo
+   trampa invisible: si viene relleno es un bot y se ignora sin avisar.
+   Guarda una copia en KV (contacto:<ts>:<id>, 1 año) por si el email fallara
+   y manda el aviso a ORDER_EMAIL_TO con "Responder a" = el cliente.
+   Límite: 5 mensajes por IP y hora. */
+const CONTACTO_MAX_HORA = 5;
+function _escHtml(t) {
+  return String(t).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+}
+async function manejarContacto(request, env, cors) {
+  let body;
+  try { body = await request.json(); } catch { return jsonResp({ ok: false, error: 'json' }, 400, cors); }
+  if (String(body.web || '').trim()) return jsonResp({ ok: true }, 200, cors); // bot
+  const nombre = String(body.nombre || '').trim().slice(0, 80);
+  const email = String(body.email || '').trim().toLowerCase().slice(0, 120);
+  const mensaje = String(body.mensaje || '').trim().slice(0, 3000);
+  if (!nombre) return jsonResp({ ok: false, error: 'nombre' }, 400, cors);
+  if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)) return jsonResp({ ok: false, error: 'email' }, 400, cors);
+  if (mensaje.length < 3) return jsonResp({ ok: false, error: 'mensaje' }, 400, cors);
+
+  const ip = _ipCliente(request);
+  let guardado = false;
+  if (env.SAVIA_KV) {
+    const kIp = 'contactoip:' + ip;
+    const n = parseInt(await env.SAVIA_KV.get(kIp) || '0', 10) || 0;
+    if (n >= CONTACTO_MAX_HORA) return jsonResp({ ok: false, error: 'limite' }, 429, cors);
+    await env.SAVIA_KV.put(kIp, String(n + 1), { expirationTtl: 3600 });
+    const ts = Math.floor(Date.now() / 1000);
+    try {
+      await env.SAVIA_KV.put('contacto:' + ts + ':' + Math.random().toString(36).slice(2, 8),
+        JSON.stringify({ ts, nombre, email, mensaje }), { expirationTtl: 365 * 86400 });
+      guardado = true;
+    } catch (e) { console.error('contacto kv:', e); }
+  }
+
+  let enviado = false;
+  if (hayEmail(env)) {
+    const html =
+      `<div style="font-family:-apple-system,Segoe UI,Roboto,Arial,sans-serif;max-width:560px;margin:0 auto;color:#333">` +
+      `<h2 style="color:#6b7a4f;margin:0 0 12px">Nueva consulta desde la web</h2>` +
+      `<p style="margin:4px 0"><strong>Nombre:</strong> ${_escHtml(nombre)}</p>` +
+      `<p style="margin:4px 0"><strong>Email:</strong> <a href="mailto:${_escHtml(email)}">${_escHtml(email)}</a></p>` +
+      `<div style="margin:16px 0;padding:14px;background:#f6f3ec;border-radius:8px;white-space:pre-wrap">${_escHtml(mensaje)}</div>` +
+      `<p style="color:#888;font-size:13px">Pulsa «Responder» para contestar directamente al cliente.</p></div>`;
+    try {
+      const r = await enviarEmail(env, {
+        to: env.ORDER_EMAIL_TO, subject: '💬 Consulta web de ' + nombre, html, replyTo: email, fromName: 'Web Savia de Alma',
+      });
+      enviado = !!r.ok;
+      if (!r.ok) console.error('contacto email:', r.status, r.body);
+    } catch (e) { console.error('contacto email:', e); }
+  }
+  if (!enviado && !guardado) return jsonResp({ ok: false, error: 'envio' }, 502, cors);
+  return jsonResp({ ok: true }, 200, cors);
+}
+
+/* Lista de mensajes de contacto guardados (panel). */
+async function manejarContactosLista(request, env, cors) {
+  if (!_authAdmin(request, env)) return jsonResp({ error: 'no_autorizado' }, 401, cors);
+  if (!env.SAVIA_KV) return jsonResp({ mensajes: [] }, 200, cors);
+  const l = await env.SAVIA_KV.list({ prefix: 'contacto:', limit: 1000 });
+  const claves = l.keys.map(k => k.name).sort().reverse().slice(0, 100);
+  const mensajes = [];
+  for (const k of claves) {
+    const v = await env.SAVIA_KV.get(k);
+    if (v) { try { mensajes.push(JSON.parse(v)); } catch { /* */ } }
+  }
+  return jsonResp({ mensajes }, 200, cors);
+}
+
 export default {
   async fetch(request, env) {
     const allowed = env.ALLOWED_ORIGIN || '*';
@@ -2591,6 +2662,13 @@ export default {
       }
       if (path === '/chat' && request.method === 'POST') {
         return await manejarChat(request, env, cors);
+      }
+      // Formulario de contacto de la portada (público).
+      if (path === '/contacto' && request.method === 'POST') {
+        return await manejarContacto(request, env, cors);
+      }
+      if (path === '/admin/contactos' && request.method === 'POST') {
+        return await manejarContactosLista(request, env, cors);
       }
       // Alta en la newsletter (público). Envía email de bienvenida.
       if (path === '/subscribe' && request.method === 'POST') {
