@@ -2420,6 +2420,82 @@ async function manejarResetCliente(request, env, cors) {
   return jsonResp({ ok: true, email }, 200, cors);
 }
 
+/* ---------- Embudo de compra: contadores anónimos ----------
+   La web manda pasos sueltos (sin cookies ni datos personales) a POST /evento
+   y aquí se suman por día, paso y tipo de dispositivo en KV:
+     ev:<AAAA-MM-DD>:<paso>:<movil|pc>  -> número
+   Los errores del pago guardan además el motivo (sin datos del cliente):
+     everr:<AAAA-MM-DD>                 -> [{h, c, d, m, p}, ...] (máx. 60/día)
+   El panel los lee con POST /admin/embudo. */
+const PASOS_EMBUDO = ['visita', 'carrito_anadir', 'carrito_abrir', 'pago_iniciar',
+  'pago_redirigir', 'pago_error', 'pago_ok', 'pago_cancelado'];
+const TTL_EMBUDO = 60 * 60 * 24 * 180; // se borran solos a los 6 meses
+
+async function registrarEvento(request, env, cors) {
+  const vacio = new Response(null, { status: 204, headers: cors });
+  if (!env.SAVIA_KV) return vacio;
+  let b = {};
+  try { b = JSON.parse((await request.text()).slice(0, 2000)); } catch { return vacio; }
+  const paso = String(b.e || '');
+  if (!PASOS_EMBUDO.includes(paso)) return vacio;
+  const dia = new Date().toISOString().slice(0, 10);
+  const disp = b.m ? 'movil' : 'pc';
+  const k = 'ev:' + dia + ':' + paso + ':' + disp;
+  const n = (parseInt(await env.SAVIA_KV.get(k), 10) || 0) + 1;
+  await env.SAVIA_KV.put(k, String(n), { expirationTtl: TTL_EMBUDO });
+  if (paso === 'pago_error') {
+    const ke = 'everr:' + dia;
+    let lista = [];
+    try { lista = JSON.parse(await env.SAVIA_KV.get(ke)) || []; } catch { lista = []; }
+    if (lista.length < 60) {
+      lista.push({
+        h: new Date().toISOString().slice(11, 16),
+        c: String(b.c || '').slice(0, 40),
+        d: String(b.d || '').slice(0, 160),
+        m: disp,
+        p: String(b.p || '').slice(0, 80),
+      });
+      await env.SAVIA_KV.put(ke, JSON.stringify(lista), { expirationTtl: TTL_EMBUDO });
+    }
+  }
+  return vacio;
+}
+
+async function manejarEmbudo(request, env, cors) {
+  if (!_authAdmin(request, env)) return jsonResp({ error: 'no_autorizado' }, 401, cors);
+  let body = {}; try { body = await request.json(); } catch { /* */ }
+  const desde = String(body.desde || '').slice(0, 10);
+  const hasta = String(body.hasta || '').slice(0, 10);
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(desde) || !/^\d{4}-\d{2}-\d{2}$/.test(hasta)) {
+    return jsonResp({ error: 'Fechas no válidas' }, 400, cors);
+  }
+  const totales = {};
+  for (const p of PASOS_EMBUDO) totales[p] = { movil: 0, pc: 0 };
+  const porDia = {};
+  let cursor;
+  do {
+    const r = await env.SAVIA_KV.list({ prefix: 'ev:', cursor });
+    for (const { name } of r.keys) {
+      const [, dia, paso, disp] = name.split(':');
+      if (dia < desde || dia > hasta || !totales[paso]) continue;
+      const n = parseInt(await env.SAVIA_KV.get(name), 10) || 0;
+      totales[paso][disp] = (totales[paso][disp] || 0) + n;
+      porDia[dia] = porDia[dia] || {};
+      porDia[dia][paso] = (porDia[dia][paso] || 0) + n;
+    }
+    cursor = r.list_complete ? undefined : r.cursor;
+  } while (cursor);
+  const errores = [];
+  for (let t = Date.parse(hasta); t >= Date.parse(desde) && errores.length < 100; t -= 86400000) {
+    const dia = new Date(t).toISOString().slice(0, 10);
+    try {
+      const l = JSON.parse(await env.SAVIA_KV.get('everr:' + dia)) || [];
+      for (const e of l.reverse()) errores.push({ dia, ...e });
+    } catch { /* día sin errores */ }
+  }
+  return jsonResp({ pasos: PASOS_EMBUDO, totales, porDia, errores: errores.slice(0, 100) }, 200, cors);
+}
+
 export default {
   async fetch(request, env) {
     const allowed = env.ALLOWED_ORIGIN || '*';
@@ -2524,6 +2600,13 @@ export default {
       // Webhook de Stripe (baja el stock). Sin CORS (lo llama Stripe).
       if (path === '/webhook' && request.method === 'POST') {
         return await manejarWebhook(request, env);
+      }
+      // Embudo de compra: la web suma pasos anónimos (público, sin datos personales).
+      if (path === '/evento' && request.method === 'POST') {
+        return await registrarEvento(request, env, cors);
+      }
+      if (path === '/admin/embudo' && request.method === 'POST') {
+        return await manejarEmbudo(request, env, cors);
       }
       // Validar un código de descuento (lo escribe el cliente en el carrito).
       if (path === '/validar-codigo' && request.method === 'POST') {

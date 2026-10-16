@@ -11,7 +11,7 @@ const SITIO = 'https://saviadealma.com';
 
 /* Sello de version de los assets: al cambiar un .js o .css hay que
    subirlo, o los navegadores siguen sirviendo la copia en cache. */
-const V = '20261016-11';
+const V = '20261016-12';
 
 /* --- cargar el catalogo sin navegador --- */
 const src = fs.readFileSync(path.join(RAIZ, 'assets/js/products.js'), 'utf8');
@@ -114,7 +114,7 @@ const PIE = `  <footer class="pie">
   </script>
   <script src="/assets/js/config.js"></script>
   <script src="/assets/js/cart.js?v=${V}"></script>
-  <script src="/assets/js/checkout.js"></script>
+  <script src="/assets/js/checkout.js?v=${V}"></script>
   <script>
     /* La ficha no carga app.js (espera la rejilla de la tienda), asi que
        anade al carrito con la API de Carrito directamente. */

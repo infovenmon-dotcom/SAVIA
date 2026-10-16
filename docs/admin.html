@@ -7,7 +7,7 @@
   <title>Panel de control · Savia de Alma</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="assets/css/styles.css?v=20261016-11">
+  <link rel="stylesheet" href="assets/css/styles.css?v=20261016-12">
   <link rel="icon" href="assets/img/favicon.ico" sizes="any">
   <link rel="icon" type="image/png" sizes="32x32" href="assets/img/favicon-32.png">
   <link rel="apple-touch-icon" href="assets/img/apple-touch-icon.png">
@@ -68,6 +68,7 @@
         <button class="tab-btn" id="tb-cuentas" onclick="mostrarTab('cuentas')">📊 Cuentas</button>
         <button class="tab-btn" id="tb-beneficio" onclick="mostrarTab('beneficio')">💰 Beneficio</button>
         <button class="tab-btn" id="tb-facturas" onclick="mostrarTab('facturas')">🧾 Facturas</button>
+        <button class="tab-btn" id="tb-embudo" onclick="mostrarTab('embudo')">📈 Embudo</button>
       </div>
 
       <div id="tab-prod">
@@ -314,11 +315,28 @@
         <p class="nota" style="margin-top:10px">Factura simplificada (no certificada). Para facturación legal completa, usa una herramienta certificada cuando lo necesites.</p>
       </div>
       </div><!-- /tab-facturas -->
+      <div id="tab-embudo" class="oculto">
+      <div class="admin-caja" style="margin-top:0">
+        <h2 style="color:var(--verde-oscuro);font-size:1.2rem;margin:0 0 4px">📈 Embudo de compra</h2>
+        <p class="nota" style="margin-bottom:12px">Cuántos clientes pasan por cada paso, separado en móvil y ordenador, para ver dónde se quedan. Es anónimo: no usa cookies ni datos personales. Empieza a contar desde que se publica este cambio.</p>
+        <div class="fila-top">
+          <label style="display:flex;flex-direction:column;font-size:.8rem">Desde<input type="date" id="em-desde" style="width:160px"></label>
+          <label style="display:flex;flex-direction:column;font-size:.8rem">Hasta<input type="date" id="em-hasta" style="width:160px"></label>
+          <button class="btn btn-primario" onclick="cargarEmbudo()">Ver</button>
+          <button class="btn btn-secundario" onclick="rangoEmbudo(7)">Últimos 7 días</button>
+          <button class="btn btn-secundario" onclick="rangoEmbudo(30)">Últimos 30 días</button>
+          <span class="msg" id="em-msg"></span>
+        </div>
+        <div id="em-tabla" style="margin-top:14px"></div>
+        <div id="em-errores" style="margin-top:14px"></div>
+      </div>
+      </div><!-- /tab-embudo -->
+
     </div>
   </main>
 
   <script src="assets/js/config.js"></script>
-  <script src="assets/js/products.js?v=20261016-11"></script>
-  <script src="assets/js/admin.js?v=20261016-11"></script>
+  <script src="assets/js/products.js?v=20261016-12"></script>
+  <script src="assets/js/admin.js?v=20261016-12"></script>
 </body>
 </html>

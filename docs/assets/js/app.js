@@ -703,6 +703,7 @@ function gestionarRetornoPago() {
   const limpia = window.location.pathname + (params.toString() ? '?' + params.toString() : '') + window.location.hash;
   history.replaceState({}, '', limpia);
 
+  if (typeof saviaEvento === 'function') saviaEvento(pago === 'ok' ? 'pago_ok' : 'pago_cancelado');
   if (pago === 'ok') {
     if (window.Carrito) { Carrito.items = {}; Carrito.guardar(); Carrito.render(); }
     if (typeof cerrarCarrito === 'function') cerrarCarrito();

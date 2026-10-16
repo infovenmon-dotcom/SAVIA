@@ -43,6 +43,34 @@ function _precioCarrito(p) {
   return (typeof precioDe === 'function') ? precioDe(p) : p.price;
 }
 
+/* ---------- Medición del recorrido de compra (embudo) ----------
+   Cuenta pasos (visita, añadir al carrito, abrir el carrito, pulsar pagar,
+   errores del pago, compra hecha) para saber dónde se quedan los clientes.
+   Es anónimo: no usa cookies, ni identificadores, ni datos personales; solo
+   envía el nombre del paso, si es móvil u ordenador y la página. Los
+   contadores se ven en el panel /admin, pestaña "Embudo". */
+function saviaEvento(e, extra) {
+  try {
+    const ep = (window.SAVIA_CONFIG && (window.SAVIA_CONFIG.checkoutEndpoint || '').trim()) || '';
+    if (!ep) return;
+    const movil = !!(window.matchMedia && window.matchMedia('(max-width: 760px)').matches);
+    const body = JSON.stringify(Object.assign({ e: e, m: movil ? 1 : 0, p: location.pathname }, extra || {}));
+    const url = ep.replace(/\/+$/, '') + '/evento';
+    if (navigator.sendBeacon) navigator.sendBeacon(url, new Blob([body], { type: 'text/plain' }));
+    else fetch(url, { method: 'POST', body: body, keepalive: true, mode: 'no-cors' });
+  } catch (err) { /* medir nunca debe romper la tienda */ }
+}
+window.saviaEvento = saviaEvento;
+
+/* Una "visita" por sesión del navegador (no por página vista). */
+(function () {
+  try {
+    if (sessionStorage.getItem('savia_visita')) return;
+    sessionStorage.setItem('savia_visita', '1');
+  } catch (err) { /* sin sessionStorage: contamos igualmente */ }
+  saviaEvento('visita');
+})();
+
 const Carrito = {
   items: {}, // handle -> qty
   codigo: null, // { code, pct, amountOff } — código de descuento validado
@@ -54,7 +82,11 @@ const Carrito = {
     catch { this.codigo = null; }
   },
   guardar() {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(this.items));
+    // Con el almacenamiento bloqueado (Safari con cookies bloqueadas, algunos
+    // navegadores dentro de apps) setItem lanza un error y antes eso impedía
+    // añadir al carrito. La cesta sigue funcionando en esta página igualmente.
+    try { localStorage.setItem(STORAGE_KEY, JSON.stringify(this.items)); }
+    catch (err) { /* almacenamiento no disponible */ }
   },
   guardarCodigo() {
     try {
@@ -78,6 +110,7 @@ const Carrito = {
   },
   añadir(handle, n = 1) {
     if (n > 0 && !this.vendible(handle)) return;
+    if (n > 0) saviaEvento('carrito_anadir');
     this.items[handle] = (this.items[handle] || 0) + n;
     if (this.items[handle] <= 0) delete this.items[handle];
     this.guardar();
@@ -85,6 +118,7 @@ const Carrito = {
   },
   fijar(handle, n) {
     if (n > 0 && !this.vendible(handle)) return;
+    if (n > (this.items[handle] || 0)) saviaEvento('carrito_anadir');
     if (n <= 0) delete this.items[handle];
     else this.items[handle] = n;
     this.guardar();
@@ -439,6 +473,8 @@ function badgesPago() {
 
 /* ---------- Apertura / cierre ---------- */
 function abrirCarrito() {
+  const panel = document.getElementById('panel-carrito');
+  if (panel && !panel.classList.contains('abierto')) saviaEvento('carrito_abrir');
   document.getElementById('panel-carrito')?.classList.add('abierto');
   document.getElementById('overlay')?.classList.add('abierto');
 }

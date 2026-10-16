@@ -41,11 +41,12 @@ async function entrar() {
 
 /* Cambiar entre pestañas */
 function mostrarTab(t) {
-  ['prod', 'envios', 'cuentas', 'beneficio', 'facturas'].forEach(x => {
+  ['prod', 'envios', 'cuentas', 'beneficio', 'facturas', 'embudo'].forEach(x => {
     document.getElementById('tab-' + x).classList.toggle('oculto', x !== t);
     document.getElementById('tb-' + x).classList.toggle('activo', x === t);
   });
   if (t === 'envios') { manInit(); if (!ENVIOS.length) cargarEnvios(); }
+  if (t === 'embudo' && !document.getElementById('em-desde').value) rangoEmbudo(7);
 }
 
 /* ---------- Facturas ---------- */
@@ -1078,3 +1079,70 @@ window.copiarEnvio = copiarEnvio;
 window.guardarTracking = guardarTracking;
 window.exportarEnviosCSV = exportarEnviosCSV;
 window.crearEtiquetaCTT = crearEtiquetaCTT;
+
+
+/* ---------- Embudo de compra ---------- */
+const NOMBRES_EMBUDO = {
+  visita: 'Visitas (1 por sesión)',
+  carrito_anadir: 'Añaden algo al carrito',
+  carrito_abrir: 'Abren el carrito',
+  pago_iniciar: 'Pulsan «Finalizar compra»',
+  pago_redirigir: 'Llegan al pago de Stripe',
+  pago_error: 'Error al abrir el pago',
+  pago_cancelado: 'Vuelven sin pagar (cancelan en Stripe)',
+  pago_ok: 'Compra completada',
+};
+function _fechaISO(d) { return d.toISOString().slice(0, 10); }
+function rangoEmbudo(dias) {
+  const hoy = new Date();
+  const ini = new Date(hoy.getTime() - (dias - 1) * 86400000);
+  document.getElementById('em-desde').value = _fechaISO(ini);
+  document.getElementById('em-hasta').value = _fechaISO(hoy);
+  cargarEmbudo();
+}
+function _escEm(t) {
+  return String(t == null ? '' : t).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+}
+async function cargarEmbudo() {
+  const msg = document.getElementById('em-msg');
+  const desde = document.getElementById('em-desde').value;
+  const hasta = document.getElementById('em-hasta').value;
+  if (!desde || !hasta) { _msg(msg, 'Elige las dos fechas.', 'err'); return; }
+  _msg(msg, 'Cargando…', '');
+  try {
+    const r = await fetch(_base() + '/admin/embudo', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + PASS },
+      body: JSON.stringify({ desde, hasta }),
+    });
+    if (r.status === 401) { _msg(msg, 'Contraseña incorrecta.', 'err'); return; }
+    if (!r.ok) throw new Error('HTTP ' + r.status);
+    pintarEmbudo(await r.json());
+    _msg(msg, '', '');
+  } catch (e) {
+    _msg(msg, 'No se pudo cargar: ' + e.message, 'err');
+  }
+}
+function pintarEmbudo(d) {
+  const t = d.totales || {};
+  const base = (t.visita ? (t.visita.movil || 0) + (t.visita.pc || 0) : 0);
+  const filas = (d.pasos || Object.keys(NOMBRES_EMBUDO)).map(p => {
+    const m = (t[p] && t[p].movil) || 0, o = (t[p] && t[p].pc) || 0, tot = m + o;
+    const pct = base ? Math.round(tot * 1000 / base) / 10 + ' %' : '—';
+    const alerta = p === 'pago_error' && tot > 0 ? ' style="background:#fdecea"' : '';
+    return `<tr${alerta}><td>${_escEm(NOMBRES_EMBUDO[p] || p)}</td><td style="text-align:right">${m}</td><td style="text-align:right">${o}</td><td style="text-align:right"><strong>${tot}</strong></td><td style="text-align:right">${pct}</td></tr>`;
+  }).join('');
+  document.getElementById('em-tabla').innerHTML = `
+    <table class="tabla-admin" style="width:100%;border-collapse:collapse">
+      <thead><tr><th style="text-align:left">Paso</th><th style="text-align:right">📱 Móvil</th><th style="text-align:right">💻 Ordenador</th><th style="text-align:right">Total</th><th style="text-align:right">% de visitas</th></tr></thead>
+      <tbody>${filas}</tbody>
+    </table>`;
+  const errs = d.errores || [];
+  document.getElementById('em-errores').innerHTML = errs.length
+    ? `<h3 style="font-size:1rem;margin:0 0 6px">Errores al abrir el pago (últimos ${errs.length})</h3>
+       <table class="tabla-admin" style="width:100%;border-collapse:collapse;font-size:.85rem">
+         <thead><tr><th style="text-align:left">Día</th><th>Hora (UTC)</th><th>Dispositivo</th><th style="text-align:left">Motivo</th><th style="text-align:left">Página</th></tr></thead>
+         <tbody>${errs.map(e => `<tr><td>${_escEm(e.dia)}</td><td>${_escEm(e.h)}</td><td>${e.m === 'movil' ? '📱' : '💻'}</td><td>${_escEm(e.c)}${e.d ? ' · ' + _escEm(e.d) : ''}</td><td>${_escEm(e.p)}</td></tr>`).join('')}</tbody>
+       </table>`
+    : '<p class="nota">Sin errores al abrir el pago en estas fechas.</p>';
+}
