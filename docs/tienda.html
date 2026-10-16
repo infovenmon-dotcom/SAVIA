@@ -21,7 +21,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="assets/css/styles.css?v=20261016-12">
+  <link rel="stylesheet" href="assets/css/styles.css?v=20261016-13">
   <link rel="icon" href="assets/img/favicon.ico" sizes="any">
   <link rel="icon" type="image/png" sizes="32x32" href="assets/img/favicon-32.png">
   <link rel="apple-touch-icon" href="assets/img/apple-touch-icon.png">
@@ -65,8 +65,122 @@
     </div>
   </section>
 
-  <!-- Catalogo generado -->
-  <div id="catalogo"></div>
+  <!-- Catalogo generado. Lo de dentro es el indice estatico de productos que
+       escribe tools/generar-fichas.js para buscadores y navegadores sin
+       JavaScript; app.js lo sustituye por la rejilla al cargar. -->
+  <div id="catalogo"><!-- INDICE-PRODUCTOS:INICIO -->
+    <section class="seccion contenedor indice-coleccion">
+      <h2>Champús Sólidos</h2>
+      <ul>
+        <li><a href="/producto/champu-cafeina-canela/">Champú Sólido Cafeína y Canela</a></li>
+        <li><a href="/producto/champu-indigo-lavanda/">Champú Sólido Índigo y Lavanda</a></li>
+        <li><a href="/producto/champu-cacao/">Champú Sólido Cacao</a></li>
+        <li><a href="/producto/champu-betaina-sal/">Champú Sólido Betaína y Sal Marina</a></li>
+        <li><a href="/producto/champu-te-matcha/">Champú Sólido Te Matcha</a></li>
+        <li><a href="/producto/champu-cebolla-arcilla/">Champú Sólido Cebolla Roja y Arcilla</a></li>
+        <li><a href="/producto/champu-avena-almendra/">Champú Sólido Avena y Almendra</a></li>
+        <li><a href="/producto/champu-romero-quina/">Champú Sólido Romero y Quina</a></li>
+        <li><a href="/producto/champu-cade-enebro/">Champú Sólido Cade de Enebro</a></li>
+      </ul>
+    </section>
+    <section class="seccion contenedor indice-coleccion">
+      <h2>Jabones Artesanales</h2>
+      <ul>
+        <li><a href="/producto/jabon-cbd/">Jabón Artesanal CBD</a></li>
+        <li><a href="/producto/jabon-naranja-canela/">Jabón Artesanal Naranja y Canela</a></li>
+        <li><a href="/producto/jabon-borraja/">Jabón Artesanal de Borraja</a></li>
+        <li><a href="/producto/jabon-karite/">Jabón Artesanal de Karité</a></li>
+        <li><a href="/producto/jabon-arbol-te/">Jabón Artesanal Árbol de Te</a></li>
+        <li><a href="/producto/jabon-rosa-mosqueta/">Jabón Artesanal Rosa Mosqueta</a></li>
+        <li><a href="/producto/jabon-argan/">Jabón Artesanal de Argán</a></li>
+        <li><a href="/producto/jabon-monoi/">Jabón Artesanal de Monoi</a></li>
+        <li><a href="/producto/jabon-pepita-uva/">Jabón Artesanal Pepita de Uva</a></li>
+        <li><a href="/producto/jabon-carbon-activo/">Jabón Artesanal Carbón Activo</a></li>
+        <li><a href="/producto/jabon-azufre/">Jabón Artesanal de Azufre</a></li>
+        <li><a href="/producto/jabon-lavanda/">Jabón Artesanal de Lavanda</a></li>
+        <li><a href="/producto/jabon-aguacate/">Jabón Artesanal de Aguacate</a></li>
+        <li><a href="/producto/jabon-leche-cabra/">Jabón Artesanal de Leche de Cabra</a></li>
+        <li><a href="/producto/jabon-leche-burra-aloe/">Jabón Artesanal de Leche de Burra y Aloe</a></li>
+        <li><a href="/producto/jabon-aceite-arroz/">Jabón Artesanal de Arroz · Ritual K-Beauty</a></li>
+      </ul>
+    </section>
+    <section class="seccion contenedor indice-coleccion">
+      <h2>Desodorantes Sólidos</h2>
+      <ul>
+        <li><a href="/producto/desodorante-te-verde/">Desodorante Sólido Te Verde</a></li>
+        <li><a href="/producto/desodorante-pomelo/">Desodorante Sólido Pomelo</a></li>
+        <li><a href="/producto/desodorante-algodon/">Desodorante Sólido Algodón</a></li>
+        <li><a href="/producto/desodorante-madera/">Desodorante Sólido Madera</a></li>
+      </ul>
+    </section>
+    <section class="seccion contenedor indice-coleccion">
+      <h2>Limpiadores Faciales</h2>
+      <ul>
+        <li><a href="/producto/limpiador-facial-rosa-mosqueta/">Limpiador Facial Sólido Rosa Mosqueta</a></li>
+        <li><a href="/producto/limpiador-facial-aloe-pepino/">Limpiador Facial Sólido Aloe Vera y Pepino</a></li>
+      </ul>
+    </section>
+    <section class="seccion contenedor indice-coleccion">
+      <h2>Afeitado y Barba</h2>
+      <ul>
+        <li><a href="/producto/champu-barba-carbon/">Champú Sólido para Barba - Carbón Activo</a></li>
+        <li><a href="/producto/espuma-afeitar-avellana/">Espuma de Afeitar Sólida Aceite de Avellana</a></li>
+      </ul>
+    </section>
+    <section class="seccion contenedor indice-coleccion">
+      <h2>Depilación</h2>
+      <ul>
+        <li><a href="/producto/espuma-depilacion-uva/">Espuma Sólida Depilación Pepita de Uva</a></li>
+        <li><a href="/producto/espuma-depilacion-aloe/">Espuma Sólida Depilación Aloe Vera</a></li>
+      </ul>
+    </section>
+    <section class="seccion contenedor indice-coleccion">
+      <h2>Acondicionadores</h2>
+      <ul>
+        <li><a href="/producto/acondicionador-coco/">Acondicionador Sólido Coco</a></li>
+        <li><a href="/producto/acondicionador-almendra/">Acondicionador Sólido Aceite de Almendra</a></li>
+      </ul>
+    </section>
+    <section class="seccion contenedor indice-coleccion">
+      <h2>Accesorios</h2>
+      <ul>
+        <li><a href="/producto/jabonera-bambu/">Jabonera de Bambú</a></li>
+        <li><a href="/producto/jabonera-pequena/">Jabonera Pequeña de Bambú</a></li>
+        <li><a href="/producto/esponja-exfoliante/">Bolsa de Sisal Natural</a></li>
+        <li><a href="/producto/cepillo-dientes-bambu/">Cepillo de Dientes de Bambú · Unidad</a></li>
+        <li><a href="/producto/esponja-konjac/">Esponja Facial de Konjac con Nuez</a></li>
+        <li><a href="/producto/set-contorno-facial/">Set de Contorno Facial · Cepillo, Gua Sha y Varilla</a></li>
+        <li><a href="/producto/jabonera-metalica/">Jabonera Trío de Acero sobre Base de Bambú</a></li>
+        <li><a href="/producto/cepillo-facial/">Cepillo Linfático Facial</a></li>
+        <li><a href="/producto/cepillo-pelo-madera/">Cepillo de Pelo de Madera</a></li>
+        <li><a href="/producto/espejo-led/">Espejo de Bolsillo con Luz LED</a></li>
+        <li><a href="/producto/kit-afeitado/">Ritual de Afeitado · Brocha, Bol y Soporte</a></li>
+        <li><a href="/producto/neceser-blanco/">Neceser Savia de Alma · Crema</a></li>
+        <li><a href="/producto/neceser-rosa/">Neceser Savia de Alma · Rosa</a></li>
+        <li><a href="/producto/neceser-organizador-espejo/">Neceser Organizador con Espejo · Rosa</a></li>
+        <li><a href="/producto/kit-afeitado-completo/">Ritual de Afeitado Completo</a></li>
+      </ul>
+    </section>
+    <section class="seccion contenedor indice-coleccion">
+      <h2>Exfoliantes Sólidos</h2>
+      <ul>
+        <li><a href="/producto/exfoliante-cafe-coco/">Exfoliante Corporal Sólido Café y Coco</a></li>
+        <li><a href="/producto/exfoliante-zanahoria-lino/">Exfoliante Corporal Sólido Zanahoria y Lino</a></li>
+      </ul>
+    </section>
+    <section class="seccion contenedor indice-coleccion">
+      <h2>Ceras de Peinado</h2>
+      <ul>
+        <li><a href="/producto/cera-peinado/">Cera de Peinado Sólida Natural</a></li>
+      </ul>
+    </section>
+    <section class="seccion contenedor indice-coleccion">
+      <h2>Sales de Epsom</h2>
+      <ul>
+        <li><a href="/producto/sales-epsom-500/">Sales de Epsom · 500 g · Ritual de Calma</a></li>
+      </ul>
+    </section>
+  <!-- INDICE-PRODUCTOS:FIN --></div>
 
   <!-- Para regalar (o regalarte) -->
   <section class="seccion" style="padding:10px 0 40px">
@@ -135,13 +249,13 @@
     <div id="ficha-contenido"></div>
   </div>
 
-  <script src="assets/js/products.js?v=20261016-12"></script>
+  <script src="assets/js/products.js?v=20261016-13"></script>
   <script src="assets/js/reviews.js"></script>
   <script src="assets/js/config.js"></script>
-  <script src="assets/js/cart.js?v=20261016-12"></script>
-  <script src="assets/js/regalo-popup.js?v=20261016-12"></script>
-  <script src="assets/js/checkout.js?v=20261016-12"></script>
-  <script src="assets/js/app.js?v=20261016-12"></script>
+  <script src="assets/js/cart.js?v=20261016-13"></script>
+  <script src="assets/js/regalo-popup.js?v=20261016-13"></script>
+  <script src="assets/js/checkout.js?v=20261016-13"></script>
+  <script src="assets/js/app.js?v=20261016-13"></script>
   <!-- Analítica web (Cloudflare Web Analytics: sin cookies, sin banner de consentimiento).
        Pega tu token: Cloudflare → Analytics & Logs → Web Analytics → Add a site → copia el "token". -->
   <script defer src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "55b5e0bbafb34a94bc832c5a8500b78d"}'></script>

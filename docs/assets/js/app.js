@@ -168,12 +168,12 @@ function cardProducto(p, { compacta = false } = {}) {
 
   return `
     <article class="card${agotado ? ' es-agotado' : ''}" data-handle="${p.handle}" data-collection="${p.collection}">
-      <button class="card-img" onclick="abrirFicha('${p.handle}')" aria-label="Ver detalles de ${acc(p.title)}">
+      <a class="card-img" href="${urlFicha(p.handle)}" onclick="return clicFicha(event, '${p.handle}')" aria-label="Ver detalles de ${acc(p.title)}">
         ${etiqueta}
         <img src="${p.image}" alt="${acc(p.title)}" loading="lazy">
-      </button>
+      </a>
       <div class="card-cuerpo">
-        <h3>${acc(p.title)}</h3>
+        <h3><a class="card-titulo" href="${urlFicha(p.handle)}" onclick="return clicFicha(event, '${p.handle}')">${acc(p.title)}</a></h3>
         ${desc}
         ${bloquePrecio(p)}
         <div class="card-acciones">
@@ -356,6 +356,17 @@ function relacionadosDe(p) {
 }
 function _precioTxt(p) { return tienePrecio(p) ? precioDe(p).toFixed(2).replace('.', ',') + ' €' : ''; }
 
+/* Cada producto tiene su pagina propia (/producto/<handle>/), generada por
+   tools/generar-fichas.js. La rejilla enlaza a ella con un enlace normal,
+   para que Google la encuentre y se pueda abrir en otra pestana, pero un
+   clic normal sigue abriendo la vista rapida sin salir de la tienda. */
+function urlFicha(handle) { return '/producto/' + handle + '/'; }
+function clicFicha(ev, handle) {
+  if (ev && (ev.ctrlKey || ev.metaKey || ev.shiftKey || ev.altKey || ev.button === 1)) return true;
+  abrirFicha(handle);
+  return false;
+}
+
 function abrirFicha(handle) {
   const p = DATA.products.find(x => x.handle === handle);
   if (!p) return;
@@ -429,8 +440,8 @@ function abrirFicha(handle) {
         <div class="ficha-combina">
           ${rel.map(x => `
             <div class="combina-item">
-              <button class="combina-img" onclick="abrirFicha('${x.handle}')" aria-label="Ver ${acc(x.title)}"><img src="${(x.images && x.images[0]) || x.image}" alt="" loading="lazy"></button>
-              <button class="combina-nom" onclick="abrirFicha('${x.handle}')">${acc(x.title)}</button>
+              <a class="combina-img" href="${urlFicha(x.handle)}" onclick="return clicFicha(event, '${x.handle}')" aria-label="Ver ${acc(x.title)}"><img src="${(x.images && x.images[0]) || x.image}" alt="" loading="lazy"></a>
+              <a class="combina-nom" href="${urlFicha(x.handle)}" onclick="return clicFicha(event, '${x.handle}')">${acc(x.title)}</a>
               <div class="combina-precio">${_precioTxt(x)}</div>
               <button class="btn btn-secundario btn-sm" onclick="addToCart('${x.handle}')">Añadir</button>
             </div>`).join('')}
@@ -490,6 +501,7 @@ function abrirFicha(handle) {
       ${combinaBlock}
 
       ${p.lema ? `<p class="ficha-lema">${acc(p.lema)}</p>` : ''}
+      <p class="ficha-enlace"><a href="${urlFicha(p.handle)}">Ver la página completa del producto →</a></p>
     </div>`;
 
   document.getElementById('ficha-overlay')?.classList.add('abierto');

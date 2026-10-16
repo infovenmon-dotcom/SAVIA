@@ -11,7 +11,7 @@ const SITIO = 'https://saviadealma.com';
 
 /* Sello de version de los assets: al cambiar un .js o .css hay que
    subirlo, o los navegadores siguen sirviendo la copia en cache. */
-const V = '20261016-12';
+const V = '20261016-13';
 
 /* --- cargar el catalogo sin navegador --- */
 const src = fs.readFileSync(path.join(RAIZ, 'assets/js/products.js'), 'utf8');
@@ -301,6 +301,27 @@ for (const p of PRODUCTOS) {
   fs.mkdirSync(dir, { recursive: true });
   fs.writeFileSync(path.join(dir, 'index.html'), ficha(p));
   n++;
+}
+
+/* --- indice estatico de productos dentro de tienda.html ---
+   La rejilla de la tienda la pinta app.js en el navegador. Este indice va
+   ya escrito en el HTML (dentro de #catalogo, que app.js sustituye al
+   cargar), para que Google y cualquier navegador sin JavaScript encuentren
+   un enlace normal a la ficha de cada producto. */
+{
+  const ruta = path.join(RAIZ, 'tienda.html');
+  const html = fs.readFileSync(ruta, 'utf8');
+  const INI = '<!-- INDICE-PRODUCTOS:INICIO -->', FIN = '<!-- INDICE-PRODUCTOS:FIN -->';
+  const a = html.indexOf(INI), b = html.indexOf(FIN);
+  if (a < 0 || b < a) throw new Error('tienda.html: faltan los marcadores del indice de productos');
+  const cols = (DATA.collections || []).map(col => {
+    const items = PRODUCTOS.filter(p => p.collection === col.slug);
+    if (!items.length) return '';
+    return `\n    <section class="seccion contenedor indice-coleccion">\n      <h2>${esc(col.name)}</h2>\n      <ul>\n`
+      + items.map(p => `        <li><a href="/producto/${p.handle}/">${esc(p.title)}</a></li>`).join('\n')
+      + `\n      </ul>\n    </section>`;
+  }).join('');
+  fs.writeFileSync(ruta, html.slice(0, a + INI.length) + cols + '\n  ' + html.slice(b));
 }
 
 /* --- sitemap: paginas fijas + una por producto --- */
