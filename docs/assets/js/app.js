@@ -462,6 +462,13 @@ function cerrarFicha() {
 }
 
 /* ---------- Tienda completa ---------- */
+/* Enlace a la pagina propia de la familia (/champu-solido/, ...), si existe.
+   Las rutas las escribe tools/generar-fichas.js en tienda.html. */
+function _rutaFamilia(slug) {
+  const f = (window.SAVIA_FAMILIAS || {})[slug];
+  return f ? ` · <a class="enlace-familia" href="${f.ruta}">Más sobre ${acc(f.nombre.toLowerCase())} →</a>` : '';
+}
+
 function renderTienda() {
   const cont = document.getElementById('catalogo');
   if (!cont) return;
@@ -473,7 +480,7 @@ function renderTienda() {
       <section class="seccion" id="col-${col.slug}">
         <div class="contenedor">
           <h2 class="seccion-titulo">${acc(col.name)}${badge}</h2>
-          <p class="seccion-sub">${col.count} producto(s)</p>
+          <p class="seccion-sub">${col.count} producto(s)${_rutaFamilia(col.slug)}</p>
           <div class="grid-productos">
             ${items.map(p => cardProducto(p)).join('')}
           </div>

@@ -11,7 +11,7 @@ const SITIO = 'https://saviadealma.com';
 
 /* Sello de version de los assets: al cambiar un .js o .css hay que
    subirlo, o los navegadores siguen sirviendo la copia en cache. */
-const V = '20261016-15';
+const V = '20261016-16';
 
 /* --- cargar el catalogo sin navegador --- */
 const src = fs.readFileSync(path.join(RAIZ, 'assets/js/products.js'), 'utf8');
@@ -26,6 +26,11 @@ const PRODUCTOS = DATA.products;
 const win2 = {};
 new Function('window', fs.readFileSync(path.join(RAIZ, 'assets/js/reviews.js'), 'utf8'))(win2);
 const RESENAS = win2.SAVIA_RESENAS || {};
+
+/* Paginas por familia (textos en tools/familias.js). */
+const FAMILIAS = require('./familias.js')
+  .filter(f => PRODUCTOS.some(p => p.collection === f.coleccion));
+const FAMILIA_DE = Object.fromEntries(FAMILIAS.map(f => [f.coleccion, f]));
 
 /* Un cosmetico no puede atribuirse el tratamiento o la curacion de una
    enfermedad (Reg. 1223/2009 y Reg. 655/2013). Una resena es del cliente,
@@ -69,6 +74,10 @@ const PIE = `  <footer class="pie">
         <a href="/tienda.html">Tienda</a>
         <a href="/index.html#contacto">Contacto</a>
         <a href="/ritual-de-calma">Guía Ritual de Calma</a>
+      </nav>
+      <nav class="pie-col">
+        <h4>Productos</h4>
+        ${FAMILIAS.map(f => `<a href="/${f.ruta}/">${esc(f.h1)}</a>`).join('\n        ')}
       </nav>
       <nav class="pie-col">
         <h4>Legales</h4>
@@ -171,7 +180,10 @@ function ficha(p) {
     itemListElement: [
       { '@type': 'ListItem', position: 1, name: 'Inicio', item: SITIO + '/' },
       { '@type': 'ListItem', position: 2, name: 'Tienda', item: SITIO + '/tienda.html' },
-      { '@type': 'ListItem', position: 3, name: p.title, item: url },
+      ...(FAMILIA_DE[p.collection]
+        ? [{ '@type': 'ListItem', position: 3, name: FAMILIA_DE[p.collection].h1, item: `${SITIO}/${FAMILIA_DE[p.collection].ruta}/` },
+           { '@type': 'ListItem', position: 4, name: p.title, item: url }]
+        : [{ '@type': 'ListItem', position: 3, name: p.title, item: url }]),
     ],
   };
 
@@ -207,7 +219,7 @@ ${CABECERA}
 
   <main class="contenedor ficha">
     <nav class="ficha-migas" aria-label="Migas de pan">
-      <a href="/index.html">Inicio</a> › <a href="/tienda.html">Tienda</a> › <span>${esc(p.title)}</span>
+      <a href="/index.html">Inicio</a> › <a href="/tienda.html">Tienda</a> ›${FAMILIA_DE[p.collection] ? ` <a href="/${FAMILIA_DE[p.collection].ruta}/">${esc(FAMILIA_DE[p.collection].h1)}</a> ›` : ''} <span>${esc(p.title)}</span>
     </nav>
 
     <div class="ficha-grid">
@@ -296,6 +308,119 @@ ${PIE}
 `;
 }
 
+/* --- paginas por familia --- */
+function paginaFamilia(f) {
+  const url = `${SITIO}/${f.ruta}/`;
+  const prods = PRODUCTOS.filter(p => p.collection === f.coleccion);
+  const vendibles = prods.filter(p => !p.proximamente);
+  const orden = [...vendibles, ...prods.filter(p => p.proximamente)];
+  const conPrecio = p => typeof p.price === 'number' && isFinite(p.price) && p.price > 0;
+  const lista = {
+    '@context': 'https://schema.org',
+    '@type': 'CollectionPage',
+    name: f.h1,
+    description: f.meta,
+    url,
+    mainEntity: {
+      '@type': 'ItemList',
+      itemListElement: orden.map((p, i) => ({ '@type': 'ListItem', position: i + 1, url: `${SITIO}/producto/${p.handle}/`, name: p.title })),
+    },
+  };
+  const migas = {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      { '@type': 'ListItem', position: 1, name: 'Inicio', item: SITIO + '/' },
+      { '@type': 'ListItem', position: 2, name: 'Tienda', item: SITIO + '/tienda.html' },
+      { '@type': 'ListItem', position: 3, name: f.h1, item: url },
+    ],
+  };
+  const tarjeta = p => `
+        <article class="familia-card">
+          <a class="familia-img" href="/producto/${p.handle}/"><img src="/${esc(p.image)}" alt="${esc(p.title)}" loading="lazy" width="400" height="400"></a>
+          <h3><a href="/producto/${p.handle}/">${esc(p.title)}</a></h3>
+          ${(p.lema && !CLAIM_MEDICO.test(p.lema)) ? `<p class="familia-lema">${esc(p.lema)}</p>` : ''}
+          ${conPrecio(p)
+            ? `<p class="familia-precio" data-precio-handle="${p.handle}">${Number(p.price).toFixed(2).replace('.', ',')} €</p>`
+            : '<p class="familia-precio">Precio por confirmar</p>'}
+          ${p.proximamente
+            ? '<button class="btn btn-secundario btn-sm btn-bloque" disabled>Próximamente</button>'
+            : `<button class="btn btn-primario btn-sm btn-bloque" data-comprar-handle="${p.handle}" onclick="anadirDesdeFicha('${p.handle}')">Añadir al carrito</button>`}
+        </article>`;
+  const otras = FAMILIAS.filter(x => x !== f);
+  return `<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>${esc(f.titulo)} · Savia de Alma</title>
+  <meta name="description" content="${esc(f.meta)}">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
+  <link rel="canonical" href="${url}">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="${esc(f.titulo)} · Savia de Alma">
+  <meta property="og:description" content="${esc(f.meta)}">
+  <meta property="og:url" content="${url}">
+  <meta property="og:image" content="${esc(abs(orden[0].image))}">
+  <link rel="stylesheet" href="/assets/css/styles.css?v=${V}">
+  <link rel="stylesheet" href="/assets/css/ficha.css?v=${V}">
+  <link rel="icon" href="/assets/img/favicon.ico" sizes="any">
+  <link rel="icon" type="image/png" sizes="32x32" href="/assets/img/favicon-32.png">
+  <link rel="apple-touch-icon" href="/assets/img/apple-touch-icon.png">
+  <script type="application/ld+json">${JSON.stringify(lista)}</script>
+  <script type="application/ld+json">${JSON.stringify(migas)}</script>
+</head>
+<body>
+${CABECERA}
+
+  <main class="contenedor ficha familia">
+    <nav class="ficha-migas" aria-label="Migas de pan">
+      <a href="/index.html">Inicio</a> › <a href="/tienda.html">Tienda</a> › <span>${esc(f.h1)}</span>
+    </nav>
+
+    <header class="familia-cab">
+      <h1>${esc(f.h1)}</h1>
+      ${f.intro.map(t => `<p>${esc(t)}</p>`).join('\n      ')}
+    </header>
+
+    <section class="familia-grid" aria-label="${esc(f.h1)}">${orden.map(tarjeta).join('')}
+    </section>
+
+    ${(f.elegir && f.elegir.length) ? `<section class="ficha-bloque">
+      <h2>Cómo elegir</h2>
+      <ul>
+        ${f.elegir.map(t => `<li>${esc(t)}</li>`).join('\n        ')}
+      </ul>
+    </section>` : ''}
+
+    ${f.uso ? `<section class="ficha-bloque"><h2>Cómo se usa</h2><p>${esc(f.uso)}</p></section>` : ''}
+
+    ${(f.preguntas && f.preguntas.length) ? `<section class="ficha-bloque familia-faq">
+      <h2>Preguntas frecuentes</h2>
+      ${f.preguntas.map(([q, a]) => `<details><summary>${esc(q)}</summary><p>${esc(a)}</p></details>`).join('\n      ')}
+    </section>` : ''}
+
+    <section class="ficha-bloque">
+      <h2>Más cosmética sólida</h2>
+      <p class="familia-otras">${otras.map(o => `<a href="/${o.ruta}/">${esc(o.h1)}</a>`).join(' · ')}</p>
+    </section>
+
+    <p class="ficha-volver"><a href="/tienda.html">← Ver toda la tienda</a></p>
+  </main>
+
+${PIE}
+</body>
+</html>
+`;
+}
+for (const f of FAMILIAS) {
+  const dir = path.join(RAIZ, f.ruta);
+  fs.mkdirSync(dir, { recursive: true });
+  fs.writeFileSync(path.join(dir, 'index.html'), paginaFamilia(f));
+}
+
 /* --- escribir fichas --- */
 let n = 0;
 for (const p of PRODUCTOS) {
@@ -319,11 +444,14 @@ for (const p of PRODUCTOS) {
   const cols = (DATA.collections || []).map(col => {
     const items = PRODUCTOS.filter(p => p.collection === col.slug);
     if (!items.length) return '';
-    return `\n    <section class="seccion contenedor indice-coleccion">\n      <h2>${esc(col.name)}</h2>\n      <ul>\n`
+    const fam = FAMILIA_DE[col.slug];
+    const h2 = fam ? `<a href="/${fam.ruta}/">${esc(col.name)}</a>` : esc(col.name);
+    return `\n    <section class="seccion contenedor indice-coleccion">\n      <h2>${h2}</h2>\n      <ul>\n`
       + items.map(p => `        <li><a href="/producto/${p.handle}/">${esc(p.title)}</a></li>`).join('\n')
       + `\n      </ul>\n    </section>`;
   }).join('');
-  fs.writeFileSync(ruta, html.slice(0, a + INI.length) + cols + '\n  ' + html.slice(b));
+  const rutas = `\n    <script>window.SAVIA_FAMILIAS = ${JSON.stringify(Object.fromEntries(FAMILIAS.map(f => [f.coleccion, { ruta: '/' + f.ruta + '/', nombre: f.h1 }])))};</script>`;
+  fs.writeFileSync(ruta, html.slice(0, a + INI.length) + rutas + cols + '\n  ' + html.slice(b));
 }
 
 /* --- sitemap: paginas fijas + una por producto --- */
@@ -333,6 +461,7 @@ const FIJAS = ['/', '/tienda.html', '/envios.html', '/devoluciones.html',
 const hoy = new Date().toISOString().slice(0, 10);
 const urls = [
   ...FIJAS.map(u => ({ loc: SITIO + u, pri: u === '/' ? '1.0' : '0.6' })),
+  ...FAMILIAS.map(f => ({ loc: `${SITIO}/${f.ruta}/`, pri: '0.9' })),
   ...PRODUCTOS.map(p => ({ loc: `${SITIO}/producto/${p.handle}/`, pri: '0.8' })),
 ];
 fs.writeFileSync(path.join(RAIZ, 'sitemap.xml'),
@@ -371,5 +500,6 @@ ${PRODUCTOS.map(p => {
 `);
 
 console.log(`${n} fichas generadas`);
+console.log(`${FAMILIAS.length} paginas de familia`);
 console.log(`sitemap.xml con ${urls.length} URLs`);
 console.log(`llms.txt escrito (${PRODUCTOS.length - noVeg.length}/${PRODUCTOS.length} veganos)`);

@@ -1,5 +1,5 @@
 /* ===========================================================================
-   SAVIA DE ALMA — Ficha de producto (/producto/<handle>/) en vivo
+   SAVIA DE ALMA — Fichas (/producto/<handle>/) y paginas de familia en vivo
    La ficha es HTML estático (la genera tools/generar-fichas.js con el precio
    de products.js). Al cargar, se trae la config del panel y se actualiza:
      - el precio (cambios de precio, ofertas y descuentos por familia),
@@ -11,9 +11,31 @@
 (function () {
   function eurFicha(n) { return Number(n).toFixed(2).replace('.', ',') + ' €'; }
 
+  /* Paginas por familia: precio y boton de cada tarjeta. */
+  function pintarTarjetas() {
+    if (!window.SAVIA_DATA || typeof precioDe !== 'function') return;
+    document.querySelectorAll('[data-precio-handle]').forEach(el => {
+      const p = SAVIA_DATA.products.find(x => x.handle === el.dataset.precioHandle);
+      if (!p || !tienePrecio(p)) return;
+      const ahora = precioDe(p), antes = precioAntesDe(p);
+      el.innerHTML = antes !== null
+        ? `<span class="precio-antes">${eurFicha(antes)}</span> <span class="precio-ahora">${eurFicha(ahora)}</span>`
+        : eurFicha(ahora);
+    });
+    document.querySelectorAll('[data-comprar-handle]').forEach(btn => {
+      const p = SAVIA_DATA.products.find(x => x.handle === btn.dataset.comprarHandle);
+      if (!p || !estaAgotado(p)) return;
+      btn.disabled = true;
+      btn.removeAttribute('onclick');
+      btn.className = 'btn btn-secundario btn-sm btn-bloque';
+      btn.textContent = enVacaciones() ? 'Volvemos pronto' : 'Agotado';
+    });
+  }
+
   function pintarFicha() {
+    pintarTarjetas();
     const el = document.getElementById('ficha-precio');
-    if (!el || !window.SAVIA_DATA) return;
+    if (!el || !window.SAVIA_DATA) { if (window.Carrito && typeof Carrito.render === 'function') Carrito.render(); return; }
     const p = SAVIA_DATA.products.find(x => x.handle === el.dataset.handle);
     if (!p) return;
 
