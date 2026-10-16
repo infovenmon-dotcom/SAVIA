@@ -348,6 +348,17 @@ function paginaFamilia(f) {
             : `<button class="btn btn-primario btn-sm btn-bloque" data-comprar-handle="${p.handle}" onclick="anadirDesdeFicha('${p.handle}')">Añadir al carrito</button>`}
         </article>`;
   const otras = FAMILIAS.filter(x => x !== f);
+  /* "Combina con": familias o productos complementarios (campo relacionadas
+     de familias.js). 'producto:<handle>' enlaza a una ficha suelta, para las
+     familias de un solo producto (sales de Epsom, cera). */
+  const combina = (f.relacionadas || []).map(r => {
+    if (r.startsWith('producto:')) {
+      const p = PRODUCTOS.find(x => x.handle === r.slice(9));
+      return p ? `<a href="/producto/${p.handle}/">${esc(p.title)}</a>` : '';
+    }
+    const o = FAMILIAS.find(x => x.coleccion === r);
+    return o ? `<a href="/${o.ruta}/">${esc(o.h1)}</a>` : '';
+  }).filter(Boolean);
   return `<!DOCTYPE html>
 <html lang="es">
 <head>
@@ -400,6 +411,11 @@ ${CABECERA}
     ${(f.preguntas && f.preguntas.length) ? `<section class="ficha-bloque familia-faq">
       <h2>Preguntas frecuentes</h2>
       ${f.preguntas.map(([q, a]) => `<details><summary>${esc(q)}</summary><p>${esc(a)}</p></details>`).join('\n      ')}
+    </section>` : ''}
+
+    ${combina.length ? `<section class="ficha-bloque">
+      <h2>Combina con</h2>
+      <p class="familia-otras">${combina.join(' · ')}</p>
     </section>` : ''}
 
     <section class="ficha-bloque">

@@ -6,6 +6,7 @@
 module.exports = [
   {
     coleccion: 'champus',
+    relacionadas: ['acondicionadores', 'accesorios', 'producto:cera-peinado'],
     ruta: 'champu-solido',
     titulo: 'Champú sólido natural hecho a mano',
     h1: 'Champús sólidos naturales',
@@ -28,11 +29,13 @@ module.exports = [
       ['¿Cuánto dura un champú sólido?', 'Una pastilla de 65 g da para más de 60 lavados si la dejas secar bien entre usos, en una jabonera que no acumule agua.'],
       ['¿Hace espuma como un champú normal?', 'Sí. Al frotarla con el cabello mojado hace espuma enseguida. Los primeros días puede notarse distinto si vienes de un champú con siliconas.'],
       ['¿Cómo lo llevo de viaje?', 'Bien seco, en una bolsa de sisal o en un neceser. No lo metas en una bolsa de tela hasta que esté completamente seco. Al ser sólido no cuenta como líquido en el equipaje de mano.'],
+      ['¿Necesito acondicionador?', 'Depende de tu cabello. Si lo tienes largo, seco o se te enreda, un acondicionador sólido de coco o de almendra completa la rutina sin plástico.'],
       ['¿Qué lleva un champú sólido?', 'La base es SCS, derivado del aceite de coco y considerado natural por las certificadoras, junto con aceite de coco, que deja el pelo suave. A cada champú le añadimos solo los ingredientes que le dan su función: romero, cacao, avena, té matcha… Pocos ingredientes y de proximidad siempre que se puede.'],
     ],
   },
   {
     coleccion: 'jabones',
+    relacionadas: ['accesorios', 'exfoliantes'],
     ruta: 'jabon-artesanal',
     titulo: 'Jabón artesanal natural hecho a mano',
     h1: 'Jabones artesanales naturales',
@@ -44,13 +47,14 @@ module.exports = [
     elegir: [
       'Para un baño relajante antes de dormir, el de lavanda; para un aroma de verano, el de monoï, con flor de tiaré.',
       'Para pieles secas que piden extra de nutrición, karité, argán, aguacate o leche de cabra.',
-      'Para empezar el día con energía, los de aroma fresco como pepita de uva o árbol de té.',
+      'Para empezar el día con energía, el de pepita de uva; para una sensación de frescor y limpieza, el de árbol de té.',
       'Para una limpieza más profunda, carbón activo, arcilla o árbol de té.',
       'Para la cara, los más delicados como arroz o rosa mosqueta.',
     ],
     uso: 'Humedece la pastilla y la piel, haz espuma entre las manos y aplícala con un masaje suave. Aclara con agua templada. Guárdala fuera del chorro de la ducha y sobre una jabonera que drene.',
     preguntas: [
       ['¿Qué es la saponificación en frío?', 'Es la forma tradicional de hacer jabón sin calentar la mezcla. Tarda semanas en curar, pero conserva la glicerina y las propiedades de los aceites.'],
+      ['¿Se pueden usar todos los días?', 'Sí, están pensados para la limpieza diaria de la piel, en la ducha o para las manos.'],
       ['¿Sirven para cara y cuerpo?', 'Sí, aunque para la cara recomendamos los más suaves, como el de arroz o el de rosa mosqueta.'],
       ['¿Cómo consigo que dure más?', 'Déjalo secar entre usos en una jabonera con drenaje. Un jabón que se queda en agua se ablanda y se gasta mucho antes. Tampoco lo guardes en una bolsa de tela hasta que esté completamente seco.'],
       ['¿Cuánto dura una pastilla de 100 g?', 'Depende de si la usas para las manos o para la ducha y de cómo la guardes, pero hace una espuma cremosa sin gastarse deprisa.'],
@@ -58,6 +62,7 @@ module.exports = [
   },
   {
     coleccion: 'desodorantes',
+    relacionadas: ['jabones', 'accesorios'],
     ruta: 'desodorante-solido',
     titulo: 'Desodorante sólido natural sin aluminio',
     h1: 'Desodorantes sólidos naturales',
@@ -81,26 +86,29 @@ module.exports = [
   },
   {
     coleccion: 'faciales',
+    relacionadas: ['jabones', 'accesorios'],
     ruta: 'limpiador-facial-solido',
     titulo: 'Limpiador facial sólido natural',
     h1: 'Limpiadores faciales sólidos',
     meta: 'Limpiadores faciales sólidos de rosa mosqueta y de aloe vera y pepino. Limpian con suavidad, sin plástico y hechos a mano en España.',
     intro: [
       'El limpiador facial sólido es una pastilla pensada para la piel de la cara: limpia sin resecar y se aclara fácilmente. Sustituye al gel en bote y no genera residuos.',
-      'Tenemos dos: uno de rosa mosqueta, para una limpieza nutritiva, y otro de aloe vera y pepino, con sensación fresca. Se hacen a mano en España y vienen sin plástico.',
+      'Tenemos dos: uno de rosa mosqueta y arcilla, pensado para piel madura, y otro de aloe vera y pepino, de uso diario y con sensación fresca. Se hacen a mano en España y vienen sin plástico.',
     ],
     elegir: [
-      'Rosa mosqueta si buscas una limpieza más nutritiva.',
+      'Rosa mosqueta si tienes la piel madura o buscas una limpieza más nutritiva.',
       'Aloe vera y pepino si prefieres una sensación fresca y ligera.',
     ],
-    uso: 'Humedece la pastilla, haz espuma entre las manos y aplícala en la cara con un masaje suave, evitando el contorno de los ojos. Aclara con agua templada.',
+    uso: 'Humedece la cara y la pastilla, haz espuma entre las manos y aplícala con un masaje suave, evitando el contorno de los ojos. Aclara con agua templada y seca la piel a toquecitos, sin frotar.',
     preguntas: [
-      ['¿Puedo usarlo cada día?', 'Sí, mañana y noche.'],
+      ['¿Puedo usarlo cada día?', 'Sí, mañana y noche. Limpiar la cara deja la piel lista para tu crema o sérum.'],
+      ['¿Qué diferencia hay entre los dos?', 'El de rosa mosqueta lleva aceite de rosa mosqueta y arcilla y está pensado para piel madura. El de aloe y pepino lleva aloe vera y es más ligero, para el día a día.'],
       ['¿Cómo lo guardo?', 'Fuera del chorro de agua, en una jabonera con drenaje, para que se seque entre usos.'],
     ],
   },
   {
     coleccion: 'afeitado',
+    relacionadas: ['jabones', 'accesorios'],
     ruta: 'afeitado-y-barba',
     titulo: 'Afeitado y barba natural: espuma sólida y champú',
     h1: 'Afeitado y cuidado de la barba',
@@ -116,12 +124,14 @@ module.exports = [
     ],
     uso: 'Humedece la brocha con agua caliente, gírala sobre la pastilla hasta cargarla y monta la espuma en el bol o directamente sobre la piel.',
     preguntas: [
+      ['¿Qué diferencia hay con una espuma en aerosol?', 'El formato: la sólida no lleva gas ni envase de plástico, y la espuma la montas tú al humedecerla. Por eso cunde mucho más.'],
       ['¿Necesito brocha?', 'Es lo más cómodo para montar la espuma, aunque también puedes hacerla con las manos mojadas.'],
       ['¿Cuánto dura una pastilla?', 'Depende de la frecuencia, pero al no llevar agua cunde mucho más que un bote de espuma.'],
     ],
   },
   {
     coleccion: 'depilacion',
+    relacionadas: ['jabones', 'exfoliantes', 'accesorios'],
     ruta: 'espuma-depilacion-solida',
     titulo: 'Espuma de depilación sólida natural',
     h1: 'Espumas sólidas para depilación',
@@ -137,6 +147,7 @@ module.exports = [
     ],
     uso: 'Moja bien la zona: la pastilla no lleva agua y la necesita para hacer espuma. Frótala directamente sobre la piel hasta crear una ligera espuma y pasa la cuchilla. Aclara al terminar; si quieres, termina con una crema o un aceite corporal.',
     preguntas: [
+      ['¿Elimina el vello por sí sola?', 'No, no es una crema depilatoria. Es una espuma para depilarte con cuchilla: ayuda a que deslice y cuida la piel mientras tanto.'],
       ['¿Sirve para piernas y axilas?', 'Sí, para cualquier zona en la que uses cuchilla.'],
       ['¿Cuánto dura una pastilla?', 'Una pastilla de 90 g da para más de 60 usos. Se gasta de forma uniforme, sin romperse, si la dejas secar entre usos en una jabonera o lata sin agua en la base.'],
       ['¿Y para afeitar la barba?', 'Para la barba tenemos la espuma de afeitar sólida de aceite de avellana.'],
@@ -144,6 +155,7 @@ module.exports = [
   },
   {
     coleccion: 'acondicionadores',
+    relacionadas: ['champus', 'accesorios', 'producto:cera-peinado'],
     ruta: 'acondicionador-solido',
     titulo: 'Acondicionador sólido natural',
     h1: 'Acondicionadores sólidos',
@@ -158,19 +170,21 @@ module.exports = [
     ],
     uso: 'Después del champú, desliza la pastilla de medios a puntas con el cabello mojado, deja actuar un minuto y aclara.',
     preguntas: [
+      ['¿Qué diferencia hay con el champú?', 'El champú limpia el cabello; el acondicionador va después y lo deja suave y fácil de peinar.'],
       ['¿Lo aplico en la raíz?', 'Mejor solo de medios a puntas, que es donde más se nota.'],
       ['¿Se puede usar con cualquier champú?', 'Sí, aunque con un champú sólido tendrás toda la rutina sin plástico.'],
     ],
   },
   {
     coleccion: 'exfoliantes',
+    relacionadas: ['jabones', 'producto:sales-epsom-500', 'accesorios'],
     ruta: 'exfoliante-corporal-solido',
     titulo: 'Exfoliante corporal sólido natural',
     h1: 'Exfoliantes corporales sólidos',
     meta: 'Exfoliantes corporales sólidos de café y coco y de zanahoria y lino. Piel suave sin plástico, hechos a mano en España.',
     intro: [
       'Un exfoliante sólido es una pastilla con partículas naturales que arrastran las células muertas mientras te lavas. La piel queda suave y lista para hidratar.',
-      'Tenemos dos: de café y coco y de zanahoria y lino, ambos con un 98,5 % de ingredientes naturales. Se hacen a mano en España y vienen sin plástico.',
+      'Tenemos dos, los dos con aceite de coco y manteca de karité: uno de café molido y coco, y otro de extracto de zanahoria y semillas de lino. Ambos tienen un 98,5 % de ingredientes naturales, se hacen a mano en España y vienen sin plástico.',
     ],
     elegir: [
       'Café y coco si te gusta un aroma intenso, como el de un buen café.',
@@ -178,12 +192,15 @@ module.exports = [
     ],
     uso: 'Una o dos veces por semana, frota la pastilla sobre la piel mojada con movimientos circulares y aclara. Evita la cara y las zonas irritadas.',
     preguntas: [
+      ['¿Qué diferencia hay con un jabón?', 'El jabón limpia; el exfoliante, además, lleva partículas que arrastran las células muertas de la superficie de la piel.'],
       ['¿Cada cuánto lo uso?', 'Una o dos veces por semana es suficiente.'],
       ['¿Sirve para la cara?', 'No, está pensado para el cuerpo. Para la cara tenemos limpiadores faciales sólidos.'],
+      ['¿Qué uso después?', 'Después de exfoliar, un baño con sales de Epsom o una crema corporal completan el ritual.'],
     ],
   },
   {
     coleccion: 'accesorios',
+    relacionadas: ['jabones', 'champus', 'acondicionadores'],
     ruta: 'accesorios-zero-waste',
     titulo: 'Accesorios zero waste para baño y viaje',
     h1: 'Accesorios zero waste',
@@ -200,6 +217,7 @@ module.exports = [
     uso: 'Deja que la jabonera se seque entre usos y límpiala de vez en cuando con agua. Las piezas de bambú y madera duran más si no se quedan en agua.',
     preguntas: [
       ['¿Por qué una jabonera con drenaje?', 'Porque un jabón o un champú sólido que se queda en agua se ablanda y se gasta mucho antes.'],
+      ['¿Qué necesito para empezar con la cosmética sólida?', 'Una jabonera con drenaje es lo básico: sirve para jabones, champús y acondicionadores sólidos.'],
       ['¿El bambú se estropea con el agua?', 'Aguanta bien la humedad, pero dura más si se seca entre usos.'],
     ],
   },
