@@ -2375,7 +2375,7 @@ window.SAVIA_DATA = {
       "specs": {
         "peso": "~110 g el set",
         "natural": "Un ritual de masaje manual, sin pilas ni electricidad",
-        "fabricacion": "Cepillo (8 × 7 cm), gua sha (9 cm) y varilla de ojos (12 cm) · Acabado efecto madera · Uso manual"
+        "fabricacion": "Cepillo de 8 × 7 cm con base efecto madera · Gua sha de 9 cm y varilla de ojos de 12 cm en resina de tono ámbar · Uso manual"
       },
       "handle": "set-contorno-facial",
       "title": "Set de Contorno Facial · Cepillo, Gua Sha y Varilla",
@@ -2393,10 +2393,10 @@ window.SAVIA_DATA = {
       "destacado": "♻️ Tres herramientas manuales y duraderas, sin pilas ni aparatos eléctricos.",
       "precauciones": "No usar sobre piel irritada, con heridas o justo después de un tratamiento facial.",
       "features": [
-        "Cepillo de 8 × 7 cm",
-        "Gua sha de 9 cm",
-        "Varilla de ojos de 12 cm",
-        "Acabado efecto madera",
+        "Cepillo de 8 × 7 cm con base efecto madera",
+        "Gua sha de 9 cm en resina ámbar",
+        "Varilla de ojos de 12 cm en resina ámbar",
+        "Sin pilas ni enchufe",
         "Uso manual"
       ],
       "bullets": [
@@ -2472,7 +2472,7 @@ window.SAVIA_DATA = {
       "specs": {
         "peso": "~35 g",
         "natural": "Masaje manual, sin pilas ni electricidad",
-        "fabricacion": "Base efecto madera · Cerdas suaves · 8 × 7 cm · Uso manual · Se vende por unidad"
+        "fabricacion": "Base efecto madera con cerdas suaves, disponible en rosa o marrón · 8 × 7 cm · Uso manual · Se vende por unidad"
       },
       "handle": "cepillo-facial",
       "title": "Cepillo Linfático Facial",
@@ -2492,7 +2492,7 @@ window.SAVIA_DATA = {
       "features": [
         "Medidas: 8 × 7 cm",
         "Base efecto madera",
-        "Cerdas suaves",
+        "Cerdas suaves en rosa o marrón",
         "Uso manual",
         "Se vende por unidad"
       ],
