@@ -626,6 +626,19 @@ img { max-width: 100%; display: block; }
 .quitar { background: none; border: none; color: var(--texto-suave); cursor: pointer; font-size: .8rem; text-decoration: underline; }
 
 .panel-resumen { padding: 14px 20px; border-top: 1px solid var(--borde); background: var(--blanco); flex: 0 0 auto; overflow-y: auto; max-height: 62%; }
+/* El boton de pagar nacia por debajo del borde de la pantalla en los moviles
+   pequenos: el resumen mide mas de lo que cabe y habia que desplazarlo sin que
+   nada indicara que se desplaza. Total y boton se quedan pegados al fondo del
+   resumen, siempre a la vista; el resto sigue haciendo scroll por detras.
+   En pantallas altas el contenido cabe entero y esto no cambia nada. */
+.panel-cierre {
+  position: sticky;
+  bottom: 0;
+  background: var(--blanco);
+  padding: 8px 0 2px;
+  margin-top: 6px;
+  box-shadow: 0 -10px 14px -10px rgba(0, 0, 0, .25);
+}
 .fila-resumen { display: flex; justify-content: space-between; font-size: .92rem; margin-bottom: 6px; }
 .fila-resumen.total { font-size: 1.15rem; font-weight: 700; margin-top: 8px; }
 .fila-resumen .ahorro { color: var(--verde-oscuro); font-weight: 600; }

@@ -306,7 +306,6 @@ function renderPanelCarrito(c) {
     ${c.ahorroPromo > 0 ? `<div class="fila-resumen"><span class="ahorro">Regalo · ${c.gratisCount} gratis</span><span class="ahorro">−${eur(c.ahorroPromo)}</span></div>` : ''}
     ${c.descuentoCodigo > 0 ? `<div class="fila-resumen"><span class="ahorro">Código ${c.codigo.code}${c.codigo.pct ? ' · ' + c.codigo.pct + '%' : ''}</span><span class="ahorro">−${eur(c.descuentoCodigo)}</span></div>` : ''}
     <div class="fila-resumen"><span>Envío${c.envioZona === 'baleares' ? ' (Baleares)' : ''}</span><span>${c.zonaNoDisponible ? '—' : (c.envioGratis ? 'GRATIS' : eur(c.envio))}</span></div>
-    <div class="fila-resumen total"><span>Total</span><span>${c.zonaNoDisponible ? '—' : eur(c.total)}</span></div>
     <p style="font-size:.7rem;color:var(--texto-suave);text-align:center;margin:6px 0 6px">Por cada 4 productos, 1 de regalo (el de menor valor) · IVA incluido.</p>
     ${c.codigo
       ? `<div style="display:flex;align-items:center;justify-content:space-between;gap:8px;background:#eef5f0;border:1px solid #cfe3d7;border-radius:8px;padding:7px 10px;margin:0 0 10px">
@@ -321,11 +320,14 @@ function renderPanelCarrito(c) {
            </div>
            <p id="cod-msg" style="font-size:.74rem;margin:5px 2px 0;min-height:1em"></p>
          </div>`}
-    ${c.zonaNoDisponible
-      ? '<button class="btn btn-secundario btn-bloque" disabled>No realizamos envíos a tu zona</button>'
-      : '<a class="btn btn-primario btn-bloque" id="btn-finalizar" href="#" onclick="finalizarCompra();return false;">Finalizar compra</a>'}
     ${badgesPago()}
     <button class="btn btn-secundario btn-bloque" style="margin-top:8px" onclick="cerrarCarrito()">← Seguir comprando</button>
+    <div class="panel-cierre">
+      <div class="fila-resumen total"><span>Total</span><span>${c.zonaNoDisponible ? '—' : eur(c.total)}</span></div>
+      ${c.zonaNoDisponible
+        ? '<button class="btn btn-secundario btn-bloque" disabled>No realizamos envíos a tu zona</button>'
+        : '<a class="btn btn-primario btn-bloque" id="btn-finalizar" href="#" onclick="finalizarCompra();return false;">Finalizar compra</a>'}
+    </div>
   `;
 }
 
