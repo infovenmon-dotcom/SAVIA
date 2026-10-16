@@ -2420,7 +2420,8 @@ window.SAVIA_DATA = {
         "bano"
       ],
       "images": [
-        "assets/img/products/jabonera-metalica.jpg"
+        "assets/img/products/jabonera-metalica.jpg",
+        "assets/img/products/jabonera-metalica-2.jpg"
       ],
       "specs": {
         "peso": "~70 g",
@@ -2709,7 +2710,9 @@ window.SAVIA_DATA = {
         "blanco"
       ],
       "images": [
-        "assets/img/products/neceser-blanco.jpg"
+        "assets/img/products/neceser-blanco.jpg",
+        "assets/img/products/neceser-blanco-2.jpg",
+        "assets/img/products/neceser-ficha.jpg"
       ],
       "specs": {
         "peso": "~60 g",
@@ -2765,7 +2768,8 @@ window.SAVIA_DATA = {
         "rosa"
       ],
       "images": [
-        "assets/img/products/neceser-rosa.jpg"
+        "assets/img/products/neceser-rosa.jpg",
+        "assets/img/products/neceser-ficha.jpg"
       ],
       "specs": {
         "peso": "~60 g",
