@@ -46,70 +46,7 @@ function acc(s) {
   return s;
 }
 
-/* ---------- Disponibilidad / stock / modo vacaciones (config.js) ---------- */
-function _cfg() { return window.SAVIA_CONFIG || {}; }
-function enVacaciones() { return !!_cfg().modoVacaciones; }
-/* Unidades en stock segun config: numero si esta definido, null si no se controla. */
-function stockDe(handle) {
-  const s = _cfg().stock || {};
-  return Object.prototype.hasOwnProperty.call(s, handle) ? Number(s[handle]) : null;
-}
-function estaAgotado(p) {
-  if (p.proximamente) return true; // "Próximamente": no vendible aún
-  if (enVacaciones()) return true;
-  if ((_cfg().agotados || []).indexOf(p.handle) !== -1) return true;
-  const n = stockDe(p.handle);
-  return n !== null && !(n > 0); // stock 0 (o negativo/invalido) => agotado
-}
-
-/* ---------- Precio efectivo y ofertas (config.js / panel) ----------
-   precioDe(p)       -> precio actual (override en config.precios si existe).
-   precioAntesDe(p)  -> precio anterior tachado SOLO si hay oferta valida
-                        (config.ofertas[handle] mayor que el precio actual),
-                        en caso contrario null.
-   El servidor de pago (Stripe) recalcula el cobro con estos mismos precios,
-   por lo que el navegador nunca decide el importe final. */
-/* % de descuento por familia (config.descuentosCategoria), 0 si no hay. */
-function _dtoCategoria(p) {
-  const dc = _cfg().descuentosCategoria || {};
-  const pct = Number(dc[p.collection]);
-  return (isFinite(pct) && pct > 0 && pct < 100) ? pct : 0;
-}
-/* Precio base (antes del descuento por categoría): respeta el override de precios. */
-function _precioBase(p) {
-  const o = _cfg().precios || {};
-  const v = Object.prototype.hasOwnProperty.call(o, p.handle) ? Number(o[p.handle]) : p.price;
-  return (isFinite(v) && v >= 0) ? v : p.price;
-}
-function precioDe(p) {
-  const base = _precioBase(p);
-  const pct = _dtoCategoria(p);
-  return pct ? Math.round(base * (1 - pct / 100) * 100) / 100 : base;
-}
-function precioAntesDe(p) {
-  const ahora = precioDe(p);
-  // 1) Oferta explícita por producto (config.ofertas) tiene prioridad.
-  const o = _cfg().ofertas || {};
-  if (Object.prototype.hasOwnProperty.call(o, p.handle)) {
-    const antes = Number(o[p.handle]);
-    if (isFinite(antes) && antes > ahora) return antes;
-  }
-  // 2) Descuento por categoría: el "antes" es el precio base sin descuento.
-  if (_dtoCategoria(p)) {
-    const base = _precioBase(p);
-    if (base > ahora) return base;
-  }
-  return null;
-}
-function dtoPorcentaje(antes, ahora) {
-  return Math.max(1, Math.round((1 - ahora / antes) * 100));
-}
-/* Los productos anunciados como "Proximamente" todavia no tienen precio:
-   se publican sin cifra hasta que se decide, y nunca se pueden comprar. */
-function tienePrecio(p) {
-  const v = precioDe(p);
-  return typeof v === 'number' && isFinite(v) && v > 0;
-}
+/* Disponibilidad y precios: viven en precios.js (compartido con las fichas). */
 
 /* Bloque de precio reutilizable: con oferta muestra precio anterior tachado,
    precio actual y % de descuento; sin oferta, solo el precio.
@@ -686,22 +623,7 @@ function mostrarAvisoVacaciones() {
    la de config.js. Así, lo que cambies en /admin (precio, stock, ofertas,
    vacaciones) sale al instante. Si no hay endpoint o falla la red, se usa la
    config local de config.js (la web nunca se queda en blanco). */
-async function cargarConfigRemota() {
-  const ep = (_cfg().checkoutEndpoint || '').trim();
-  if (!ep) return;
-  try {
-    const ctrl = new AbortController();
-    const t = setTimeout(() => ctrl.abort(), 4000);
-    const r = await fetch(ep.replace(/\/+$/, '') + '/config', { cache: 'no-store', signal: ctrl.signal });
-    clearTimeout(t);
-    if (!r.ok) return;
-    const remoto = await r.json();
-    if (remoto && typeof remoto === 'object') {
-      // checkoutEndpoint y demás ajustes locales se conservan.
-      window.SAVIA_CONFIG = Object.assign({}, window.SAVIA_CONFIG, remoto);
-    }
-  } catch (e) { /* sin conexión: seguimos con la config local de config.js */ }
-}
+/* cargarConfigRemota(): en precios.js. */
 
 /* Al volver del pago de Stripe, la URL trae ?pago=ok o ?pago=cancelado.
    - ok        -> damos las gracias y vaciamos la cesta (el pedido ya está hecho).

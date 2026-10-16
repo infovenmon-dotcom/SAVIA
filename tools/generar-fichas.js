@@ -11,7 +11,7 @@ const SITIO = 'https://saviadealma.com';
 
 /* Sello de version de los assets: al cambiar un .js o .css hay que
    subirlo, o los navegadores siguen sirviendo la copia en cache. */
-const V = '20261016-13';
+const V = '20261016-15';
 
 /* --- cargar el catalogo sin navegador --- */
 const src = fs.readFileSync(path.join(RAIZ, 'assets/js/products.js'), 'utf8');
@@ -113,6 +113,7 @@ const PIE = `  <footer class="pie">
     })();
   </script>
   <script src="/assets/js/config.js"></script>
+  <script src="/assets/js/precios.js?v=${V}"></script>
   <script src="/assets/js/cart.js?v=${V}"></script>
   <script src="/assets/js/checkout.js?v=${V}"></script>
   <script>
@@ -124,6 +125,7 @@ const PIE = `  <footer class="pie">
       if (typeof abrirCarrito === 'function') abrirCarrito();
     }
   </script>
+  <script src="/assets/js/ficha.js?v=${V}"></script>
   <script src="/assets/js/accesibilidad.js"></script>
   <script defer src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "55b5e0bbafb34a94bc832c5a8500b78d"}'></script>`;
 
@@ -221,8 +223,8 @@ ${CABECERA}
         ${p.destacado ? `<p class="ficha-destacado">${esc(p.destacado)}</p>` : ''}
         ${p.guia ? `<p class="ficha-guia"><a href="${esc(p.guia.url)}">${esc(p.guia.texto)}</a></p>` : ''}
         ${conPrecio
-          ? `<p class="ficha-precio">${Number(p.price).toFixed(2).replace('.', ',')} €</p>`
-          : '<p class="ficha-precio ficha-sin-precio">Precio por confirmar</p>'}
+          ? `<p class="ficha-precio" id="ficha-precio" data-handle="${p.handle}">${Number(p.price).toFixed(2).replace('.', ',')} €</p>`
+          : `<p class="ficha-precio ficha-sin-precio" id="ficha-precio" data-handle="${p.handle}">Precio por confirmar</p>`}
         <p class="ficha-corta">${esc(p.short || '')}</p>
         ${(p.colores && p.colores.length > 1) ? `<div class="ficha-colores">
           <span class="fc-eti">Color</span>
@@ -243,7 +245,7 @@ ${CABECERA}
         ${p.proximamente
           ? `<button class="btn btn-secundario btn-bloque" disabled>Próximamente</button>
         <p class="ficha-nota">Estamos preparando este producto. Apúntate a la newsletter y te avisamos.</p>`
-          : `<button class="btn btn-primario btn-bloque" onclick="anadirDesdeFicha('${p.handle}')">Añadir al carrito</button>
+          : `<button class="btn btn-primario btn-bloque" id="ficha-comprar" onclick="anadirDesdeFicha('${p.handle}')">Añadir al carrito</button>
         <a class="btn btn-secundario btn-bloque" href="/tienda.html?producto=${encodeURIComponent(p.handle)}">Ver en la tienda</a>`}
         ${p.exclusiveWeb ? '<p class="ficha-nota">🌿 Exclusivo de la web</p>' : ''}
         ${(p.features && p.features.length) ? `<ul class="ficha-features">

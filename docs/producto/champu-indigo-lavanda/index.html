@@ -14,8 +14,8 @@
   <meta property="og:description" content="Calmante, anticaspa, cuero cabelludo sensible, sin sulfatos, vegano">
   <meta property="og:url" content="https://saviadealma.com/producto/champu-indigo-lavanda/">
   <meta property="og:image" content="https://saviadealma.com/assets/img/products/champu-indigo-lavanda.jpg">
-  <link rel="stylesheet" href="/assets/css/styles.css?v=20261016-13">
-  <link rel="stylesheet" href="/assets/css/ficha.css?v=20261016-13">
+  <link rel="stylesheet" href="/assets/css/styles.css?v=20261016-15">
+  <link rel="stylesheet" href="/assets/css/ficha.css?v=20261016-15">
   <link rel="icon" href="/assets/img/favicon.ico" sizes="any">
   <link rel="icon" type="image/png" sizes="32x32" href="/assets/img/favicon-32.png">
   <link rel="apple-touch-icon" href="/assets/img/apple-touch-icon.png">
@@ -59,10 +59,10 @@
         <p class="ficha-lema">La belleza del blanco también merece su ritual.</p>
         
         
-        <p class="ficha-precio">10,99 €</p>
+        <p class="ficha-precio" id="ficha-precio" data-handle="champu-indigo-lavanda">10,99 €</p>
         <p class="ficha-corta">Calmante, anticaspa, cuero cabelludo sensible, sin sulfatos, vegano</p>
         
-        <button class="btn btn-primario btn-bloque" onclick="anadirDesdeFicha('champu-indigo-lavanda')">Añadir al carrito</button>
+        <button class="btn btn-primario btn-bloque" id="ficha-comprar" onclick="anadirDesdeFicha('champu-indigo-lavanda')">Añadir al carrito</button>
         <a class="btn btn-secundario btn-bloque" href="/tienda.html?producto=champu-indigo-lavanda">Ver en la tienda</a>
         
         <ul class="ficha-features">
@@ -162,7 +162,7 @@
     <div class="panel-items" id="carrito-items"></div>
     <div class="panel-resumen" id="carrito-resumen"></div>
   </aside>
-  <script src="/assets/js/products.js?v=20261016-13"></script>
+  <script src="/assets/js/products.js?v=20261016-15"></script>
   <script>
     /* products.js guarda las imagenes con ruta relativa ("assets/img/..").
        Desde /producto/<handle>/ eso apunta dentro de esta carpeta y el
@@ -181,8 +181,9 @@
     })();
   </script>
   <script src="/assets/js/config.js"></script>
-  <script src="/assets/js/cart.js?v=20261016-13"></script>
-  <script src="/assets/js/checkout.js?v=20261016-13"></script>
+  <script src="/assets/js/precios.js?v=20261016-15"></script>
+  <script src="/assets/js/cart.js?v=20261016-15"></script>
+  <script src="/assets/js/checkout.js?v=20261016-15"></script>
   <script>
     /* La ficha no carga app.js (espera la rejilla de la tienda), asi que
        anade al carrito con la API de Carrito directamente. */
@@ -192,6 +193,7 @@
       if (typeof abrirCarrito === 'function') abrirCarrito();
     }
   </script>
+  <script src="/assets/js/ficha.js?v=20261016-15"></script>
   <script src="/assets/js/accesibilidad.js"></script>
   <script defer src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "55b5e0bbafb34a94bc832c5a8500b78d"}'></script>
 </body>
