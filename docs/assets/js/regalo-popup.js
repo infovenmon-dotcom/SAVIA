@@ -88,7 +88,23 @@
   function origen() { try { return sessionStorage.getItem('savia_origen') || calcOrigen(); } catch (e) { return calcOrigen(); } }
   window.saviaOrigen = origen;
   var desdeAnuncio = q.has('regalo') || /tiktok|instagram|facebook|ig|fb/i.test(q.get('utm_source') || '');
-  function iniciar() { if (noMostrar || /admin\.html/.test(location.pathname)) return; setTimeout(crear, desdeAnuncio ? 900 : 5000); }
+  /* No interrumpir. La ventana salta a los 5 s pase lo que pase, y si para
+     entonces el cliente tiene abierto el carrito o una ficha se le planta
+     encima: ocupa la pantalla entera con z-index 9999, muy por encima del
+     carrito (131) y de la ficha (4000). Justo encima del boton de pagar.
+     Ahora espera a que no haya nada abierto; cuando cierra, sale. */
+  function hayAlgoAbierto() {
+    return !!document.querySelector('#panel-carrito.abierto, #panel-ficha.abierto, .rg-fondo');
+  }
+  function intentar() {
+    if (noMostrar || /admin\.html/.test(location.pathname)) return;
+    if (hayAlgoAbierto()) { setTimeout(intentar, 1500); return; }
+    crear();
+  }
+  function iniciar() {
+    if (noMostrar || /admin\.html/.test(location.pathname)) return;
+    setTimeout(intentar, desdeAnuncio ? 900 : 5000);
+  }
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', iniciar); else iniciar();
   window.abrirRegalo = crear;
 })();
