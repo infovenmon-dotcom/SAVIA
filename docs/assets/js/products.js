@@ -553,7 +553,7 @@ window.SAVIA_DATA = {
       "features": [
         "Carbón activo - limpieza detox profunda",
         "Aceite de coco - nutre y suaviza la barba",
-        "Más de 60 usos, sin plástico, 90g",
+        "Más de 60 usos, sin plástico, 65g",
         "Sin sulfatos, sin parabenos, vegano, cruelty free",
         "Exclusivo web - hecho a mano en España"
       ],
@@ -594,7 +594,7 @@ window.SAVIA_DATA = {
       "lema": "Una barba limpia, suave y con carácter.",
       "specs": {
         "cpnp": "3852941",
-        "peso": "60 g",
+        "peso": "65 g",
         "inci": "Sodium Coco-Sulfate, Cocos nucifera Oil, Aqua, Cocamidopropyl Betaine, Parfum, Charcoal Powder, Benzyl Salicylate, Citronellol, Coumarine, Limonene.",
         "fabricacion": "Champú sólido en frío, hecho a mano en España · Vegano · Sin plástico."
       }
@@ -1689,7 +1689,7 @@ window.SAVIA_DATA = {
       "features": [
         "Rosa mosqueta - regenerador y antimanchas",
         "Limpieza profunda sin resecar",
-        "Sin plástico, zero waste, 60g",
+        "Sin plástico, zero waste, 65g",
         "Vegano, cruelty free, hecho a mano en España",
         "Apto piel sensible, uso diario"
       ],
@@ -1741,7 +1741,7 @@ window.SAVIA_DATA = {
       "features": [
         "Aloe vera - hidratante y calmante",
         "Pepino - refrescante y equilibrante",
-        "Sin plástico, zero waste, 60g",
+        "Sin plástico, zero waste, 65g",
         "Vegano, cruelty free, hecho a mano en España",
         "Apto pieles mixtas, uso diario"
       ],
