@@ -12,19 +12,23 @@ module.exports = [
     meta: 'Champús sólidos artesanales hechos a mano en España: sin plástico, sin SLS, veganos y con más de 60 lavados por pastilla. Elige el tuyo según tu cabello.',
     intro: [
       'Un champú sólido es lo mismo que el de bote, pero sin el agua ni el envase de plástico. Cada pastilla de 65 g da para más de 60 lavados, cabe en la palma de la mano y no se derrama en la maleta.',
-      'Los nuestros se elaboran a mano, uno a uno, en España, sin SLS y sin siliconas, con extractos como el romero, el cacao, el té matcha o el índigo. Todos son veganos y cruelty free.',
+      'Los nuestros se elaboran a mano y en frío, en lotes muy pequeños, y se prensan uno a uno en España. La base es SCS, un tensioactivo suave derivado del aceite de coco: no llevan SLS, ni SCI, ni siliconas. Todos son veganos y cruelty free.',
+      'Como no llevan agua, no se rompen ni se deshacen: se gastan de forma uniforme hasta quedar finos como una oblea.',
     ],
     elegir: [
       'Si tu cabello es fino o le falta cuerpo, busca fórmulas ligeras con arcilla o romero.',
       'Si lo tienes seco o con encrespamiento, mejor las que llevan avena, almendra o cacao.',
-      'Si se engrasa pronto, prueba las de té matcha, betaína o sal marina.',
+      'Si se engrasa pronto, prueba las de té matcha o betaína y sal marina, con aroma cítrico de pomelo.',
+      'Si tienes canas o eres rubia natural, el de índigo y lavanda ayuda a matizar los tonos amarillentos.',
+      'Si tu cuero cabelludo es sensible, el de cade de enebro, con un aroma ahumado de bosque.',
       'Combínalo con un acondicionador sólido para desenredar sin plástico.',
     ],
-    uso: 'Moja el cabello, frota la pastilla entre las manos o directamente sobre el pelo hasta que haga espuma, masajea y aclara. Después, déjala secar en una jabonera con drenaje para que dure más.',
+    uso: 'Moja bien el cabello: en la primera pasada, frota la pastilla directamente sobre el pelo bajo el agua hasta que haga espuma. Masajea insistiendo en raíz o puntas, como hagas siempre, y aclara. Un último aclarado con agua templada o fría deja el pelo con más brillo. Después, deja la pastilla secar en una jabonera con drenaje.',
     preguntas: [
       ['¿Cuánto dura un champú sólido?', 'Una pastilla de 65 g da para más de 60 lavados si la dejas secar bien entre usos, en una jabonera que no acumule agua.'],
       ['¿Hace espuma como un champú normal?', 'Sí. Al frotarla con el cabello mojado hace espuma enseguida. Los primeros días puede notarse distinto si vienes de un champú con siliconas.'],
-      ['¿Cómo lo llevo de viaje?', 'Bien seco, en una bolsa de sisal o en un neceser. Al ser sólido no cuenta como líquido en el equipaje de mano.'],
+      ['¿Cómo lo llevo de viaje?', 'Bien seco, en una bolsa de sisal o en un neceser. No lo metas en una bolsa de tela hasta que esté completamente seco. Al ser sólido no cuenta como líquido en el equipaje de mano.'],
+      ['¿Qué lleva un champú sólido?', 'La base es SCS, derivado del aceite de coco y considerado natural por las certificadoras, junto con aceite de coco, que deja el pelo suave. A cada champú le añadimos solo los ingredientes que le dan su función: romero, cacao, avena, té matcha… Pocos ingredientes y de proximidad siempre que se puede.'],
     ],
   },
   {
@@ -34,12 +38,13 @@ module.exports = [
     h1: 'Jabones artesanales naturales',
     meta: 'Jabones artesanales hechos a mano en España por saponificación en frío: rosa mosqueta, lavanda, karité, argán, carbón activo y más. Sin plástico.',
     intro: [
-      'Nuestros jabones se hacen a mano por saponificación en frío, un proceso lento que conserva la glicerina natural del jabón y deja la piel limpia y suave, sin sensación de tirantez.',
+      'Nuestros jabones se hacen a mano en España por saponificación en frío, con aceite de oliva y de coco, en lotes muy pequeños. Es un proceso lento que conserva la glicerina natural del jabón y deja la piel limpia y suave, sin sensación de tirantez.',
       'Hay uno para cada rutina: de rosa mosqueta, lavanda, karité, argán, aguacate, árbol de té, carbón activo, arroz… Cada pastilla viene sin plástico y la mayoría son veganos (los de leche de cabra y leche de burra, no).',
     ],
     elegir: [
-      'Para un baño relajante, los de aroma suave como lavanda o monoi.',
-      'Para pieles que piden extra de nutrición, karité, argán, aguacate o leche de cabra.',
+      'Para un baño relajante antes de dormir, el de lavanda; para un aroma de verano, el de monoï, con flor de tiaré.',
+      'Para pieles secas que piden extra de nutrición, karité, argán, aguacate o leche de cabra.',
+      'Para empezar el día con energía, los de aroma fresco como pepita de uva o árbol de té.',
       'Para una limpieza más profunda, carbón activo, arcilla o árbol de té.',
       'Para la cara, los más delicados como arroz o rosa mosqueta.',
     ],
@@ -47,7 +52,8 @@ module.exports = [
     preguntas: [
       ['¿Qué es la saponificación en frío?', 'Es la forma tradicional de hacer jabón sin calentar la mezcla. Tarda semanas en curar, pero conserva la glicerina y las propiedades de los aceites.'],
       ['¿Sirven para cara y cuerpo?', 'Sí, aunque para la cara recomendamos los más suaves, como el de arroz o el de rosa mosqueta.'],
-      ['¿Cómo consigo que dure más?', 'Déjalo secar entre usos en una jabonera con drenaje. Un jabón que se queda en agua se ablanda y se gasta mucho antes.'],
+      ['¿Cómo consigo que dure más?', 'Déjalo secar entre usos en una jabonera con drenaje. Un jabón que se queda en agua se ablanda y se gasta mucho antes. Tampoco lo guardes en una bolsa de tela hasta que esté completamente seco.'],
+      ['¿Cuánto dura una pastilla de 100 g?', 'Depende de si la usas para las manos o para la ducha y de cómo la guardes, pero hace una espuma cremosa sin gastarse deprisa.'],
     ],
   },
   {
@@ -61,9 +67,10 @@ module.exports = [
       'Tenemos cuatro aromas (té verde, pomelo, algodón y madera), todos veganos, sin plástico y hechos a mano en España. Cada pastilla de 50 g da para más de 60 usos.',
     ],
     elegir: [
-      'Té verde o pomelo si te gustan los aromas frescos y cítricos.',
-      'Algodón si prefieres un olor suave y limpio.',
-      'Madera si buscas un aroma más cálido.',
+      'Té verde si te gusta un aroma fresco y herbal, ligero para pieles sensibles.',
+      'Pomelo si prefieres un aroma cítrico y luminoso para empezar el día.',
+      'Algodón si buscas un olor suave y empolvado, como a ropa recién lavada.',
+      'Madera si te gusta un aroma cálido, amaderado y ligeramente especiado.',
     ],
     uso: 'Aplícalo sobre la piel limpia y seca con dos o tres pasadas. Si está muy firme, sujétalo unos segundos en la mano para que se temple.',
     preguntas: [
@@ -100,11 +107,11 @@ module.exports = [
     meta: 'Espuma de afeitar sólida de aceite de avellana y champú sólido para barba de carbón activo. Afeitado clásico sin plástico, hecho a mano en España.',
     intro: [
       'Recupera el afeitado clásico con brocha y sin aerosoles. Nuestra espuma de afeitar sólida, con aceite de avellana, hace una espuma cremosa que ayuda a que la cuchilla deslice.',
-      'Para el día a día de la barba, el champú sólido de carbón activo la limpia sin plástico. Todo se elabora a mano en España.',
+      'Para el día a día de la barba, el champú sólido de carbón activo: lleva un ingrediente que neutraliza el olor a humo, tabaco o comida que se queda en el pelo, sin taparlo con perfume, y deja un aroma fresco de eucalipto. Todo se elabora a mano en España.',
     ],
     elegir: [
       'Si te afeitas con brocha, la espuma sólida de avellana.',
-      'Si llevas barba, el champú sólido de carbón activo para lavarla.',
+      'Si llevas barba o el pelo se te queda con olor a humo o tabaco, el champú sólido de carbón activo.',
       'Para empezar con el afeitado clásico, mira el Ritual de Afeitado con brocha, bol y soporte en accesorios.',
     ],
     uso: 'Humedece la brocha con agua caliente, gírala sobre la pastilla hasta cargarla y monta la espuma en el bol o directamente sobre la piel.',
@@ -120,16 +127,18 @@ module.exports = [
     h1: 'Espumas sólidas para depilación',
     meta: 'Espumas sólidas para depilarte con cuchilla: de aloe vera y de pepita de uva. Sin aerosol y sin plástico, hechas a mano en España.',
     intro: [
-      'Para depilarte con cuchilla sin espuma en aerosol. Estas pastillas hacen una espuma cremosa que ayuda a que la cuchilla deslice por la piel.',
-      'Hay dos versiones, de aloe vera y de pepita de uva. Se hacen a mano en España y vienen sin plástico.',
+      'Para depilarte con cuchilla sin espuma en aerosol. Al frotar la pastilla sobre la piel mojada se forma una crema espumosa que ayuda a que la cuchilla deslice.',
+      'Las dos llevan aceite de coco, manteca de karité, que hidrata, y manteca de cacao, que ayuda a que la piel no pierda humedad. Así la piel no queda seca después de pasar la cuchilla.',
+      'Se elaboran a mano en España, en frío y una a una, con un 98 % de ingredientes naturales según la norma Cosmos. No llevan SLS ni SCI, son veganas y vienen sin plástico.',
     ],
     elegir: [
-      'Aloe vera si buscas una sensación fresca.',
-      'Pepita de uva si prefieres una textura más nutritiva.',
+      'Aloe vera, con aloe canario, si buscas una sensación fresca y calmante después de depilarte.',
+      'Pepita de uva, con aroma a frutos rojos, si prefieres un extra de suavidad e hidratación.',
     ],
-    uso: 'Moja la piel y la pastilla, frótala directamente sobre la zona hasta hacer espuma y pasa la cuchilla. Aclara al terminar.',
+    uso: 'Moja bien la zona: la pastilla no lleva agua y la necesita para hacer espuma. Frótala directamente sobre la piel hasta crear una ligera espuma y pasa la cuchilla. Aclara al terminar; si quieres, termina con una crema o un aceite corporal.',
     preguntas: [
       ['¿Sirve para piernas y axilas?', 'Sí, para cualquier zona en la que uses cuchilla.'],
+      ['¿Cuánto dura una pastilla?', 'Una pastilla de 90 g da para más de 60 usos. Se gasta de forma uniforme, sin romperse, si la dejas secar entre usos en una jabonera o lata sin agua en la base.'],
       ['¿Y para afeitar la barba?', 'Para la barba tenemos la espuma de afeitar sólida de aceite de avellana.'],
     ],
   },
