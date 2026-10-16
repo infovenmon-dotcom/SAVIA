@@ -279,7 +279,12 @@ async function cargar(esLogin) {
   const lm = document.getElementById('login-msg');
   let cfg = {};
   try {
-    const r = await fetch(_base() + '/config', { cache: 'no-store' });
+    // Con contraseña, el panel pide la config COMPLETA (stock incluido), que
+    // ya no viaja en el /config público. Sin ella, la pública (solo lectura).
+    const r = PASS
+      ? await fetch(_base() + '/admin/config-completa', { method: 'POST', headers: { 'Authorization': 'Bearer ' + PASS }, cache: 'no-store' })
+      : await fetch(_base() + '/config', { cache: 'no-store' });
+    if (r.status === 401) throw new Error('Contraseña incorrecta');
     if (!r.ok) throw new Error('HTTP ' + r.status);
     cfg = await r.json();
   } catch (e) {

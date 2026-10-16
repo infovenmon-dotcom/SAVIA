@@ -2511,7 +2511,15 @@ export default {
         const cfg = await getConfig(env);
         // Los COSTES son información sensible de negocio: NO se exponen en el
         // endpoint público (la web no los usa). El panel los pide por /admin/costes.
-        const { costes, costeCajaPeq, costeCajaGrande, umbralCajaPeq, ...publico } = cfg;
+        // El STOCK (unidades) tampoco: es solo para el panel. A la web le basta
+        // saber qué está agotado, así que los productos con stock 0 se pasan a
+        // la lista "agotados" y las cantidades no salen de aquí.
+        const { costes, costeCajaPeq, costeCajaGrande, umbralCajaPeq, stock, ...publico } = cfg;
+        const agotados = new Set(Array.isArray(publico.agotados) ? publico.agotados : []);
+        for (const [h, n] of Object.entries(stock || {})) {
+          if (!(Number(n) > 0)) agotados.add(h);
+        }
+        publico.agotados = [...agotados];
         return jsonResp(publico, 200, cors);
       }
       // --- Muro central del panel: bloqueo por fuerza bruta + auth por cabecera.
@@ -2531,6 +2539,11 @@ export default {
       // Guardar config desde el panel /admin.
       if (path === '/admin/config' && request.method === 'POST') {
         return await guardarConfig(request, env, cors);
+      }
+      // Config completa, con stock y costes (privada, solo panel con contraseña).
+      if (path === '/admin/config-completa' && request.method === 'POST') {
+        if (!_authAdmin(request, env)) return jsonResp({ error: 'no_autorizado' }, 401, cors);
+        return jsonResp(await getConfig(env), 200, cors);
       }
       // Costes por unidad (privados, solo panel con contraseña).
       if (path === '/admin/costes' && request.method === 'POST') {
