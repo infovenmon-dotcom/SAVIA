@@ -221,6 +221,12 @@ function actualizarBarraPromo(c) {
 }
 
 /* Aviso flotante (toast) estilo Temu: salta cuando se desbloquea algo. */
+let _avisoTimer = null;
+/* Un solo aviso a la vez: el nuevo sustituye al anterior en vez de apilarse.
+   Anadiendo tres productos seguidos salian cuatro mensajes amontonados (uno
+   por producto mas el de envio gratis) que tapaban el carrito entero en un
+   movil pequeno. Al reemplazarlo se repite ademas la animacion de entrada,
+   asi que el mensaje nuevo se nota igual. */
 function mostrarAvisoFlotante(msg) {
   let cont = document.getElementById('avisos-flotantes');
   if (!cont) {
@@ -228,11 +234,13 @@ function mostrarAvisoFlotante(msg) {
     cont.id = 'avisos-flotantes';
     document.body.appendChild(cont);
   }
+  cont.textContent = '';
+  clearTimeout(_avisoTimer);
   const t = document.createElement('div');
   t.className = 'toast-promo';
   t.innerHTML = msg;
   cont.appendChild(t);
-  setTimeout(() => t.remove(), 4000);
+  _avisoTimer = setTimeout(() => t.remove(), 4000);
 }
 
 function eur(n) {
