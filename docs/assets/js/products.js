@@ -2660,7 +2660,7 @@ window.SAVIA_DATA = {
       "specs": {
         "peso": "500 g",
         "natural": "Mineral 100 % puro, sin nada añadido",
-        "fabricacion": "Sulfato de magnesio (INCI: Magnesium Sulfate) · Contenido neto 500 g ℮ · Bolsa doypack de papel kraft con cierre zip · Envasado en España por Venmon Naturalmente SL · Envase al contenedor amarillo"
+        "fabricacion": "Sulfato de magnesio (INCI: Magnesium Sulfate) · Contenido neto 500 g ℮ · Bolsa doypack de papel kraft con cierre zip · Savia de Alma es una marca de Venmon Naturalmente SL · Envasado en España · Envase al contenedor amarillo"
       },
       "handle": "sales-epsom-500",
       "title": "Sales de Epsom · 500 g · Ritual de Calma",
