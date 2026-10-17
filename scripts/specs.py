@@ -111,7 +111,7 @@ MAS_SPECS = {
         "fabricacion": "Espuma de depilacion solida, hecha a mano en Espana · Vegana · Sin plastico.",
     },
     "champu-barba-carbon": {
-        "cpnp": "3852941", "peso": "60 g",
+        "cpnp": "3852941", "peso": "65 g",
         "inci": "Sodium Coco-Sulfate, Cocos nucifera Oil, Aqua, Cocamidopropyl Betaine, Parfum, Charcoal Powder, Benzyl Salicylate, Citronellol, Coumarine, Limonene.",
         "fabricacion": "Champu solido en frio, hecho a mano en Espana · Vegano · Sin plastico.",
     },
