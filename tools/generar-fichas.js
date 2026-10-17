@@ -138,6 +138,35 @@ const PIE = `  <footer class="pie">
   <script src="/assets/js/accesibilidad.js"></script>
   <script defer src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "55b5e0bbafb34a94bc832c5a8500b78d"}'></script>`;
 
+/* Envio y devoluciones para Google (Fichas de comerciantes). Reflejan
+   envios.html, devoluciones.html y las tarifas del Worker (stripe/worker.js:
+   ENVIO_GRATIS_DESDE / ENVIO_PENINSULA / ENVIO_BALEARES). Si cambian alli,
+   cambiarlas aqui tambien. La tarifa es la de comprar solo ese producto. */
+const ENVIO = { gratisDesde: 20, peninsula: 3.95, baleares: 6 };
+function envioSchema(precio) {
+  const tarifa = (coste) => ({ '@type': 'MonetaryAmount', value: (precio >= ENVIO.gratisDesde ? 0 : coste).toFixed(2), currency: 'EUR' });
+  const plazo = (min, max) => ({
+    '@type': 'ShippingDeliveryTime',
+    handlingTime: { '@type': 'QuantitativeValue', minValue: 1, maxValue: 2, unitCode: 'DAY' },
+    transitTime: { '@type': 'QuantitativeValue', minValue: min, maxValue: max, unitCode: 'DAY' },
+  });
+  return [
+    { '@type': 'OfferShippingDetails', shippingRate: tarifa(ENVIO.peninsula),
+      shippingDestination: { '@type': 'DefinedRegion', addressCountry: 'ES' }, deliveryTime: plazo(1, 2) },
+    { '@type': 'OfferShippingDetails', shippingRate: tarifa(ENVIO.baleares),
+      shippingDestination: { '@type': 'DefinedRegion', addressCountry: 'ES', addressRegion: 'IB' }, deliveryTime: plazo(2, 3) },
+  ];
+}
+const DEVOLUCION_SCHEMA = {
+  '@type': 'MerchantReturnPolicy',
+  applicableCountry: 'ES',
+  returnPolicyCategory: 'https://schema.org/MerchantReturnFiniteReturnWindow',
+  merchantReturnDays: 14,
+  returnMethod: 'https://schema.org/ReturnByMail',
+  returnFees: 'https://schema.org/ReturnShippingFees',
+  merchantReturnLink: SITIO + '/devoluciones.html',
+};
+
 function ficha(p) {
   const url = `${SITIO}/producto/${p.handle}/`;
   const sp = p.specs || {};
@@ -167,6 +196,8 @@ function ficha(p) {
         : 'https://schema.org/InStock',
       itemCondition: 'https://schema.org/NewCondition',
       seller: { '@type': 'Organization', name: 'Savia de Alma' },
+      shippingDetails: envioSchema(Number(p.price)),
+      hasMerchantReturnPolicy: DEVOLUCION_SCHEMA,
     };
   }
   if (desc) jsonld.description = desc;
