@@ -217,7 +217,7 @@ const Carrito = {
     // Avisos tipo Temu al cruzar un umbral (solo tras una interaccion, no al cargar)
     if (this._prev) {
       if (c.gratisCount > this._prev.gratisCount) {
-        mostrarAvisoFlotante('🎁 ¡Tienes 1 producto de REGALO! (por cada 4, el de menor valor gratis)');
+        mostrarAvisoFlotante('🎁 ¡4×3 conseguido! El producto de menor precio te sale GRATIS');
         abrirCarrito();
       }
       if (c.envioGratis && !this._prev.envioGratis) {
@@ -246,7 +246,7 @@ function actualizarBarraPromo(c) {
   const regalo = falta === 0
     ? `🎁 ¡Llevas <strong>${c.gratisCount} de regalo</strong>!`
     : (falta === 1
-        ? `🎁 <strong>1 producto más</strong> y el 4º es de regalo`
+        ? `🎁 <strong>1 producto más</strong> y el de menor precio te sale gratis`
         : `🎁 Añade <strong>${falta}</strong> y llévate 1 de regalo`);
   const envio = c.envioGratis
     ? `🚚 <strong>¡Envío GRATIS!</strong>`
@@ -322,7 +322,7 @@ function renderPanelCarrito(c) {
     regalo = `<div class="aviso-regalo cerca">🎁 ¡Solo <strong>1 producto más</strong> y tienes <strong>1 de regalo</strong>!
       <div class="barra-regalo"><span style="width:${pgRegalo}%"></span></div></div>`;
   } else {
-    regalo = `<div class="aviso-regalo">🎁 Añade <strong>${falta} productos</strong> y consigue <strong>1 de regalo</strong> (por cada 4, 1 gratis).
+    regalo = `<div class="aviso-regalo">🎁 Añade <strong>${falta} productos</strong> y consigue <strong>1 de regalo</strong> (4×3: llévate 4, paga 3).
       <div class="barra-regalo"><span style="width:${pgRegalo}%"></span></div></div>`;
   }
 
@@ -348,7 +348,7 @@ function renderPanelCarrito(c) {
     ${c.ahorroPromo > 0 ? `<div class="fila-resumen"><span class="ahorro">Regalo · ${c.gratisCount} gratis</span><span class="ahorro">−${eur(c.ahorroPromo)}</span></div>` : ''}
     ${c.descuentoCodigo > 0 ? `<div class="fila-resumen"><span class="ahorro">Código ${c.codigo.code}${c.codigo.pct ? ' · ' + c.codigo.pct + '%' : ''}</span><span class="ahorro">−${eur(c.descuentoCodigo)}</span></div>` : ''}
     <div class="fila-resumen"><span>Envío${c.envioZona === 'baleares' ? ' (Baleares)' : ''}</span><span>${c.zonaNoDisponible ? '—' : (c.envioGratis ? 'GRATIS' : eur(c.envio))}</span></div>
-    <p style="font-size:.7rem;color:var(--texto-suave);text-align:center;margin:6px 0 6px">Por cada 4 productos, 1 de regalo (el de menor valor) · IVA incluido.</p>
+    <p style="font-size:.7rem;color:var(--texto-suave);text-align:center;margin:6px 0 6px">4×3: llévate 4, paga 3 (el de menor precio, gratis) · IVA incluido.</p>
     ${c.codigo
       ? `<div style="display:flex;align-items:center;justify-content:space-between;gap:8px;background:#eef5f0;border:1px solid #cfe3d7;border-radius:8px;padding:7px 10px;margin:0 0 10px">
            <span style="font-size:.8rem;color:var(--verde-oscuro)">🏷️ Código <strong>${c.codigo.code}</strong> aplicado${c.codigo.pct ? ' (−' + c.codigo.pct + '%)' : ''}</span>
