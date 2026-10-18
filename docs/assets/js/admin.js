@@ -1230,7 +1230,7 @@ async function verSeguimiento() {
     const r = await _postAdmin('/admin/seguimiento', {});
     const c = r.candidatos || [];
     caja.innerHTML = c.length
-      ? '<p class="nota">El próximo domingo se enviará el correo de seguimiento a:</p><ul>' + c.map(x => `<li style="margin:4px 0">${_escA(x.nombre || x.email)}${x.tipo && x.tipo !== 'compra' ? ' (' + _escA(x.tipo) + ')' : ''} · ${_escA(x.productos.join(', ') || 'sin productos apuntados')} <button class="btn btn-secundario btn-sm" onclick="omitirSeguimiento('${_escA(x.id)}')">No enviarle</button></li>`).join('') + '</ul>'
+      ? '<p class="nota">El próximo domingo se enviará el correo de seguimiento a:</p><ul>' + c.map(x => `<li style="margin:4px 0">${_escA(x.nombre || x.email)}${x.tipo && x.tipo !== 'compra' ? ' (' + _escA(x.tipo) + ')' : ''} · ${_escA(x.productos.join(', ') || 'sin productos apuntados')}${x.clave ? ` <button class="btn btn-secundario btn-sm" onclick="apuntarProductosSeg('${_escA(x.clave)}')">${x.productos.length ? 'Cambiar productos' : 'Apuntar productos'}</button>` : ''} <button class="btn btn-secundario btn-sm" onclick="omitirSeguimiento('${_escA(x.id)}')">No enviarle</button></li>`).join('') + '</ul>'
       : '<p class="nota">Ahora mismo no hay pedidos de hace 10–30 días pendientes de seguimiento.</p>';
   } catch (e) { caja.innerHTML = '<p class="nota">' + _escA(e.message) + '</p>'; }
 }
@@ -1238,4 +1238,28 @@ async function verSeguimiento() {
 async function omitirSeguimiento(id) {
   if (!confirm('¿No enviar el correo de seguimiento a esta persona?')) return;
   try { await _postAdmin('/admin/seguimiento', { accion: 'omitir', id }); verSeguimiento(); } catch (e) { alert(e.message); }
+}
+
+function apuntarProductosSeg(clave) {
+  const lista = PRODUCTOS.filter(p => !p.proximamente);
+  const caja = document.createElement('div');
+  caja.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:9999;display:flex;align-items:center;justify-content:center;padding:16px';
+  caja.innerHTML = `<div style="background:#fff;border-radius:12px;max-width:480px;width:100%;max-height:85vh;display:flex;flex-direction:column;padding:16px">
+    <h3 style="margin:0 0 8px">¿Qué productos se le enviaron?</h3>
+    <input type="search" placeholder="Buscar…" style="padding:8px;margin-bottom:8px;border:1px solid #ccc;border-radius:8px">
+    <div class="ap-lista" style="overflow:auto;flex:1">${lista.map(p => `<label style="display:flex;gap:8px;padding:6px 0;border-bottom:1px solid #eee"><input type="checkbox" value="${p.handle}"> ${_escA(p.title)}</label>`).join('')}</div>
+    <div style="display:flex;gap:8px;justify-content:flex-end;margin-top:12px">
+      <button class="btn btn-secundario ap-cancelar">Cancelar</button><button class="btn ap-guardar">Guardar</button></div></div>`;
+  document.body.appendChild(caja);
+  caja.querySelector('input[type=search]').oninput = e => {
+    const q = e.target.value.toLowerCase();
+    caja.querySelectorAll('.ap-lista label').forEach(l => { l.style.display = l.textContent.toLowerCase().includes(q) ? '' : 'none'; });
+  };
+  caja.querySelector('.ap-cancelar').onclick = () => caja.remove();
+  caja.querySelector('.ap-guardar').onclick = async () => {
+    const items = {};
+    caja.querySelectorAll('.ap-lista input:checked').forEach(c => { items[c.value] = 1; });
+    if (!Object.keys(items).length) { alert('Marca al menos un producto'); return; }
+    try { await _postAdmin('/admin/seguimiento', { accion: 'productos', clave, items }); caja.remove(); verSeguimiento(); } catch (e) { alert(e.message); }
+  };
 }
