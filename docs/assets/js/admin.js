@@ -1196,7 +1196,7 @@ function _tarjetaOp(o, handle, pendiente) {
   const h = handle || o.handle;
   return `<div style="border:1px solid #e5e0d5;border-radius:10px;padding:12px 14px;margin-bottom:10px;background:#fff">
     <div style="display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;font-size:.85rem">
-      <span><span style="color:#e8b53d">${'★'.repeat(o.r)}${'☆'.repeat(5 - o.r)}</span> <strong>${_escA(o.n)}</strong> · ${_escA(h)}</span>
+      <span><span style="color:#e8b53d">${'★'.repeat(o.r)}${'☆'.repeat(5 - o.r)}</span> <strong>${_escA(o.n)}</strong> · ${_escA(h)}${o.v === 'regalo' ? ' · <em>regalo/sorteo</em>' : ''}</span>
       <span style="color:#888">${new Date(o.ts * 1000).toLocaleDateString('es-ES')}</span></div>
     <p style="white-space:pre-wrap;margin:8px 0">${_escA(o.t)}</p>
     ${pendiente ? `<button class="btn btn-primario btn-sm" onclick="accionOpinion('aprobar','${o.id}')">Aprobar y publicar</button> ` : ''}
@@ -1229,7 +1229,7 @@ async function verSeguimiento() {
     const r = await _postAdmin('/admin/seguimiento', {});
     const c = r.candidatos || [];
     caja.innerHTML = c.length
-      ? '<p class="nota">El próximo domingo se enviará el correo de seguimiento a:</p><ul>' + c.map(x => `<li>${_escA(x.nombre || x.email)} · ${_escA(x.productos.join(', '))}</li>`).join('') + '</ul>'
+      ? '<p class="nota">El próximo domingo se enviará el correo de seguimiento a:</p><ul>' + c.map(x => `<li>${_escA(x.nombre || x.email)}${x.tipo && x.tipo !== 'compra' ? ' (' + _escA(x.tipo) + ')' : ''} · ${_escA(x.productos.join(', '))}</li>`).join('') + '</ul>'
       : '<p class="nota">Ahora mismo no hay pedidos de hace 10–30 días pendientes de seguimiento.</p>';
   } catch (e) { caja.innerHTML = '<p class="nota">' + _escA(e.message) + '</p>'; }
 }

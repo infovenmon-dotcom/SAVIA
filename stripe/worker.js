@@ -2623,7 +2623,7 @@ async function _codigoSostenible(env, email) {
   return null;
 }
 
-function _correoSeguimiento({ nombre, productos, codigo, unsub, opinar }) {
+function _correoSeguimiento({ nombre, productos, codigo, unsub, opinar, regalo }) {
   const esc = t => String(t || '').replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
   const principal = productos[0];
   const lista = productos.map(p =>
@@ -2636,8 +2636,10 @@ function _correoSeguimiento({ nombre, productos, codigo, unsub, opinar }) {
   const html =
     `<div style="font-family:-apple-system,Segoe UI,Roboto,Arial,sans-serif;max-width:560px;margin:0 auto;color:#333;line-height:1.55">` +
     `<h2 style="color:#6b7a4f;margin-bottom:6px">${nombre ? esc(nombre) + ', ya' : 'Ya'} eres parte del cambio 🌿</h2>` +
-    `<p>Hace unos días te llegó tu pedido de Savia de Alma y queríamos saber cómo te va. Con él has dejado fuera de tu baño unos cuantos botes de plástico: <strong>ya eres sostenible</strong>.</p>` +
-    (productos.length ? `<p style="margin-bottom:4px">Esto es lo que te llevaste:</p><ul style="padding-left:18px;margin-top:4px">${lista}</ul>` : '') +
+    (regalo
+      ? `<p>Hace unos días te llegó tu regalo de Savia de Alma y queríamos saber qué te ha parecido. Con la cosmética sólida dejas fuera de tu baño unos cuantos botes de plástico: <strong>ya eres sostenible</strong>.</p>`
+      : `<p>Hace unos días te llegó tu pedido de Savia de Alma y queríamos saber cómo te va. Con él has dejado fuera de tu baño unos cuantos botes de plástico: <strong>ya eres sostenible</strong>.</p>`) +
+    (productos.length ? `<p style="margin-bottom:4px">${regalo ? 'Esto es lo que te enviamos' : 'Esto es lo que te llevaste'}:</p><ul style="padding-left:18px;margin-top:4px">${lista}</ul>` : '') +
     (principal ? `<p><strong>¿Qué tal con el ${esc(principal.title)}?</strong> ¿Cómo lo notas, te gusta el aroma, te está durando bien?</p>` +
       (opinar ? `<p style="margin:18px 0"><a href="${opinar(principal.handle)}" style="background:#e8b53d;color:#3f2f00;padding:12px 22px;border-radius:8px;text-decoration:none;font-weight:700">★★★★★ Deja tu opinión</a></p>` +
         `<p style="font-size:14px;color:#555">Tu opinión aparecerá en la web y ayuda a otras personas a dar el paso a la cosmética sólida. Te lleva un minuto. También puedes responder a este correo: lo leemos todo.</p>`
@@ -2652,7 +2654,7 @@ function _correoSeguimiento({ nombre, productos, codigo, unsub, opinar }) {
       : '') +
     `<p style="margin:22px 0"><a href="${NL_SITE}/tienda.html?utm_source=postcompra&amp;utm_medium=email" style="background:#6b7a4f;color:#fff;padding:12px 22px;border-radius:8px;text-decoration:none;font-weight:600">Volver a la tienda</a></p>` +
     `<p style="color:#8a9b6a;font-weight:600">Gracias por cuidarte y cuidar del planeta 💚<br>Savia de Alma</p>` +
-    `<hr style="border:none;border-top:1px solid #eee"><p style="color:#aaa;font-size:12px">Recibes este correo porque compraste en saviadealma.com. ` +
+    `<hr style="border:none;border-top:1px solid #eee"><p style="color:#aaa;font-size:12px">Recibes este correo porque ${regalo ? 'recibiste un envío de' : 'compraste en'} saviadealma.com. ` +
     `<a href="${unsub}" style="color:#aaa">No quiero recibir más correos</a>.</p></div>`;
   return { subject, html };
 }
@@ -2671,7 +2673,8 @@ async function enviarSeguimientos(env, opts = {}) {
   do {
     const l = await env.SAVIA_KV.list({ prefix: 'pedido:', cursor });
     for (const k of l.keys) {
-      const f = Number((k.metadata && k.metadata.fecha) || k.name.split(':')[1]);
+      let f = Number((k.metadata && k.metadata.fecha) || k.name.split(':')[1]);
+      if (f > 1e12) f = Math.floor(f / 1000);                              // los envíos manuales guardan ms
       if (opts.pruebaA || (f >= desde && f <= hasta)) pedidos.push({ k: k.name, f });
     }
     cursor = l.list_complete ? null : l.cursor;
@@ -2682,12 +2685,17 @@ async function enviarSeguimientos(env, opts = {}) {
   const vistos = new Set();
   for (const { k } of pedidos) {
     const rec = JSON.parse(await env.SAVIA_KV.get(k) || 'null');
-    if (!rec || !String(rec.id || '').startsWith('cs_')) continue;        // solo ventas de Stripe
+    if (!rec) continue;
+    // Ventas de Stripe y envíos manuales (sorteos, regalos, muestras, prensa).
+    // Las reposiciones no: ese cliente ya recibe el correo por su pedido.
+    const esVenta = String(rec.id || '').startsWith('cs_');
+    if (!esVenta && !(rec.manual && rec.tipo !== 'reposicion')) continue;
+    const segId = rec.id || k;
     const email = String((rec.envio && rec.envio.email) || '').toLowerCase();
     if (!email || vistos.has(email)) continue;
     vistos.add(email);
     if (!opts.pruebaA) {
-      if (await env.SAVIA_KV.get('seguimiento:' + rec.id)) { res.saltados++; continue; }
+      if (await env.SAVIA_KV.get('seguimiento:' + segId)) { res.saltados++; continue; }
       if (await env.SAVIA_KV.get('unsub:' + email)) { res.saltados++; continue; }
     }
     const productos = Object.keys(rec.items || {})
@@ -2695,18 +2703,18 @@ async function enviarSeguimientos(env, opts = {}) {
       .concat(Object.keys(rec.items || {}).filter(h => prods[h] && prods[h].collection === 'accesorios'))
       .map(h => ({ handle: h, title: prods[h].title }));
     const nombre = primerNombre(rec.envio && rec.envio.nombre);
-    if (opts.simular) { res.candidatos.push({ email, nombre, productos: productos.map(p => p.title) }); continue; }
+    if (opts.simular) { res.candidatos.push({ email, nombre, tipo: esVenta ? 'compra' : (rec.tipo || 'regalo'), productos: productos.map(p => p.title) }); continue; }
     const to = opts.pruebaA || email;
     const codigo = opts.pruebaA ? 'SOSTENIBLE-EJEMP' : await _codigoSostenible(env, email);
     const token = await nlToken(email, env);
     const unsub = nlWorker(env) + '/unsubscribe?e=' + encodeURIComponent(email) + '&amp;t=' + token;
-    const tokOp = await nlToken('op:' + rec.id, env);
-    const opinar = h => `${NL_SITE}/opinar.html?o=${encodeURIComponent(rec.id)}&amp;t=${tokOp}&amp;p=${encodeURIComponent(h)}`;
-    const { subject, html } = _correoSeguimiento({ nombre, productos, codigo, unsub, opinar });
+    const tokOp = await nlToken('op:' + segId, env);
+    const opinar = h => `${NL_SITE}/opinar.html?o=${encodeURIComponent(segId)}&amp;t=${tokOp}&amp;p=${encodeURIComponent(h)}`;
+    const { subject, html } = _correoSeguimiento({ nombre, productos, codigo, unsub, opinar, regalo: !esVenta });
     const r = await enviarEmail(env, { to, subject: (opts.pruebaA ? '[PRUEBA] ' : '') + subject, html, replyTo: env.ORDER_EMAIL_TO || undefined, fromName: 'Savia de Alma' });
     if (r && r.ok) {
       res.enviados++;
-      if (!opts.pruebaA) await env.SAVIA_KV.put('seguimiento:' + rec.id, JSON.stringify({ ts: ahora, email, codigo, nombre, items: productos.map(p => p.handle) }), { expirationTtl: 400 * 86400 });
+      if (!opts.pruebaA) await env.SAVIA_KV.put('seguimiento:' + segId, JSON.stringify({ ts: ahora, email, codigo, nombre, items: productos.map(p => p.handle), origen: esVenta ? 'compra' : 'regalo' }), { expirationTtl: 400 * 86400 });
     } else console.error('seguimiento email', email, r && r.status, r && r.body);
     if (opts.pruebaA) break;
   }
@@ -2760,7 +2768,7 @@ async function manejarOpinion(request, env, cors) {
   const kOp = 'opinado:' + b.o + ':' + handle;
   if (await env.SAVIA_KV.get(kOp)) return jsonResp({ ok: false, error: 'repetida' }, 409, cors);
   const ts = Math.floor(Date.now() / 1000);
-  const op = { id: ts + '-' + Math.random().toString(36).slice(2, 7), handle, r, t: texto, n: nombre, ts, o: b.o };
+  const op = { id: ts + '-' + Math.random().toString(36).slice(2, 7), handle, r, t: texto, n: nombre, ts, o: b.o, v: seg.origen === 'regalo' ? 'regalo' : 'compra' };
   await env.SAVIA_KV.put('opinion:pend:' + op.id, JSON.stringify(op), { expirationTtl: 365 * 86400 });
   await env.SAVIA_KV.put(kOp, '1', { expirationTtl: 400 * 86400 });
   if (hayEmail(env)) {
@@ -2788,7 +2796,7 @@ async function manejarOpinionesAdmin(request, env, cors) {
   if (b.accion === 'aprobar' && b.id) {
     const op = JSON.parse(await env.SAVIA_KV.get('opinion:pend:' + b.id) || 'null');
     if (op) {
-      (ap[op.handle] = ap[op.handle] || []).unshift({ id: op.id, r: op.r, t: op.t, n: op.n, ts: op.ts });
+      (ap[op.handle] = ap[op.handle] || []).unshift({ id: op.id, r: op.r, t: op.t, n: op.n, ts: op.ts, v: op.v || 'compra' });
       await env.SAVIA_KV.put('opiniones:aprobadas', JSON.stringify(ap));
       await env.SAVIA_KV.delete('opinion:pend:' + b.id);
     }
