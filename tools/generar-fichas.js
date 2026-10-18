@@ -5,6 +5,7 @@
        node tools/generar-fichas.js                                     */
 const fs = require('fs');
 const path = require('path');
+const { seoDe } = require('./seo-fichas');
 
 const RAIZ = path.join(__dirname, '..', 'docs');
 const SITIO = 'https://saviadealma.com';
@@ -172,7 +173,9 @@ function ficha(p) {
   const sp = p.specs || {};
   const imgs = (p.images && p.images.length ? p.images : [p.image]).filter(Boolean);
   const desc = (p.descripcion || p.short || '').trim();
-  const metaDesc = (p.short || desc).slice(0, 155);
+  const seo = seoDe(p);
+  const metaDesc = seo ? seo.desc : (p.short || desc).slice(0, 155);
+  const tituloSeo = seo ? seo.titulo : p.title;
 
   // Los "Proximamente" se anuncian sin precio: una Offer sin price es un dato
   // invalido para Google, asi que en esos casos no se emite oferta ninguna.
@@ -226,14 +229,14 @@ function ficha(p) {
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>${esc(p.title)} · Savia de Alma</title>
+  <title>${esc(tituloSeo)} | Savia de Alma</title>
   <meta name="description" content="${esc(metaDesc)}">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
   <link rel="canonical" href="${url}">
   <meta property="og:type" content="product">
-  <meta property="og:title" content="${esc(p.title)} · Savia de Alma">
+  <meta property="og:title" content="${esc(tituloSeo)} | Savia de Alma">
   <meta property="og:description" content="${esc(metaDesc)}">
   <meta property="og:url" content="${url}">
   <meta property="og:image" content="${esc(abs(imgs[0]))}">
