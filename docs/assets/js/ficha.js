@@ -81,14 +81,19 @@
     if (!caja || !ep) return;
     let todas = {};
     try { todas = await (await fetch(ep + '/opiniones')).json(); } catch (e) { return; }
-    const ops = (todas && todas[caja.dataset.handle]) || [];
+    // Las mejores primero (más estrellas y, a igualdad, la más reciente).
+    const ops = ((todas && todas[caja.dataset.handle]) || []).slice().sort((x, y) => (y.r - x.r) || (y.ts - x.ts));
     if (!ops.length) return;
     const esc = t => String(t || '').replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
     const media = ops.reduce((a, o) => a + o.r, 0) / ops.length;
     const estrellas = r => '★'.repeat(r) + '☆'.repeat(5 - r);
     caja.innerHTML = `<h2>⭐ Opiniones de nuestros clientes</h2>
       <p class="op-media"><span class="resena-estrellas">${estrellas(Math.round(media))}</span> <strong>${media.toFixed(1).replace('.', ',')}</strong> de 5 · ${ops.length} ${ops.length > 1 ? 'opiniones' : 'opinión'} de compradores verificados</p>` +
-      ops.map(o => `<div class="fr-item"><div class="resena-estrellas">${estrellas(o.r)}</div><p>“${esc(o.t)}”</p><cite>— ${esc(o.n)} · compra verificada</cite></div>`).join('');
+      ops.map((o, i) => `<div class="fr-item"${i >= 3 ? ' hidden' : ''}><div class="resena-estrellas">${estrellas(o.r)}</div><p>“${esc(o.t)}”</p><cite>— ${esc(o.n)} · compra verificada</cite></div>`).join('') +
+      (ops.length > 3 ? `<button type="button" class="btn btn-secundario btn-sm op-mas">Ver las ${ops.length} opiniones</button>` : '') +
+      `<p class="op-nota">Solo pueden opinar quienes han comprado en esta web.</p>`;
+    const mas = caja.querySelector('.op-mas');
+    if (mas) mas.addEventListener('click', () => { caja.querySelectorAll('.fr-item[hidden]').forEach(x => { x.hidden = false; }); mas.remove(); });
     caja.hidden = false;
     document.querySelectorAll('script[type="application/ld+json"]').forEach(s => {
       try {

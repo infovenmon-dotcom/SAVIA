@@ -1772,3 +1772,5 @@ a.card-img, a.combina-img { color: inherit; text-decoration: none; }
 .opinar-prod textarea, .opinar-prod input { width: 100%; box-sizing: border-box; padding: 10px; border: 1px solid var(--borde); border-radius: 8px; font: inherit; margin-bottom: 8px; }
 .opinar-ok { color: var(--verde-oscuro); font-weight: 600; }
 .opinar-err { color: #a33; font-weight: 600; }
+.op-nota { font-size: .78rem; color: var(--texto-suave); margin: 10px 0 0; }
+.ficha-resenas .op-mas { margin-top: 8px; }
