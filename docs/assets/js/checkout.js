@@ -9,7 +9,7 @@
         pago segura y redirige al checkout de Stripe.
      5. Si el pago no se puede abrir -> mensaje claro junto al botón (ya no se
         manda a Amazon) y se registra el error en el embudo del panel.
-   La promo (por cada 3, 1 gratis) y el envío los RECALCULA el servidor a partir
+   La promo (4×3: por cada 4, el de menor precio gratis) y el envío los RECALCULA el servidor a partir
    de los precios reales: el navegador nunca decide cuánto se cobra.
    =========================================================================== */
 
