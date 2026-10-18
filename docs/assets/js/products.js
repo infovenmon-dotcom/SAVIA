@@ -2131,9 +2131,10 @@ window.SAVIA_DATA = {
       "collectionName": "Jabones Artesanales",
       "emoji": "🐐",
       "vegano": false,
-      "image": "assets/img/products/jabon-leche-cabra.jpg?v=4",
+      "image": "assets/img/products/jabon-leche-cabra.jpg?v=5",
       "images": [
-        "assets/img/products/jabon-leche-cabra.jpg?v=4"
+        "assets/img/products/jabon-leche-cabra.jpg?v=5",
+        "assets/img/products/jabon-leche-cabra-2.jpg"
       ],
       "bullets": [
         "HIDRATACIÓN QUE SE NOTA: la leche de cabra es rica en ácidos grasos, vitaminas (A, B, E) y minerales que nutren y suavizan la piel.",
@@ -2182,9 +2183,10 @@ window.SAVIA_DATA = {
       "collectionName": "Jabones Artesanales",
       "emoji": "🫏",
       "vegano": false,
-      "image": "assets/img/products/jabon-leche-burra-aloe.jpg?v=4",
+      "image": "assets/img/products/jabon-leche-burra-aloe.jpg?v=5",
       "images": [
-        "assets/img/products/jabon-leche-burra-aloe.jpg?v=4"
+        "assets/img/products/jabon-leche-burra-aloe.jpg?v=5",
+        "assets/img/products/jabon-leche-burra-aloe-2.jpg"
       ],
       "bullets": [
         "UN CLÁSICO PREMIUM: la leche de burra, muy valorada en cosmética, es rica en vitaminas y ácidos grasos que nutren y ayudan a mantener la piel joven y elástica.",
@@ -2237,9 +2239,10 @@ window.SAVIA_DATA = {
       "collectionName": "Jabones Artesanales",
       "emoji": "🌾",
       "vegano": true,
-      "image": "assets/img/products/jabon-aceite-arroz.jpg?v=4",
+      "image": "assets/img/products/jabon-aceite-arroz.jpg?v=5",
       "images": [
-        "assets/img/products/jabon-aceite-arroz.jpg?v=4"
+        "assets/img/products/jabon-aceite-arroz.jpg?v=5",
+        "assets/img/products/jabon-aceite-arroz-2.jpg"
       ],
       "bullets": [
         "EL RITUAL K-BEAUTY DEL ARROZ: el arroz es un ingrediente estrella de la cosmética coreana, asociado desde siempre a una piel luminosa, suave y de aspecto uniforme.",
