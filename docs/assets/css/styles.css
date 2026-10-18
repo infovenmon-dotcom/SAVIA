@@ -1759,3 +1759,16 @@ a.card-img, a.combina-img { color: inherit; text-decoration: none; }
 .enlace-familia { color: var(--verde-oscuro); font-weight: 600; }
 .indice-coleccion h2 a { color: inherit; }
 @media (max-width: 520px) { .familia-grid { grid-template-columns: repeat(2, 1fr); gap: 10px; } .familia-cab h1 { font-size: 1.6rem; } }
+
+/* Opiniones de compradores verificados + página opinar.html */
+.op-media { font-size: .92rem; margin: 0 0 10px; }
+.opinar { max-width: 560px; margin: 0 auto; padding: 24px 16px 48px; }
+.opinar h1 { font-size: 1.6rem; margin-bottom: 6px; }
+.opinar-prod { background: #fff; border: 1px solid var(--borde); border-radius: var(--radio); padding: 16px; margin: 16px 0; box-shadow: var(--sombra); }
+.opinar-prod h2 { font-size: 1.05rem; margin: 0 0 8px; }
+.estrellas-input { display: flex; gap: 4px; margin: 6px 0 10px; }
+.estrellas-input button { font-size: 2rem; line-height: 1; background: none; border: 0; color: #d9d3c4; cursor: pointer; padding: 2px; }
+.estrellas-input button.on { color: #e8b53d; }
+.opinar-prod textarea, .opinar-prod input { width: 100%; box-sizing: border-box; padding: 10px; border: 1px solid var(--borde); border-radius: 8px; font: inherit; margin-bottom: 8px; }
+.opinar-ok { color: var(--verde-oscuro); font-weight: 600; }
+.opinar-err { color: #a33; font-weight: 600; }

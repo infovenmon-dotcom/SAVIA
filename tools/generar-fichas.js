@@ -11,7 +11,7 @@ const SITIO = 'https://saviadealma.com';
 
 /* Sello de version de los assets: al cambiar un .js o .css hay que
    subirlo, o los navegadores siguen sirviendo la copia en cache. */
-const V = '20261016-19';
+const V = '20261016-20';
 
 /* --- cargar el catalogo sin navegador --- */
 const src = fs.readFileSync(path.join(RAIZ, 'assets/js/products.js'), 'utf8');
@@ -329,6 +329,8 @@ ${CABECERA}
         <cite>— ${esc(rv.n)}</cite>
       </div>`).join('\n      ')}
     </section>` : ''}
+
+    <section class="ficha-bloque ficha-resenas" id="opiniones-web" data-handle="${p.handle}" hidden></section>
 
     <p class="ficha-volver"><a href="/tienda.html">← Ver todos los productos</a></p>
   </main>

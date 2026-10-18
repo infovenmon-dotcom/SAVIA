@@ -2567,6 +2567,243 @@ async function manejarContactosLista(request, env, cors) {
   return jsonResp({ mensajes }, 200, cors);
 }
 
+/* ---------- Seguimiento post-compra ("Ya eres sostenible") ----------
+   Una vez por pedido, entre SEG_DIAS_MIN y SEG_DIAS_MAX días después de la
+   compra, el cliente recibe un correo que:
+     · le pregunta qué tal con lo que compró (nombra sus productos y pregunta
+       por uno en concreto; puede contestar al propio correo),
+   · y le regala un código PERSONAL de un solo uso (SOSTENIBLE-XXXX, -10 %,
+       válido 30 días), creado en Stripe sobre el cupón SOSTENIBLE10.
+   Lo lanza el temporizador semanal. Marca seguimiento:<pedido> para no
+   repetir y respeta las bajas (unsub:<email>). Los pedidos manuales del
+   panel (muestras, regalos) no reciben este correo. */
+const SEG_DIAS_MIN = 10;
+const SEG_DIAS_MAX = 30;
+const SEG_CUPON_ID = 'SOSTENIBLE10';
+const SEG_PCT = 10;
+const SEG_VALIDEZ_DIAS = 30;
+
+async function _stripeForm(env, ruta, campos) {
+  const r = await fetch('https://api.stripe.com/v1/' + ruta, {
+    method: 'POST',
+    headers: { 'Authorization': 'Bearer ' + env.STRIPE_SECRET_KEY, 'Content-Type': 'application/x-www-form-urlencoded' },
+    body: new URLSearchParams(campos).toString(),
+  });
+  const j = await r.json().catch(() => ({}));
+  return { ok: r.ok, status: r.status, j };
+}
+
+async function _cuponSostenible(env) {
+  const H = { 'Authorization': 'Bearer ' + env.STRIPE_SECRET_KEY };
+  const r = await fetch('https://api.stripe.com/v1/coupons/' + SEG_CUPON_ID, { headers: H });
+  if (r.ok) return true;
+  const c = await _stripeForm(env, 'coupons', {
+    id: SEG_CUPON_ID, percent_off: String(SEG_PCT), duration: 'once', name: 'Ya eres sostenible (-' + SEG_PCT + ' %)',
+  });
+  if (!c.ok) console.error('cupon sostenible:', c.status, JSON.stringify(c.j && c.j.error));
+  return c.ok;
+}
+
+async function _codigoSostenible(env, email) {
+  if (!env.STRIPE_SECRET_KEY || !(await _cuponSostenible(env))) return null;
+  const abc = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+  for (let intento = 0; intento < 3; intento++) {
+    let suf = '';
+    const rnd = crypto.getRandomValues(new Uint8Array(5));
+    for (const b of rnd) suf += abc[b % abc.length];
+    const code = 'SOSTENIBLE-' + suf;
+    const r = await _stripeForm(env, 'promotion_codes', {
+      coupon: SEG_CUPON_ID, code, max_redemptions: '1',
+      expires_at: String(Math.floor(Date.now() / 1000) + SEG_VALIDEZ_DIAS * 86400),
+      'metadata[email]': email, 'metadata[origen]': 'seguimiento-postcompra',
+    });
+    if (r.ok) return code;
+    console.error('promo sostenible:', r.status, JSON.stringify(r.j && r.j.error));
+  }
+  return null;
+}
+
+function _correoSeguimiento({ nombre, productos, codigo, unsub, opinar }) {
+  const esc = t => String(t || '').replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+  const principal = productos[0];
+  const lista = productos.map(p =>
+    `<li style="margin:6px 0"><a href="${NL_SITE}/producto/${p.handle}/?utm_source=postcompra&amp;utm_medium=email" style="color:#3f4a2e">${esc(p.title)}</a>` +
+    (opinar ? ` · <a href="${opinar(p.handle)}" style="color:#b8860b;font-weight:700;text-decoration:none">★ Valorar</a>` : '') + `</li>`).join('');
+  const caduca = new Date(Date.now() + SEG_VALIDEZ_DIAS * 86400000).toLocaleDateString('es-ES', { day: 'numeric', month: 'long' });
+  const subject = principal
+    ? `🌿 ¿Qué tal con tu ${principal.title}?`
+    : '🌿 ¿Qué tal con tu pedido de Savia de Alma?';
+  const html =
+    `<div style="font-family:-apple-system,Segoe UI,Roboto,Arial,sans-serif;max-width:560px;margin:0 auto;color:#333;line-height:1.55">` +
+    `<h2 style="color:#6b7a4f;margin-bottom:6px">${nombre ? esc(nombre) + ', ya' : 'Ya'} eres parte del cambio 🌿</h2>` +
+    `<p>Hace unos días te llegó tu pedido de Savia de Alma y queríamos saber cómo te va. Con él has dejado fuera de tu baño unos cuantos botes de plástico: <strong>ya eres sostenible</strong>.</p>` +
+    (productos.length ? `<p style="margin-bottom:4px">Esto es lo que te llevaste:</p><ul style="padding-left:18px;margin-top:4px">${lista}</ul>` : '') +
+    (principal ? `<p><strong>¿Qué tal con el ${esc(principal.title)}?</strong> ¿Cómo lo notas, te gusta el aroma, te está durando bien?</p>` +
+      (opinar ? `<p style="margin:18px 0"><a href="${opinar(principal.handle)}" style="background:#e8b53d;color:#3f2f00;padding:12px 22px;border-radius:8px;text-decoration:none;font-weight:700">★★★★★ Deja tu opinión</a></p>` +
+        `<p style="font-size:14px;color:#555">Tu opinión aparecerá en la web y ayuda a otras personas a dar el paso a la cosmética sólida. Te lleva un minuto. También puedes responder a este correo: lo leemos todo.</p>`
+        : `<p>Responde a este correo y cuéntanoslo: lo leemos todo y nos ayuda muchísimo a mejorar.</p>`)
+      : `<p>¿Qué tal te está yendo? Responde a este correo y cuéntanoslo: lo leemos todo.</p>`) +
+    `<p style="margin:6px 0 2px;color:#555;font-size:14px">Un consejo para que te dure más: guarda la pastilla fuera del chorro de la ducha y en una jabonera que no acumule agua.</p>` +
+    (codigo
+      ? `<div style="margin:22px 0;padding:18px;border:2px dashed #6b7a4f;border-radius:12px;text-align:center;background:#f6f3ec">` +
+        `<p style="margin:0 0 6px">Para cuando quieras reponer o probar algo nuevo, un <strong>${SEG_PCT} % de descuento</strong> solo para ti:</p>` +
+        `<p style="font-size:22px;font-weight:800;letter-spacing:2px;color:#3f4a2e;margin:6px 0">${esc(codigo)}</p>` +
+        `<p style="margin:0;font-size:13px;color:#777">Un solo uso · válido hasta el ${caduca}. Escríbelo al pagar.</p></div>`
+      : '') +
+    `<p style="margin:22px 0"><a href="${NL_SITE}/tienda.html?utm_source=postcompra&amp;utm_medium=email" style="background:#6b7a4f;color:#fff;padding:12px 22px;border-radius:8px;text-decoration:none;font-weight:600">Volver a la tienda</a></p>` +
+    `<p style="color:#8a9b6a;font-weight:600">Gracias por cuidarte y cuidar del planeta 💚<br>Savia de Alma</p>` +
+    `<hr style="border:none;border-top:1px solid #eee"><p style="color:#aaa;font-size:12px">Recibes este correo porque compraste en saviadealma.com. ` +
+    `<a href="${unsub}" style="color:#aaa">No quiero recibir más correos</a>.</p></div>`;
+  return { subject, html };
+}
+
+/* Recorre los pedidos y envía los seguimientos pendientes.
+   opts.simular: no envía ni crea códigos; devuelve a quién se enviaría.
+   opts.pruebaA: envía UN correo de muestra (último pedido) a esa dirección,
+   con un código de ejemplo que no existe en Stripe. */
+async function enviarSeguimientos(env, opts = {}) {
+  if (!env.SAVIA_KV) return { ok: false, motivo: 'sin KV' };
+  if (!opts.simular && !hayEmail(env)) return { ok: false, motivo: 'sin proveedor de email' };
+  const ahora = Math.floor(Date.now() / 1000);
+  const desde = ahora - SEG_DIAS_MAX * 86400, hasta = ahora - SEG_DIAS_MIN * 86400;
+  const pedidos = [];
+  let cursor;
+  do {
+    const l = await env.SAVIA_KV.list({ prefix: 'pedido:', cursor });
+    for (const k of l.keys) {
+      const f = Number((k.metadata && k.metadata.fecha) || k.name.split(':')[1]);
+      if (opts.pruebaA || (f >= desde && f <= hasta)) pedidos.push({ k: k.name, f });
+    }
+    cursor = l.list_complete ? null : l.cursor;
+  } while (cursor);
+  pedidos.sort((a, b) => b.f - a.f);
+  const prods = await cargarProductos(env.PRODUCTS_URL).catch(() => ({}));
+  const res = { ok: true, enviados: 0, saltados: 0, candidatos: [] };
+  const vistos = new Set();
+  for (const { k } of pedidos) {
+    const rec = JSON.parse(await env.SAVIA_KV.get(k) || 'null');
+    if (!rec || !String(rec.id || '').startsWith('cs_')) continue;        // solo ventas de Stripe
+    const email = String((rec.envio && rec.envio.email) || '').toLowerCase();
+    if (!email || vistos.has(email)) continue;
+    vistos.add(email);
+    if (!opts.pruebaA) {
+      if (await env.SAVIA_KV.get('seguimiento:' + rec.id)) { res.saltados++; continue; }
+      if (await env.SAVIA_KV.get('unsub:' + email)) { res.saltados++; continue; }
+    }
+    const productos = Object.keys(rec.items || {})
+      .filter(h => prods[h] && prods[h].collection !== 'accesorios')
+      .concat(Object.keys(rec.items || {}).filter(h => prods[h] && prods[h].collection === 'accesorios'))
+      .map(h => ({ handle: h, title: prods[h].title }));
+    const nombre = primerNombre(rec.envio && rec.envio.nombre);
+    if (opts.simular) { res.candidatos.push({ email, nombre, productos: productos.map(p => p.title) }); continue; }
+    const to = opts.pruebaA || email;
+    const codigo = opts.pruebaA ? 'SOSTENIBLE-EJEMP' : await _codigoSostenible(env, email);
+    const token = await nlToken(email, env);
+    const unsub = nlWorker(env) + '/unsubscribe?e=' + encodeURIComponent(email) + '&amp;t=' + token;
+    const tokOp = await nlToken('op:' + rec.id, env);
+    const opinar = h => `${NL_SITE}/opinar.html?o=${encodeURIComponent(rec.id)}&amp;t=${tokOp}&amp;p=${encodeURIComponent(h)}`;
+    const { subject, html } = _correoSeguimiento({ nombre, productos, codigo, unsub, opinar });
+    const r = await enviarEmail(env, { to, subject: (opts.pruebaA ? '[PRUEBA] ' : '') + subject, html, replyTo: env.ORDER_EMAIL_TO || undefined, fromName: 'Savia de Alma' });
+    if (r && r.ok) {
+      res.enviados++;
+      if (!opts.pruebaA) await env.SAVIA_KV.put('seguimiento:' + rec.id, JSON.stringify({ ts: ahora, email, codigo, nombre, items: productos.map(p => p.handle) }), { expirationTtl: 400 * 86400 });
+    } else console.error('seguimiento email', email, r && r.status, r && r.body);
+    if (opts.pruebaA) break;
+  }
+  return res;
+}
+
+async function manejarSeguimientoAdmin(request, env, cors) {
+  if (!_authAdmin(request, env)) return jsonResp({ error: 'no_autorizado' }, 401, cors);
+  let body = {}; try { body = await request.json(); } catch { /* */ }
+  if (body.accion === 'prueba') return jsonResp(await enviarSeguimientos(env, { pruebaA: env.ORDER_EMAIL_TO }), 200, cors);
+  return jsonResp(await enviarSeguimientos(env, { simular: true }), 200, cors);
+}
+
+/* ---------- Opiniones de clientes (solo compradores verificados) ----------
+   El correo de seguimiento enlaza a /opinar.html?o=<pedido>&t=<firma>&p=<producto>.
+   La firma (HMAC del pedido) garantiza que solo opina quien compró. Cada
+   opinión entra como PENDIENTE; desde el panel (⭐ Opiniones) se aprueba o
+   borra. Las aprobadas se publican en las fichas (/opiniones). */
+async function _pedidoOpinion(env, o, t) {
+  if (!o || !t || !env.SAVIA_KV) return null;
+  if (!igualSeguro(String(t), await nlToken('op:' + o, env))) return null;
+  const seg = JSON.parse(await env.SAVIA_KV.get('seguimiento:' + o) || 'null');
+  return seg;
+}
+async function _opinionesAprobadas(env) {
+  return JSON.parse(await env.SAVIA_KV.get('opiniones:aprobadas') || '{}');
+}
+async function manejarOpinionInfo(request, env, cors) {
+  const u = new URL(request.url);
+  const o = u.searchParams.get('o'), t = u.searchParams.get('t');
+  const seg = await _pedidoOpinion(env, o, t);
+  if (!seg) return jsonResp({ ok: false, error: 'enlace' }, 403, cors);
+  const prods = await cargarProductos(env.PRODUCTS_URL).catch(() => ({}));
+  const productos = [];
+  for (const h of seg.items || []) {
+    productos.push({ handle: h, title: (prods[h] && prods[h].title) || h, hecha: !!(await env.SAVIA_KV.get('opinado:' + o + ':' + h)) });
+  }
+  return jsonResp({ ok: true, nombre: seg.nombre || '', productos }, 200, cors);
+}
+async function manejarOpinion(request, env, cors) {
+  let b; try { b = await request.json(); } catch { return jsonResp({ ok: false, error: 'json' }, 400, cors); }
+  const seg = await _pedidoOpinion(env, b.o, b.t);
+  if (!seg) return jsonResp({ ok: false, error: 'enlace' }, 403, cors);
+  const handle = String(b.handle || '');
+  if (!(seg.items || []).includes(handle)) return jsonResp({ ok: false, error: 'producto' }, 400, cors);
+  const r = Math.round(Number(b.estrellas));
+  if (!(r >= 1 && r <= 5)) return jsonResp({ ok: false, error: 'estrellas' }, 400, cors);
+  const texto = String(b.texto || '').trim().slice(0, 1200);
+  if (texto.length < 5) return jsonResp({ ok: false, error: 'texto' }, 400, cors);
+  const nombre = String(b.nombre || seg.nombre || 'Cliente').trim().slice(0, 40) || 'Cliente';
+  const kOp = 'opinado:' + b.o + ':' + handle;
+  if (await env.SAVIA_KV.get(kOp)) return jsonResp({ ok: false, error: 'repetida' }, 409, cors);
+  const ts = Math.floor(Date.now() / 1000);
+  const op = { id: ts + '-' + Math.random().toString(36).slice(2, 7), handle, r, t: texto, n: nombre, ts, o: b.o };
+  await env.SAVIA_KV.put('opinion:pend:' + op.id, JSON.stringify(op), { expirationTtl: 365 * 86400 });
+  await env.SAVIA_KV.put(kOp, '1', { expirationTtl: 400 * 86400 });
+  if (hayEmail(env)) {
+    try {
+      await enviarEmail(env, {
+        to: env.ORDER_EMAIL_TO, fromName: 'Web Savia de Alma',
+        subject: '⭐ Nueva opinión pendiente (' + '★'.repeat(r) + ')',
+        html: `<div style="font-family:Arial,sans-serif;color:#333"><p><strong>${_escHtml(nombre)}</strong> ha valorado <strong>${_escHtml(handle)}</strong> con ${'★'.repeat(r)}${'☆'.repeat(5 - r)}:</p>` +
+          `<blockquote style="background:#f6f3ec;padding:12px;border-radius:8px;white-space:pre-wrap">${_escHtml(texto)}</blockquote>` +
+          `<p>Apruébala o bórrala en el panel, pestaña ⭐ Opiniones.</p></div>`,
+      });
+    } catch (e) { console.error('aviso opinion:', e); }
+  }
+  return jsonResp({ ok: true }, 200, cors);
+}
+async function manejarOpinionesPublicas(env, cors) {
+  const ap = env.SAVIA_KV ? await _opinionesAprobadas(env) : {};
+  const h = Object.assign({}, cors, { 'Cache-Control': 'public, max-age=300' });
+  return jsonResp(ap, 200, h);
+}
+async function manejarOpinionesAdmin(request, env, cors) {
+  if (!_authAdmin(request, env)) return jsonResp({ error: 'no_autorizado' }, 401, cors);
+  let b = {}; try { b = await request.json(); } catch { /* */ }
+  const ap = await _opinionesAprobadas(env);
+  if (b.accion === 'aprobar' && b.id) {
+    const op = JSON.parse(await env.SAVIA_KV.get('opinion:pend:' + b.id) || 'null');
+    if (op) {
+      (ap[op.handle] = ap[op.handle] || []).unshift({ id: op.id, r: op.r, t: op.t, n: op.n, ts: op.ts });
+      await env.SAVIA_KV.put('opiniones:aprobadas', JSON.stringify(ap));
+      await env.SAVIA_KV.delete('opinion:pend:' + b.id);
+    }
+  } else if (b.accion === 'borrar' && b.id) {
+    await env.SAVIA_KV.delete('opinion:pend:' + b.id);
+    for (const h of Object.keys(ap)) ap[h] = ap[h].filter(x => x.id !== b.id);
+    await env.SAVIA_KV.put('opiniones:aprobadas', JSON.stringify(ap));
+  }
+  const l = await env.SAVIA_KV.list({ prefix: 'opinion:pend:' });
+  const pendientes = [];
+  for (const k of l.keys) { const v = await env.SAVIA_KV.get(k.name); if (v) pendientes.push(JSON.parse(v)); }
+  pendientes.sort((x, y) => y.ts - x.ts);
+  return jsonResp({ pendientes, aprobadas: ap }, 200, cors);
+}
+
 export default {
   async fetch(request, env) {
     const allowed = env.ALLOWED_ORIGIN || '*';
@@ -2667,6 +2904,21 @@ export default {
       if (path === '/contacto' && request.method === 'POST') {
         return await manejarContacto(request, env, cors);
       }
+      if (path === '/opinion/info' && request.method === 'GET') {
+        return await manejarOpinionInfo(request, env, cors);
+      }
+      if (path === '/opinion' && request.method === 'POST') {
+        return await manejarOpinion(request, env, cors);
+      }
+      if (path === '/opiniones' && request.method === 'GET') {
+        return await manejarOpinionesPublicas(env, cors);
+      }
+      if (path === '/admin/opiniones' && request.method === 'POST') {
+        return await manejarOpinionesAdmin(request, env, cors);
+      }
+      if (path === '/admin/seguimiento' && request.method === 'POST') {
+        return await manejarSeguimientoAdmin(request, env, cors);
+      }
       if (path === '/admin/contactos' && request.method === 'POST') {
         return await manejarContactosLista(request, env, cors);
       }
@@ -2721,6 +2973,10 @@ export default {
   async scheduled(event, env, ctx) {
     ctx.waitUntil(
       enviarNewsletterSemanal(env, { avanzar: true }).catch((e) => console.error('newsletter cron:', e))
+    );
+    // Seguimiento post-compra con código "Ya eres sostenible" (una vez por pedido).
+    ctx.waitUntil(
+      enviarSeguimientos(env).catch((e) => console.error('seguimiento cron:', e))
     );
   },
 };

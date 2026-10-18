@@ -41,13 +41,14 @@ async function entrar() {
 
 /* Cambiar entre pestañas */
 function mostrarTab(t) {
-  ['prod', 'envios', 'cuentas', 'beneficio', 'facturas', 'embudo', 'mensajes'].forEach(x => {
+  ['prod', 'envios', 'cuentas', 'beneficio', 'facturas', 'embudo', 'mensajes', 'opiniones'].forEach(x => {
     document.getElementById('tab-' + x).classList.toggle('oculto', x !== t);
     document.getElementById('tb-' + x).classList.toggle('activo', x === t);
   });
   if (t === 'envios') { manInit(); if (!ENVIOS.length) cargarEnvios(); }
   if (t === 'embudo' && !document.getElementById('em-desde').value) rangoEmbudo(7);
   if (t === 'mensajes') cargarMensajes();
+  if (t === 'opiniones') cargarOpiniones();
 }
 
 /* ---------- Facturas ---------- */
@@ -1180,4 +1181,55 @@ async function cargarMensajes() {
   } catch (e) {
     _msg(msg, 'No se han podido cargar: ' + e.message, 'err');
   }
+}
+
+
+/* ---------- Opiniones de clientes + seguimiento post-compra ---------- */
+function _escA(t) { return String(t || '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c])); }
+async function _postAdmin(ruta, body) {
+  const r = await fetch(_base() + ruta, { method: 'POST', headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + PASS }, body: JSON.stringify(body || {}) });
+  if (r.status === 401) throw new Error('Contraseña incorrecta');
+  if (!r.ok) throw new Error('HTTP ' + r.status);
+  return r.json();
+}
+function _tarjetaOp(o, handle, pendiente) {
+  const h = handle || o.handle;
+  return `<div style="border:1px solid #e5e0d5;border-radius:10px;padding:12px 14px;margin-bottom:10px;background:#fff">
+    <div style="display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;font-size:.85rem">
+      <span><span style="color:#e8b53d">${'★'.repeat(o.r)}${'☆'.repeat(5 - o.r)}</span> <strong>${_escA(o.n)}</strong> · ${_escA(h)}</span>
+      <span style="color:#888">${new Date(o.ts * 1000).toLocaleDateString('es-ES')}</span></div>
+    <p style="white-space:pre-wrap;margin:8px 0">${_escA(o.t)}</p>
+    ${pendiente ? `<button class="btn btn-primario btn-sm" onclick="accionOpinion('aprobar','${o.id}')">Aprobar y publicar</button> ` : ''}
+    <button class="btn btn-secundario btn-sm" onclick="accionOpinion('borrar','${o.id}')">Borrar</button></div>`;
+}
+function _pintarOpiniones(d) {
+  const p = d.pendientes || [];
+  document.getElementById('op-pend').innerHTML = p.length ? p.map(o => _tarjetaOp(o, null, true)).join('') : '<p class="nota">No hay opiniones pendientes.</p>';
+  const ap = d.aprobadas || {}; const filas = [];
+  Object.keys(ap).forEach(h => ap[h].forEach(o => filas.push(_tarjetaOp(o, h, false))));
+  document.getElementById('op-ap').innerHTML = filas.length ? filas.join('') : '<p class="nota">Todavía no hay opiniones publicadas.</p>';
+}
+async function cargarOpiniones() {
+  const msg = document.getElementById('op-msg'); _msg(msg, 'Cargando…', '');
+  try { _pintarOpiniones(await _postAdmin('/admin/opiniones')); _msg(msg, '', ''); } catch (e) { _msg(msg, e.message, 'err'); }
+}
+async function accionOpinion(accion, id) {
+  if (accion === 'borrar' && !confirm('¿Borrar esta opinión?')) return;
+  const msg = document.getElementById('op-msg');
+  try { _pintarOpiniones(await _postAdmin('/admin/opiniones', { accion, id })); _msg(msg, accion === 'aprobar' ? 'Publicada ✓' : 'Borrada', 'ok'); } catch (e) { _msg(msg, e.message, 'err'); }
+}
+async function pruebaSeguimiento() {
+  const msg = document.getElementById('op-msg'); _msg(msg, 'Enviando…', '');
+  try { const r = await _postAdmin('/admin/seguimiento', { accion: 'prueba' }); _msg(msg, r.enviados ? 'Enviado a info@saviadealma.com ✓' : 'No se ha enviado (' + (r.motivo || 'sin pedidos') + ')', r.enviados ? 'ok' : 'err'); }
+  catch (e) { _msg(msg, e.message, 'err'); }
+}
+async function verSeguimiento() {
+  const caja = document.getElementById('op-seg');
+  try {
+    const r = await _postAdmin('/admin/seguimiento', {});
+    const c = r.candidatos || [];
+    caja.innerHTML = c.length
+      ? '<p class="nota">El próximo domingo se enviará el correo de seguimiento a:</p><ul>' + c.map(x => `<li>${_escA(x.nombre || x.email)} · ${_escA(x.productos.join(', '))}</li>`).join('') + '</ul>'
+      : '<p class="nota">Ahora mismo no hay pedidos de hace 10–30 días pendientes de seguimiento.</p>';
+  } catch (e) { caja.innerHTML = '<p class="nota">' + _escA(e.message) + '</p>'; }
 }

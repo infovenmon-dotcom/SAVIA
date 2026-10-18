@@ -71,9 +71,44 @@
     if (window.Carrito && typeof Carrito.render === 'function') Carrito.render();
   }
 
+  /* Opiniones de compradores verificados de la web (aprobadas en el panel).
+     Se pintan en la ficha y se añaden al bloque de datos para Google
+     (aggregateRating + review): son opiniones recogidas aquí, de clientes
+     reales, que es lo que Google admite. */
+  async function pintarOpiniones() {
+    const caja = document.getElementById('opiniones-web');
+    const ep = ((window.SAVIA_CONFIG || {}).checkoutEndpoint || '').trim().replace(/\/+$/, '');
+    if (!caja || !ep) return;
+    let todas = {};
+    try { todas = await (await fetch(ep + '/opiniones')).json(); } catch (e) { return; }
+    const ops = (todas && todas[caja.dataset.handle]) || [];
+    if (!ops.length) return;
+    const esc = t => String(t || '').replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+    const media = ops.reduce((a, o) => a + o.r, 0) / ops.length;
+    const estrellas = r => '★'.repeat(r) + '☆'.repeat(5 - r);
+    caja.innerHTML = `<h2>⭐ Opiniones de nuestros clientes</h2>
+      <p class="op-media"><span class="resena-estrellas">${estrellas(Math.round(media))}</span> <strong>${media.toFixed(1).replace('.', ',')}</strong> de 5 · ${ops.length} ${ops.length > 1 ? 'opiniones' : 'opinión'} de compradores verificados</p>` +
+      ops.map(o => `<div class="fr-item"><div class="resena-estrellas">${estrellas(o.r)}</div><p>“${esc(o.t)}”</p><cite>— ${esc(o.n)} · compra verificada</cite></div>`).join('');
+    caja.hidden = false;
+    document.querySelectorAll('script[type="application/ld+json"]').forEach(s => {
+      try {
+        const d = JSON.parse(s.textContent);
+        if (d['@type'] !== 'Product') return;
+        d.aggregateRating = { '@type': 'AggregateRating', ratingValue: media.toFixed(1), reviewCount: ops.length, bestRating: 5, worstRating: 1 };
+        d.review = ops.slice(0, 10).map(o => ({
+          '@type': 'Review', reviewRating: { '@type': 'Rating', ratingValue: o.r, bestRating: 5 },
+          author: { '@type': 'Person', name: o.n }, reviewBody: o.t,
+          datePublished: new Date(o.ts * 1000).toISOString().slice(0, 10),
+        }));
+        s.textContent = JSON.stringify(d);
+      } catch (e) { /* */ }
+    });
+  }
+
   async function iniciar() {
     if (typeof cargarConfigRemota === 'function') await cargarConfigRemota();
     pintarFicha();
+    pintarOpiniones();
   }
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', iniciar);
   else iniciar();

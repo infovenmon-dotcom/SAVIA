@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tu opinión · Savia de Alma</title>
+  <meta name="description" content="Cuéntanos qué tal con tus productos de Savia de Alma.">
+  <meta name="robots" content="noindex">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
+  
+  <link rel="stylesheet" href="assets/css/styles.css?v=20261016-20">
+  <link rel="icon" href="assets/img/favicon.ico" sizes="any">
+  <link rel="icon" type="image/png" sizes="32x32" href="assets/img/favicon-32.png">
+  <link rel="apple-touch-icon" href="assets/img/apple-touch-icon.png">
+</head>
+<body>
+  <div class="barra-fija">
+    <header class="cabecera">
+      <div class="cabecera-inner">
+        <a class="logo" href="index.html"><img class="logo-img" src="assets/img/logo-negro.png" alt="Savia de Alma"></a>
+        <nav class="nav-tienda">
+          <a href="index.html">Inicio</a>
+          <a href="tienda.html">Tienda</a>
+          <a href="index.html#contacto">Contacto</a>
+        </nav>
+      </div>
+    </header>
+  </div>
+
+  <main class="opinar">
+    <h1>¿Qué tal con tus productos? 🌿</h1>
+    <p id="op-intro">Tu opinión aparecerá en la web y ayuda a otras personas a dar el paso a la cosmética sólida.</p>
+    <div id="op-lista"><p>Cargando…</p></div>
+  </main>
+  <script src="assets/js/config.js?v=20261016-20"></script>
+  <script>
+  (function () {
+    const q = new URLSearchParams(location.search);
+    const o = q.get('o'), t = q.get('t'), foco = q.get('p');
+    const ep = ((window.SAVIA_CONFIG || {}).checkoutEndpoint || '').replace(/\/+$/, '');
+    const lista = document.getElementById('op-lista');
+    const esc = s => String(s || '').replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+    const fallo = m => { lista.innerHTML = '<p class="opinar-err">' + m + '</p><p>Si quieres, escríbenos a <a href="mailto:info@saviadealma.com">info@saviadealma.com</a>.</p>'; };
+    if (!o || !t || !ep) return fallo('Este enlace no es válido. Usa el botón del correo que te enviamos.');
+    fetch(ep + '/opinion/info?o=' + encodeURIComponent(o) + '&t=' + encodeURIComponent(t))
+      .then(r => r.json()).then(info => {
+        if (!info.ok) return fallo('Este enlace no es válido o ha caducado.');
+        const prods = info.productos.slice().sort((a, b) => (b.handle === foco) - (a.handle === foco));
+        lista.innerHTML = prods.map(p => `
+          <form class="opinar-prod" data-h="${esc(p.handle)}">
+            <h2>${esc(p.title)}</h2>
+            ${p.hecha ? '<p class="opinar-ok">✓ Ya nos dejaste tu opinión. ¡Gracias!</p>' : `
+            <div class="estrellas-input" role="radiogroup" aria-label="Valoración">
+              ${[1,2,3,4,5].map(n => `<button type="button" data-n="${n}" aria-label="${n} estrella${n > 1 ? 's' : ''}">★</button>`).join('')}
+            </div>
+            <textarea name="texto" rows="4" maxlength="1200" placeholder="¿Qué te ha parecido? Aroma, espuma, cómo te deja la piel o el pelo, cuánto te dura…" required></textarea>
+            <input name="nombre" maxlength="40" value="${esc(info.nombre)}" placeholder="Tu nombre (se mostrará así)">
+            <button class="btn btn-primario" type="submit">Publicar mi opinión</button>
+            <p class="op-msg" hidden></p>`}
+          </form>`).join('');
+        lista.querySelectorAll('form').forEach(f => {
+          let r = 0;
+          const bs = f.querySelectorAll('.estrellas-input button');
+          bs.forEach(b => b.addEventListener('click', () => { r = +b.dataset.n; bs.forEach(x => x.classList.toggle('on', +x.dataset.n <= r)); }));
+          f.addEventListener('submit', ev => {
+            ev.preventDefault();
+            const msg = f.querySelector('.op-msg'), btn = f.querySelector('button[type=submit]');
+            const di = m => { msg.hidden = false; msg.className = 'op-msg opinar-err'; msg.textContent = m; };
+            if (!r) return di('Elige de 1 a 5 estrellas.');
+            if (f.texto.value.trim().length < 5) return di('Cuéntanos un poco más.');
+            btn.disabled = true; btn.textContent = 'Enviando…';
+            fetch(ep + '/opinion', { method: 'POST', headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ o, t, handle: f.dataset.h, estrellas: r, texto: f.texto.value, nombre: f.nombre.value }) })
+              .then(x => x.json()).then(j => {
+                if (j.ok) { f.innerHTML = '<h2>' + esc(f.querySelector('h2').textContent) + '</h2><p class="opinar-ok">✓ ¡Gracias! Tu opinión se publicará en la web en cuanto la revisemos.</p>'; return; }
+                btn.disabled = false; btn.textContent = 'Publicar mi opinión';
+                di(j.error === 'repetida' ? 'Ya nos habías dejado tu opinión de este producto.' : 'No se ha podido enviar. Inténtalo de nuevo.');
+              }).catch(() => { btn.disabled = false; btn.textContent = 'Publicar mi opinión'; di('Sin conexión. Inténtalo de nuevo.'); });
+          });
+        });
+        const f0 = lista.querySelector('form[data-h="' + CSS.escape(foco || '') + '"]'); if (f0) f0.scrollIntoView();
+      }).catch(() => fallo('No hemos podido cargar tu pedido. Inténtalo más tarde.'));
+  })();
+  </script>
+
+
+  <footer class="pie">
+    <div class="contenedor pie-inner">
+      <div class="pie-marca">
+        <img class="pie-logo" src="assets/img/logo-blanco.png" alt="Savia de Alma">
+        <p>Cosmética sólida natural · Hecha a mano en España</p>
+      </div>
+      <nav class="pie-col">
+        <h4>Mapa del sitio</h4>
+        <a href="index.html">Inicio</a>
+        <a href="tienda.html">Tienda</a>
+        <a href="index.html#contacto">Contacto</a>
+        <a href="ritual-de-calma">Guía Ritual de Calma</a>
+      </nav>
+      <nav class="pie-col">
+        <h4>Legales</h4>
+        <a href="aviso-legal.html">Aviso legal</a>
+        <a href="condiciones-venta.html">Condiciones de venta</a>
+        <a href="privacidad.html">Privacidad y cookies</a>
+        <a href="envios.html">Envíos</a>
+        <a href="devoluciones.html">Devoluciones y desistimiento</a>
+        <a href="accesibilidad.html">Accesibilidad</a>
+      </nav>
+    </div>
+    <small>© Savia de Alma</small>
+  </footer>
+  <div class="kit-digital">
+    <img src="assets/img/kit-digital.png" alt="Programa Kit Digital, financiado por los fondos Next Generation EU - Plan de Recuperación, Transformación y Resiliencia, Gobierno de España, red.es">
+  </div>
+  <script src="assets/js/accesibilidad.js"></script>
+  <!-- Analítica web (Cloudflare Web Analytics: sin cookies, sin banner de consentimiento). -->
+  <script defer src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "55b5e0bbafb34a94bc832c5a8500b78d"}'></script>
+</body>
+</html>
