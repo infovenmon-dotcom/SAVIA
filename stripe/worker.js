@@ -2693,6 +2693,8 @@ async function enviarSeguimientos(env, opts = {}) {
     const segId = rec.id || k;
     const email = String((rec.envio && rec.envio.email) || '').toLowerCase();
     if (!email || vistos.has(email)) continue;
+    // Envíos apuntados con un email de la propia tienda (no es el del cliente).
+    if (/venmon|saviadealma/.test(email) || email === String(env.ORDER_EMAIL_TO || '').toLowerCase()) continue;
     vistos.add(email);
     if (!opts.pruebaA) {
       if (await env.SAVIA_KV.get('seguimiento:' + segId)) { res.saltados++; continue; }
@@ -2703,7 +2705,7 @@ async function enviarSeguimientos(env, opts = {}) {
       .concat(Object.keys(rec.items || {}).filter(h => prods[h] && prods[h].collection === 'accesorios'))
       .map(h => ({ handle: h, title: prods[h].title }));
     const nombre = primerNombre(rec.envio && rec.envio.nombre);
-    if (opts.simular) { res.candidatos.push({ email, nombre, tipo: esVenta ? 'compra' : (rec.tipo || 'regalo'), productos: productos.map(p => p.title) }); continue; }
+    if (opts.simular) { res.candidatos.push({ id: segId, email, nombre, tipo: esVenta ? 'compra' : (rec.tipo || 'regalo'), productos: productos.map(p => p.title) }); continue; }
     const to = opts.pruebaA || email;
     const codigo = opts.pruebaA ? 'SOSTENIBLE-EJEMP' : await _codigoSostenible(env, email);
     const token = await nlToken(email, env);
@@ -2725,6 +2727,10 @@ async function manejarSeguimientoAdmin(request, env, cors) {
   if (!_authAdmin(request, env)) return jsonResp({ error: 'no_autorizado' }, 401, cors);
   let body = {}; try { body = await request.json(); } catch { /* */ }
   if (body.accion === 'prueba') return jsonResp(await enviarSeguimientos(env, { pruebaA: env.ORDER_EMAIL_TO }), 200, cors);
+  // Excluir a alguien del seguimiento (p. ej. un paquete perdido): se marca como hecho.
+  if (body.accion === 'omitir' && body.id) {
+    await env.SAVIA_KV.put('seguimiento:' + String(body.id).slice(0, 80), JSON.stringify({ ts: Math.floor(Date.now() / 1000), omitido: true }), { expirationTtl: 400 * 86400 });
+  }
   return jsonResp(await enviarSeguimientos(env, { simular: true }), 200, cors);
 }
 

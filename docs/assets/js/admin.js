@@ -747,7 +747,8 @@ let CTT_ENTORNO = '';
 
 function _fechaCorta(ts) {
   if (!ts) return '—';
-  const d = new Date(ts * 1000);
+  const n = Number(ts);
+  const d = new Date(n > 1e12 ? n : n * 1000);   // los envíos manuales guardan milisegundos
   return d.toLocaleDateString('es-ES', { day: '2-digit', month: '2-digit', year: '2-digit' });
 }
 function _dirTexto(e) {
@@ -1229,7 +1230,12 @@ async function verSeguimiento() {
     const r = await _postAdmin('/admin/seguimiento', {});
     const c = r.candidatos || [];
     caja.innerHTML = c.length
-      ? '<p class="nota">El próximo domingo se enviará el correo de seguimiento a:</p><ul>' + c.map(x => `<li>${_escA(x.nombre || x.email)}${x.tipo && x.tipo !== 'compra' ? ' (' + _escA(x.tipo) + ')' : ''} · ${_escA(x.productos.join(', '))}</li>`).join('') + '</ul>'
+      ? '<p class="nota">El próximo domingo se enviará el correo de seguimiento a:</p><ul>' + c.map(x => `<li style="margin:4px 0">${_escA(x.nombre || x.email)}${x.tipo && x.tipo !== 'compra' ? ' (' + _escA(x.tipo) + ')' : ''} · ${_escA(x.productos.join(', ') || 'sin productos apuntados')} <button class="btn btn-secundario btn-sm" onclick="omitirSeguimiento('${_escA(x.id)}')">No enviarle</button></li>`).join('') + '</ul>'
       : '<p class="nota">Ahora mismo no hay pedidos de hace 10–30 días pendientes de seguimiento.</p>';
   } catch (e) { caja.innerHTML = '<p class="nota">' + _escA(e.message) + '</p>'; }
+}
+
+async function omitirSeguimiento(id) {
+  if (!confirm('¿No enviar el correo de seguimiento a esta persona?')) return;
+  try { await _postAdmin('/admin/seguimiento', { accion: 'omitir', id }); verSeguimiento(); } catch (e) { alert(e.message); }
 }
