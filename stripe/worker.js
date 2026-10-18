@@ -2675,7 +2675,7 @@ async function enviarSeguimientos(env, opts = {}) {
     for (const k of l.keys) {
       let f = Number((k.metadata && k.metadata.fecha) || k.name.split(':')[1]);
       if (f > 1e12) f = Math.floor(f / 1000);                              // los envíos manuales guardan ms
-      if (opts.pruebaA || (f >= desde && f <= hasta)) pedidos.push({ k: k.name, f });
+      if (opts.pruebaA || opts.listar || opts.soloId || (f >= desde && f <= hasta)) pedidos.push({ k: k.name, f });
     }
     cursor = l.list_complete ? null : l.cursor;
   } while (cursor);
@@ -2683,7 +2683,7 @@ async function enviarSeguimientos(env, opts = {}) {
   const prods = await cargarProductos(env.PRODUCTS_URL).catch(() => ({}));
   const res = { ok: true, enviados: 0, saltados: 0, candidatos: [] };
   const vistos = new Set();
-  for (const { k } of pedidos) {
+  for (const { k, f } of pedidos) {
     const rec = JSON.parse(await env.SAVIA_KV.get(k) || 'null');
     if (!rec) continue;
     // Ventas de Stripe y envíos manuales (sorteos, regalos, muestras, prensa).
@@ -2696,6 +2696,17 @@ async function enviarSeguimientos(env, opts = {}) {
     // Envíos apuntados con un email de la propia tienda (no es el del cliente).
     if (/venmon|saviadealma/.test(email) || email === String(env.ORDER_EMAIL_TO || '').toLowerCase()) continue;
     vistos.add(email);
+    if (opts.soloId && segId !== opts.soloId) continue;
+    if (opts.listar) {
+      const seg = JSON.parse(await env.SAVIA_KV.get('seguimiento:' + segId) || 'null');
+      const dias = Math.floor((ahora - f) / 86400);
+      let estado = dias < SEG_DIAS_MIN ? 'pronto' : (dias <= SEG_DIAS_MAX ? 'domingo' : 'antiguo');
+      if (await env.SAVIA_KV.get('unsub:' + email)) estado = 'baja';
+      if (seg) estado = seg.omitido ? 'omitido' : 'enviado';
+      const titulos = Object.keys(rec.items || {}).filter(h => prods[h]).map(h => prods[h].title);
+      res.candidatos.push({ id: segId, clave: rec.manual ? k : '', email, nombre: primerNombre(rec.envio && rec.envio.nombre), tipo: esVenta ? 'compra' : (rec.tipo || 'regalo'), productos: titulos, dias, estado, enviadoTs: seg && !seg.omitido ? seg.ts : null });
+      continue;
+    }
     if (!opts.pruebaA) {
       if (await env.SAVIA_KV.get('seguimiento:' + segId)) { res.saltados++; continue; }
       if (await env.SAVIA_KV.get('unsub:' + email)) { res.saltados++; continue; }
@@ -2737,11 +2748,22 @@ async function manejarSeguimientoAdmin(request, env, cors) {
     rec.items = items;
     await env.SAVIA_KV.put(body.clave, JSON.stringify(rec), { metadata: { fecha: rec.fecha, items } });
   }
+  // Enviar ya el correo a una persona concreta, esté o no en el plazo de 10–30 días.
+  if (body.accion === 'enviar' && body.id) {
+    const r = await enviarSeguimientos(env, { soloId: String(body.id).slice(0, 120) });
+    if (!r.enviados) return jsonResp({ error: r.motivo || 'no_enviado', detalle: 'No se pudo enviar (¿ya se le envió o se dio de baja?)' }, 400, cors);
+  }
+  // Volver a incluir a alguien que se había marcado como "No enviarle".
+  if (body.accion === 'incluir' && body.id) {
+    const k = 'seguimiento:' + String(body.id).slice(0, 120);
+    const seg = JSON.parse(await env.SAVIA_KV.get(k) || 'null');
+    if (seg && seg.omitido) await env.SAVIA_KV.delete(k);
+  }
   // Excluir a alguien del seguimiento (p. ej. un paquete perdido): se marca como hecho.
   if (body.accion === 'omitir' && body.id) {
-    await env.SAVIA_KV.put('seguimiento:' + String(body.id).slice(0, 80), JSON.stringify({ ts: Math.floor(Date.now() / 1000), omitido: true }), { expirationTtl: 400 * 86400 });
+    await env.SAVIA_KV.put('seguimiento:' + String(body.id).slice(0, 120), JSON.stringify({ ts: Math.floor(Date.now() / 1000), omitido: true }), { expirationTtl: 400 * 86400 });
   }
-  return jsonResp(await enviarSeguimientos(env, { simular: true }), 200, cors);
+  return jsonResp(await enviarSeguimientos(env, { listar: true }), 200, cors);
 }
 
 /* ---------- Opiniones de clientes (solo compradores verificados) ----------

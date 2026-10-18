@@ -1224,15 +1224,48 @@ async function pruebaSeguimiento() {
   try { const r = await _postAdmin('/admin/seguimiento', { accion: 'prueba' }); _msg(msg, r.enviados ? 'Enviado a info@saviadealma.com ✓' : 'No se ha enviado (' + (r.motivo || 'sin pedidos') + ')', r.enviados ? 'ok' : 'err'); }
   catch (e) { _msg(msg, e.message, 'err'); }
 }
+const _SEG_ESTADOS = {
+  domingo: ['Sale este domingo', '#2f6b4f'],
+  pronto: ['Recibido hace poco (saldrá cuando cumpla 10 días)', '#8a6d1f'],
+  antiguo: ['Fuera de plazo (más de 30 días): solo si lo envías tú', '#8a6d1f'],
+  enviado: ['Ya enviado', '#666'],
+  omitido: ['No se le enviará', '#a33'],
+  baja: ['Se dio de baja de los correos', '#a33']
+};
 async function verSeguimiento() {
   const caja = document.getElementById('op-seg');
   try {
     const r = await _postAdmin('/admin/seguimiento', {});
     const c = r.candidatos || [];
-    caja.innerHTML = c.length
-      ? '<p class="nota">El próximo domingo se enviará el correo de seguimiento a:</p><ul>' + c.map(x => `<li style="margin:4px 0">${_escA(x.nombre || x.email)}${x.tipo && x.tipo !== 'compra' ? ' (' + _escA(x.tipo) + ')' : ''} · ${_escA(x.productos.join(', ') || 'sin productos apuntados')}${x.clave ? ` <button class="btn btn-secundario btn-sm" onclick="apuntarProductosSeg('${_escA(x.clave)}')">${x.productos.length ? 'Cambiar productos' : 'Apuntar productos'}</button>` : ''} <button class="btn btn-secundario btn-sm" onclick="omitirSeguimiento('${_escA(x.id)}')">No enviarle</button></li>`).join('') + '</ul>'
-      : '<p class="nota">Ahora mismo no hay pedidos de hace 10–30 días pendientes de seguimiento.</p>';
+    if (!c.length) { caja.innerHTML = '<p class="nota">Todavía no hay compras ni envíos con email.</p>'; return; }
+    const orden = ['domingo', 'pronto', 'antiguo', 'omitido', 'enviado', 'baja'];
+    c.sort((a, b) => orden.indexOf(a.estado) - orden.indexOf(b.estado) || a.dias - b.dias);
+    const n = c.filter(x => x.estado === 'domingo').length;
+    caja.innerHTML = `<p class="nota">Todas las compras y envíos con email (${c.length}). Este domingo saldrá automáticamente a <b>${n}</b>. Al resto puedes enviárselo tú cuando quieras con "Enviar ahora".</p>` +
+      '<ul style="list-style:none;padding:0">' + c.map(x => {
+        const [txt, col] = _SEG_ESTADOS[x.estado] || [x.estado, '#666'];
+        const pend = ['domingo', 'pronto', 'antiguo'].includes(x.estado);
+        const btns = [];
+        if (x.clave && pend) btns.push(`<button class="btn btn-secundario btn-sm" onclick="apuntarProductosSeg('${_escA(x.clave)}')">${x.productos.length ? 'Cambiar productos' : 'Apuntar productos'}</button>`);
+        if (pend) btns.push(`<button class="btn btn-sm" onclick="enviarSeguimientoYa('${_escA(x.id)}','${_escA(x.nombre || x.email)}')">Enviar ahora</button>`);
+        if (pend) btns.push(`<button class="btn btn-secundario btn-sm" onclick="omitirSeguimiento('${_escA(x.id)}')">No enviarle</button>`);
+        if (x.estado === 'omitido') btns.push(`<button class="btn btn-secundario btn-sm" onclick="incluirSeguimiento('${_escA(x.id)}')">Volver a incluir</button>`);
+        return `<li style="padding:10px 0;border-bottom:1px solid #eee">
+          <b>${_escA(x.nombre || x.email)}</b>${x.tipo && x.tipo !== 'compra' ? ' (' + _escA(x.tipo) + ')' : ''} · <span style="color:#777">recibido hace ${x.dias} días</span>
+          <span style="display:inline-block;margin-left:6px;padding:2px 8px;border-radius:10px;font-size:.8em;color:#fff;background:${col}">${txt}${x.estado === 'enviado' && x.enviadoTs ? ' el ' + _fechaCorta(x.enviadoTs) : ''}</span>
+          <div style="color:#555;margin:4px 0">${_escA(x.productos.join(', ') || 'sin productos apuntados')}</div>
+          <div style="display:flex;gap:6px;flex-wrap:wrap">${btns.join('')}</div></li>`;
+      }).join('') + '</ul>';
   } catch (e) { caja.innerHTML = '<p class="nota">' + _escA(e.message) + '</p>'; }
+}
+
+async function enviarSeguimientoYa(id, nombre) {
+  if (!confirm('¿Enviar ahora el correo de seguimiento a ' + nombre + '?')) return;
+  try { await _postAdmin('/admin/seguimiento', { accion: 'enviar', id }); verSeguimiento(); } catch (e) { alert(e.message); }
+}
+
+async function incluirSeguimiento(id) {
+  try { await _postAdmin('/admin/seguimiento', { accion: 'incluir', id }); verSeguimiento(); } catch (e) { alert(e.message); }
 }
 
 async function omitirSeguimiento(id) {
