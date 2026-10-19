@@ -2604,23 +2604,151 @@ async function _cuponSostenible(env) {
   return c.ok;
 }
 
-async function _codigoSostenible(env, email) {
+async function _codigoSostenible(env, email, prefijo = 'SOSTENIBLE', origen = 'seguimiento-postcompra') {
   if (!env.STRIPE_SECRET_KEY || !(await _cuponSostenible(env))) return null;
   const abc = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
   for (let intento = 0; intento < 3; intento++) {
     let suf = '';
     const rnd = crypto.getRandomValues(new Uint8Array(5));
     for (const b of rnd) suf += abc[b % abc.length];
-    const code = 'SOSTENIBLE-' + suf;
+    const code = prefijo + '-' + suf;
     const r = await _stripeForm(env, 'promotion_codes', {
       coupon: SEG_CUPON_ID, code, max_redemptions: '1',
       expires_at: String(Math.floor(Date.now() / 1000) + SEG_VALIDEZ_DIAS * 86400),
-      'metadata[email]': email, 'metadata[origen]': 'seguimiento-postcompra',
+      'metadata[email]': email, 'metadata[origen]': origen,
     });
     if (r.ok) return code;
     console.error('promo sostenible:', r.status, JSON.stringify(r.j && r.j.error));
   }
   return null;
+}
+
+/* ---------- Importar contactos de Brevo a la newsletter ----------
+   Mete en la newsletter de la web (lead:/sub:) a los contactos de una lista de
+   Brevo y les envía UNA VEZ un correo de bienvenida con un código personal
+   (mismo cupón que el seguimiento: -10 %, un uso, 30 días) recordando el 4×3,
+   el envío gratis desde 20 € y el regalo de bienvenida del primer pedido.
+   - Salta a quien está dado de baja en Brevo (emailBlacklisted) o en la web.
+   - impbrevo:<email> evita enviar dos veces.
+   - Va por lotes (IMP_LOTE por llamada) para no pasar el límite de peticiones
+     del Worker; el panel repite la llamada hasta que no quedan pendientes. */
+const IMP_LOTE = 15;
+const IMP_LISTA_DEFECTO = 6;
+
+async function _contactosBrevo(env, lista) {
+  if (!env.EMAIL_API_KEY) throw new Error('falta la clave de Brevo (EMAIL_API_KEY)');
+  const out = [];
+  for (let offset = 0; offset < 5000; offset += 500) {
+    const r = await fetch(`https://api.brevo.com/v3/contacts/lists/${lista}/contacts?limit=500&offset=${offset}`, {
+      headers: { 'api-key': env.EMAIL_API_KEY, 'accept': 'application/json' },
+    });
+    if (!r.ok) throw new Error('Brevo respondió ' + r.status + ': ' + (await r.text()).slice(0, 200));
+    const j = await r.json();
+    const cs = j.contacts || [];
+    out.push(...cs);
+    if (cs.length < 500) break;
+  }
+  return out;
+}
+
+async function _clasificarBrevo(env, lista) {
+  const cs = await _contactosBrevo(env, lista);
+  const res = { total: cs.length, bajaBrevo: 0, bajaWeb: 0, internos: 0, yaEnviados: 0, pendientes: [], yaSuscritos: 0 };
+  const vistos = new Set();
+  for (const c of cs) {
+    const email = String(c.email || '').trim().toLowerCase();
+    if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email) || vistos.has(email)) continue;
+    vistos.add(email);
+    if (c.emailBlacklisted) { res.bajaBrevo++; continue; }
+    if (/venmon|saviadealma/.test(email) || email === String(env.ORDER_EMAIL_TO || '').toLowerCase()) { res.internos++; continue; }
+    if (await env.SAVIA_KV.get('unsub:' + email)) { res.bajaWeb++; continue; }
+    if (await env.SAVIA_KV.get('impbrevo:' + email)) { res.yaEnviados++; continue; }
+    if (await env.SAVIA_KV.get('sub:' + email)) res.yaSuscritos++;
+    res.pendientes.push(email);
+  }
+  return res;
+}
+
+function _correoImportBrevo({ codigo, regalo, unsub }) {
+  const esc = t => String(t || '').replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+  const utm = '?utm_source=brevo&amp;utm_medium=email&amp;utm_campaign=bienvenida-newsletter';
+  const caduca = new Date(Date.now() + SEG_VALIDEZ_DIAS * 86400000).toLocaleDateString('es-ES', { day: 'numeric', month: 'long' });
+  const subject = '🎁 Un momento para ti (y un ' + SEG_PCT + ' % solo tuyo)';
+  const fila = (n, g) => `<td style="padding:10px 6px;text-align:center;border:1px solid #e7ded2;background:#fff">` +
+    `<div style="font-size:22px;font-weight:800;color:#1D6B50">${n}</div><div style="font-size:13px;color:#555">productos</div>` +
+    `<div style="font-size:14px;font-weight:700;color:#b8860b;margin-top:2px">${g} gratis</div></td>`;
+  const html =
+    `<div style="font-family:-apple-system,Segoe UI,Roboto,Arial,sans-serif;max-width:560px;margin:0 auto;color:#333;line-height:1.55">` +
+    `<p style="font-size:12px;letter-spacing:2px;text-transform:uppercase;color:#b8860b;font-weight:700;margin:0">Un momento para ti</p>` +
+    `<h2 style="color:#1D6B50;margin:6px 0 10px;font-family:Georgia,serif">Cuidas de todo el mundo. ¿Y de ti, cuándo?</h2>` +
+    `<p>Desde hoy formas parte de la newsletter de Savia de Alma: cada semana, un producto, un consejo y lo nuevo de la tienda. Y para empezar, tres cosas que solo tienes en nuestra web:</p>` +
+    `<h3 style="color:#1D6B50;margin:22px 0 6px">1 · El 4×3, siempre</h3>` +
+    `<p style="margin:0 0 10px">Por cada 4 productos, el de menor precio te sale <strong>gratis</strong>. Y se acumula, mezclando lo que quieras:</p>` +
+    `<table role="presentation" style="width:100%;border-collapse:collapse"><tr>${fila(4, 1)}${fila(8, 2)}${fila(12, 3)}</tr></table>` +
+    (regalo
+      ? `<h3 style="color:#1D6B50;margin:22px 0 6px">2 · Tu regalo de bienvenida</h3>` +
+        `<p style="margin:0">En tu primer pedido te regalamos una <strong>jabonera de bambú</strong> y una <strong>bolsa de sisal</strong> para que tus pastillas duren más. Se añaden solas, no tienes que hacer nada.</p>`
+      : '') +
+    `<h3 style="color:#1D6B50;margin:22px 0 6px">${regalo ? '3' : '2'} · Un ${SEG_PCT} % solo para ti</h3>` +
+    (codigo
+      ? `<div style="margin:8px 0 6px;padding:18px;border:2px dashed #1D6B50;border-radius:12px;text-align:center;background:#f6f3ec">` +
+        `<p style="font-size:24px;font-weight:800;letter-spacing:2px;color:#1D6B50;margin:0">${esc(codigo)}</p>` +
+        `<p style="margin:6px 0 0;font-size:13px;color:#777">Escríbelo al pagar · un solo uso · válido hasta el ${caduca}. Se suma al 4×3.</p></div>`
+      : `<p>Escríbenos respondiendo a este correo y te lo enviamos.</p>`) +
+    `<p style="margin:14px 0 0">Y el <strong>envío es gratis desde 20 €</strong>, con presentación de regalo en todos los pedidos.</p>` +
+    `<p style="margin:24px 0 8px"><a href="${NL_SITE}/rituales/${utm}" style="background:#1D6B50;color:#fff;padding:13px 24px;border-radius:8px;text-decoration:none;font-weight:700">Crea tu momento</a></p>` +
+    `<p style="font-size:14px;color:#555;margin:0">¿No sabes por dónde empezar? <a href="${NL_SITE}/encuentra-tu-ritual/${utm}" style="color:#1D6B50">Encuentra tu ritual en tres preguntas</a> o <a href="${NL_SITE}/tienda.html${utm}" style="color:#1D6B50">mira toda la tienda</a>.</p>` +
+    `<p style="color:#1D6B50;font-weight:600;margin-top:24px">Gracias por estar ahí 💚<br>Savia de Alma</p>` +
+    `<hr style="border:none;border-top:1px solid #eee"><p style="color:#aaa;font-size:12px">Recibes este correo porque estás en la lista de contactos de Savia de Alma. ` +
+    `<a href="${unsub}" style="color:#aaa">No quiero recibir más correos</a>.</p></div>`;
+  return { subject, html };
+}
+
+async function manejarImportBrevo(request, env, cors) {
+  const auth = request.headers.get('authorization') || '';
+  if (!env.ADMIN_PASSWORD || !igualSeguro(auth.replace(/^Bearer\s+/i, ''), env.ADMIN_PASSWORD)) return jsonResp({ error: 'no_autorizado' }, 401, cors);
+  if (!env.SAVIA_KV) return jsonResp({ error: 'sin KV' }, 500, cors);
+  let body; try { body = await request.json(); } catch { body = {}; }
+  const lista = parseInt(body.lista, 10) || IMP_LISTA_DEFECTO;
+  try {
+    if (body.accion === 'prueba') {
+      const to = String(body.to || '').trim().toLowerCase();
+      if (!to) return jsonResp({ error: 'falta el correo de prueba' }, 400, cors);
+      const token = await nlToken(to, env);
+      const unsub = nlWorker(env) + '/unsubscribe?e=' + encodeURIComponent(to) + '&amp;t=' + token;
+      const { subject, html } = _correoImportBrevo({ codigo: 'MOMENTO-EJEMP', regalo: true, unsub });
+      const r = await enviarEmail(env, { to, subject: '[PRUEBA] ' + subject, html, replyTo: env.ORDER_EMAIL_TO || undefined, fromName: 'Savia de Alma' });
+      return jsonResp({ ok: !!(r && r.ok), detalle: r && r.body }, 200, cors);
+    }
+    const c = await _clasificarBrevo(env, lista);
+    if (body.accion !== 'importar') {
+      const { pendientes, ...resto } = c;
+      return jsonResp({ ok: true, lista, ...resto, pendientes: pendientes.length }, 200, cors);
+    }
+    if (!hayEmail(env)) return jsonResp({ error: 'sin proveedor de email' }, 500, cors);
+    let enviados = 0, fallos = 0;
+    const lote = c.pendientes.slice(0, IMP_LOTE);
+    for (const email of lote) {
+      const ts = Math.floor(Date.now() / 1000);
+      if (!(await env.SAVIA_KV.get('sub:' + email))) {
+        await env.SAVIA_KV.put('lead:' + ts + ':' + email, JSON.stringify({ email, ts, origen: 'Importado de Brevo' }));
+        await env.SAVIA_KV.put('sub:' + email, '1');
+      }
+      const regalo = !(await env.SAVIA_KV.get('regalo:' + email));
+      const codigo = await _codigoSostenible(env, email, 'MOMENTO', 'importacion-brevo');
+      const token = await nlToken(email, env);
+      const unsub = nlWorker(env) + '/unsubscribe?e=' + encodeURIComponent(email) + '&amp;t=' + token;
+      const { subject, html } = _correoImportBrevo({ codigo, regalo, unsub });
+      const r = await enviarEmail(env, { to: email, subject, html, replyTo: env.ORDER_EMAIL_TO || undefined, fromName: 'Savia de Alma' });
+      if (r && r.ok) {
+        enviados++;
+        await env.SAVIA_KV.put('impbrevo:' + email, JSON.stringify({ ts, codigo, lista }));
+      } else { fallos++; console.error('impbrevo envio', email, r && r.status, r && r.body); }
+    }
+    return jsonResp({ ok: true, enviados, fallos, pendientes: c.pendientes.length - enviados }, 200, cors);
+  } catch (e) {
+    return jsonResp({ error: String(e.message || e) }, 500, cors);
+  }
 }
 
 function _correoSeguimiento({ nombre, productos, codigo, unsub, opinar, regalo }) {
@@ -2979,6 +3107,9 @@ export default {
       // Panel: configurar/enviar el correo semanal.
       if (path === '/admin/newsletter' && request.method === 'POST') {
         return await manejarNewsletter(request, env, cors);
+      }
+      if (path === '/admin/importar-brevo' && request.method === 'POST') {
+        return await manejarImportBrevo(request, env, cors);
       }
       if (path === '/admin/reset-cliente' && request.method === 'POST') {
         return await manejarResetCliente(request, env, cors);

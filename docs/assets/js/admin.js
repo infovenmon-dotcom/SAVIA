@@ -1296,3 +1296,45 @@ function apuntarProductosSeg(clave) {
     try { await _postAdmin('/admin/seguimiento', { accion: 'productos', clave, items }); caja.remove(); verSeguimiento(); } catch (e) { alert(e.message); }
   };
 }
+
+
+/* ---------- Contactos de Brevo → newsletter (bienvenida con código) ---------- */
+function _ibLista() { return parseInt(document.getElementById('ib-lista').value, 10) || 6; }
+async function brevoContar() {
+  const msg = document.getElementById('ib-msg');
+  _msg(msg, 'Consultando Brevo…', '');
+  try {
+    const d = await _postAdmin('/admin/importar-brevo', { accion: 'contar', lista: _ibLista() });
+    if (d.error) throw new Error(d.error);
+    _msg(msg, `Lista ${d.lista}: ${d.total} contactos · ${d.pendientes} recibirán la bienvenida` +
+      ` · ${d.yaEnviados} ya la recibieron · ${d.bajaBrevo} de baja en Brevo · ${d.bajaWeb} de baja en la web` +
+      (d.internos ? ` · ${d.internos} internos` : '') + (d.yaSuscritos ? ` · (${d.yaSuscritos} ya estaban en la newsletter)` : ''), 'ok');
+  } catch (e) { _msg(msg, 'Error: ' + e.message, 'err'); }
+}
+async function brevoPrueba() {
+  const msg = document.getElementById('ib-msg');
+  const to = (document.getElementById('ib-prueba').value || '').trim();
+  if (!to) { _msg(msg, 'Escribe tu correo para la prueba.', 'err'); return; }
+  _msg(msg, 'Enviando prueba…', '');
+  try {
+    const d = await _postAdmin('/admin/importar-brevo', { accion: 'prueba', to });
+    _msg(msg, d.ok ? '✓ Prueba enviada a ' + to + ' (con un código de ejemplo que no funciona).' : 'No se pudo enviar: ' + (d.detalle || d.error || ''), d.ok ? 'ok' : 'err');
+  } catch (e) { _msg(msg, 'Error: ' + e.message, 'err'); }
+}
+async function brevoImportar() {
+  const msg = document.getElementById('ib-msg');
+  if (!confirm('¿Meter los contactos de Brevo en la newsletter y enviarles AHORA el correo de bienvenida con su código?')) return;
+  let total = 0, fallos = 0;
+  try {
+    for (let vuelta = 0; vuelta < 60; vuelta++) {
+      _msg(msg, `Enviando… ${total} enviados`, '');
+      const d = await _postAdmin('/admin/importar-brevo', { accion: 'importar', lista: _ibLista() });
+      if (d.error) throw new Error(d.error);
+      total += d.enviados || 0; fallos += d.fallos || 0;
+      if (!d.pendientes || (!d.enviados && d.fallos)) {
+        _msg(msg, `✓ Terminado: ${total} enviados` + (fallos ? ` · ${fallos} fallos (quedan ${d.pendientes} pendientes; vuelve a pulsar más tarde)` : ''), fallos ? 'err' : 'ok');
+        return;
+      }
+    }
+  } catch (e) { _msg(msg, `Error tras ${total} enviados: ` + e.message, 'err'); }
+}

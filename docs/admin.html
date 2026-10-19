@@ -181,6 +181,22 @@
       </div>
 
       <div class="admin-caja">
+        <h2 style="color:var(--verde-oscuro);font-size:1.1rem;margin:0 0 4px">📥 Contactos de Brevo → newsletter</h2>
+        <p class="nota" style="margin-bottom:12px">Mete en la newsletter a los contactos de la lista de Brevo y les envía <strong>una sola vez</strong> un correo de bienvenida con su <strong>código personal del 10 %</strong> (un uso, 30 días), el 4×3, el envío gratis desde 20 € y el regalo de bienvenida. Salta a quien se dio de baja en Brevo o en la web, y nunca envía dos veces al mismo correo.</p>
+        <div class="fila" style="display:flex;gap:8px;flex-wrap:wrap;align-items:center">
+          <label class="nota" for="ib-lista">Lista nº</label>
+          <input id="ib-lista" type="number" value="6" min="1" style="width:70px">
+          <button class="btn btn-secundario" onclick="brevoContar()">🔎 Contar contactos</button>
+        </div>
+        <div class="fila" style="display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-top:10px">
+          <input id="ib-prueba" type="email" placeholder="tu correo para la prueba" style="min-width:220px">
+          <button class="btn btn-secundario" onclick="brevoPrueba()">✉️ Enviarme una prueba</button>
+          <button class="btn btn-primario" onclick="brevoImportar()">📨 Importar y enviar bienvenida</button>
+        </div>
+        <p class="msg" id="ib-msg" style="margin-top:10px"></p>
+      </div>
+
+      <div class="admin-caja">
         <h2 style="color:var(--verde-oscuro);font-size:1.1rem;margin:0 0 4px">🧪 Herramientas de prueba</h2>
         <p class="nota" style="margin-bottom:12px">Resetea un cliente para volver a probar el <strong>regalo de bienvenida</strong> (borra la marca de "ya recibido", el contador de pedidos y su último pedido). Úsalo solo para pruebas.</p>
         <div class="fila-top">
@@ -362,6 +378,6 @@
 
   <script src="assets/js/config.js"></script>
   <script src="assets/js/products.js?v=20261016-25"></script>
-  <script src="assets/js/admin.js?v=20261016-25"></script>
+  <script src="assets/js/admin.js?v=20261019-1"></script>
 </body>
 </html>
