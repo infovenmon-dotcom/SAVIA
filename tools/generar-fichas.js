@@ -6,13 +6,14 @@
 const fs = require('fs');
 const path = require('path');
 const { seoDe } = require('./seo-fichas');
+const { menuHTML } = require('./menu');
 
 const RAIZ = path.join(__dirname, '..', 'docs');
 const SITIO = 'https://saviadealma.com';
 
 /* Sello de version de los assets: al cambiar un .js o .css hay que
    subirlo, o los navegadores siguen sirviendo la copia en cache. */
-const V = '20261016-25';
+const V = '20261019-1';
 
 /* --- cargar el catalogo sin navegador --- */
 const src = fs.readFileSync(path.join(RAIZ, 'assets/js/products.js'), 'utf8');
@@ -51,11 +52,7 @@ const CABECERA = `  <div class="barra-fija">
     <header class="cabecera">
       <div class="cabecera-inner">
         <a class="logo" href="/index.html"><img class="logo-img" src="/assets/img/logo-negro.png" alt="Savia de Alma"></a>
-        <nav class="nav-tienda">
-          <a href="/index.html">Inicio</a>
-          <a href="/tienda.html">Tienda</a>
-          <a href="/index.html#contacto">Contacto</a>
-        </nav>
+        ${menuHTML()}
         <button class="boton-carrito" onclick="abrirCarrito()">
           🛒 <span class="carrito-contador oculto" data-carrito-contador>0</span>
         </button>
@@ -74,6 +71,8 @@ const PIE = `  <footer class="pie">
         <a href="/index.html">Inicio</a>
         <a href="/tienda.html">Tienda</a>
         <a href="/index.html#contacto">Contacto</a>
+        <a href="/rituales/">Rituales de 4 productos</a>
+        <a href="/encuentra-tu-ritual/">Encuentra tu ritual</a>
         <a href="/ritual-de-calma">Guía Ritual de Calma</a>
       </nav>
       <nav class="pie-col">
@@ -136,6 +135,7 @@ const PIE = `  <footer class="pie">
     }
   </script>
   <script src="/assets/js/ficha.js?v=${V}"></script>
+  <script src="/assets/js/menu.js?v=${V}"></script>
   <script src="/assets/js/accesibilidad.js"></script>
   <script defer src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "55b5e0bbafb34a94bc832c5a8500b78d"}'></script>`;
 
@@ -506,10 +506,113 @@ for (const p of PRODUCTOS) {
   fs.writeFileSync(ruta, html.slice(0, a + INI.length) + rutas + cols + '\n  ' + html.slice(b));
 }
 
+/* --- Rituales de 4 y selector "Encuentra tu ritual" ---
+   El contenido lo pinta assets/js/rituales.js (datos y precios en vivo,
+   con el 4×3 calculado igual que el carrito). Aqui va el esqueleto, los
+   textos para buscadores y una version sin JavaScript con enlaces. */
+function paginaRitual({ ruta, titulo, meta, h1, intro, contId, sinJs }) {
+  const url = `${SITIO}/${ruta}/`;
+  const migas = {
+    '@context': 'https://schema.org', '@type': 'BreadcrumbList',
+    itemListElement: [
+      { '@type': 'ListItem', position: 1, name: 'Inicio', item: SITIO + '/' },
+      { '@type': 'ListItem', position: 2, name: h1, item: url },
+    ],
+  };
+  return `<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>${esc(titulo)} · Savia de Alma</title>
+  <meta name="description" content="${esc(meta)}">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
+  <link rel="canonical" href="${url}">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="${esc(titulo)} · Savia de Alma">
+  <meta property="og:description" content="${esc(meta)}">
+  <meta property="og:url" content="${url}">
+  <meta property="og:image" content="${SITIO}/assets/img/products/exfoliante-cafe-coco.jpg">
+  <link rel="stylesheet" href="/assets/css/styles.css?v=${V}">
+  <link rel="stylesheet" href="/assets/css/ficha.css?v=${V}">
+  <link rel="icon" href="/assets/img/favicon.ico" sizes="any">
+  <link rel="icon" type="image/png" sizes="32x32" href="/assets/img/favicon-32.png">
+  <link rel="apple-touch-icon" href="/assets/img/apple-touch-icon.png">
+  <script type="application/ld+json">${JSON.stringify(migas)}</script>
+</head>
+<body>
+${CABECERA}
+
+  <main class="contenedor ficha familia ritual-pagina">
+    <nav class="ficha-migas" aria-label="Migas de pan">
+      <a href="/index.html">Inicio</a> › <span>${esc(h1)}</span>
+    </nav>
+    <header class="familia-cab">
+      <p class="ritual-eyebrow">Un momento para ti</p>
+      <h1>${esc(h1)}</h1>
+      ${intro.map(t => `<p>${t}</p>`).join('\n      ')}
+    </header>
+    <ul class="ritual-escala" aria-label="Cómo funciona el 4×3">
+      <li><strong>4</strong> productos <span>1 gratis</span></li>
+      <li><strong>8</strong> productos <span>2 gratis</span></li>
+      <li><strong>12</strong> productos <span>3 gratis</span></li>
+    </ul>
+    <div id="${contId}" class="ritual-cont">
+${sinJs}
+    </div>
+    <p class="ritual-legal">En cada grupo de 4 productos, el de menor precio es gratis. Se aplica solo en el carrito. Envío gratis desde 20 €. <a href="/condiciones-venta.html">Condiciones</a>.</p>
+  </main>
+
+${PIE.replace('<script src="/assets/js/menu.js', `<script src="/assets/js/rituales.js?v=${V}"></script>\n  <script src="/assets/js/menu.js`)}
+</body>
+</html>
+`;
+}
+{
+  const enl = h => { const p = PRODUCTOS.find(x => x.handle === h); return p ? `<a href="/producto/${h}/">${esc(p.title)}</a>` : ''; };
+  const RITUALES_TXT = [
+    ['Calma al final del día', ['jabon-lavanda', 'champu-indigo-lavanda', 'limpiador-facial-rosa-mosqueta', 'sales-epsom-500']],
+    ['Mañanas con energía', ['champu-cafeina-canela', 'jabon-naranja-canela', 'desodorante-pomelo', 'limpiador-facial-aloe-pepino']],
+    ['Un momento para ti', ['exfoliante-cafe-coco', 'jabon-karite', 'limpiador-facial-rosa-mosqueta', 'jabon-aceite-arroz']],
+    ['Ritual capilar', ['champu-avena-almendra', 'champu-cacao', 'acondicionador-almendra', 'cera-peinado']],
+    ['Ritual de afeitado', ['espuma-afeitar-avellana', 'champu-barba-carbon', 'jabon-carbon-activo', 'desodorante-madera']],
+  ];
+  const sinJsRituales = RITUALES_TXT.map(([n, hs]) =>
+    `      <section class="ficha-bloque"><h2>${esc(n)}</h2><ul>${hs.map(h => `<li>${enl(h)}</li>`).join('')}</ul></section>`).join('\n');
+  fs.mkdirSync(path.join(RAIZ, 'rituales'), { recursive: true });
+  fs.writeFileSync(path.join(RAIZ, 'rituales', 'index.html'), paginaRitual({
+    ruta: 'rituales',
+    titulo: 'Rituales de cosmética sólida · Packs de 4 con el 4×3',
+    meta: 'Rituales de 4 productos de cosmética sólida hecha a mano en España. Elige uno, cambia lo que quieras y el de menor precio te sale gratis.',
+    h1: 'Rituales de 4',
+    intro: [
+      'Cuidas de todo el mundo. ¿Y de ti, cuándo? Hemos juntado cuatro productos que se entienden bien entre ellos para que no tengas que pensarlo.',
+      'Cambia cualquiera por otro de su misma familia: el precio se recalcula al momento y, con el 4×3, <strong>el de menor precio te sale gratis</strong>.',
+    ],
+    contId: 'rituales-lista',
+    sinJs: sinJsRituales,
+  }));
+  fs.mkdirSync(path.join(RAIZ, 'encuentra-tu-ritual'), { recursive: true });
+  fs.writeFileSync(path.join(RAIZ, 'encuentra-tu-ritual', 'index.html'), paginaRitual({
+    ruta: 'encuentra-tu-ritual',
+    titulo: 'Encuentra tu ritual · Qué champú o jabón sólido elegir',
+    meta: 'Tres preguntas para elegir tu champú sólido, jabón artesanal o limpiador facial según tu cabello, tu piel y los aromas que te gustan.',
+    h1: 'Encuentra tu ritual',
+    intro: [
+      'Tres preguntas y te decimos qué productos encajan contigo: qué quieres cuidar, cómo es tu cabello o tu piel y qué aromas te gustan.',
+    ],
+    contId: 'selector-ritual',
+    sinJs: `      <p>Elige por familia: ${FAMILIAS.map(f => `<a href="/${f.ruta}/">${esc(f.h1)}</a>`).join(' · ')}.</p>`,
+  }));
+  n += 2;
+}
+
 /* --- sitemap: paginas fijas + una por producto --- */
 const FIJAS = ['/', '/tienda.html', '/envios.html', '/devoluciones.html',
   '/condiciones-venta.html', '/aviso-legal.html', '/privacidad.html', '/accesibilidad.html',
-  '/ritual-de-calma'];
+  '/ritual-de-calma', '/rituales/', '/encuentra-tu-ritual/'];
 const hoy = new Date().toISOString().slice(0, 10);
 const urls = [
   ...FIJAS.map(u => ({ loc: SITIO + u, pri: u === '/' ? '1.0' : '0.6' })),
