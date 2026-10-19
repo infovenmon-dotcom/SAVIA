@@ -460,7 +460,11 @@ async function enviarEmail(env, { to, subject, html, replyTo, fromName }) {
       headers: { 'Authorization': 'Bearer ' + String(env.RESEND_API_KEY).trim(), 'Content-Type': 'application/json' },
       body: JSON.stringify(cuerpo),
     });
-    return { ok: r.ok, status: r.status, body: (await r.text()).slice(0, 600), proveedor: 'resend' };
+    const res = { ok: r.ok, status: r.status, body: (await r.text()).slice(0, 600), proveedor: 'resend' };
+    // Si Resend falla (p. ej. cupo diario agotado, 429) y hay clave de Brevo,
+    // se reintenta por Brevo para que los avisos de pedido no se pierdan.
+    if (res.ok || !env.EMAIL_API_KEY) return res;
+    console.error('resend falló, reintento por Brevo:', res.status, res.body);
   }
   if (env.EMAIL_API_KEY) {
     const payload = { sender: { email: fromEmail, name: nombre }, to: [{ email: to }], subject, htmlContent: html };
