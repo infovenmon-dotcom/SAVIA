@@ -40,8 +40,10 @@ window.savia_getCP = function () { return CP; };
 /* Precio efectivo de una unidad: usa precioDe() (ofertas/override de app.js)
    si esta disponible; si no, el precio base del producto. */
 function _precioCarrito(p) {
+  if (typeof precioCarritoDe === 'function') return precioCarritoDe(p);
   return (typeof precioDe === 'function') ? precioDe(p) : p.price;
 }
+function _campana() { return (typeof campanaActiva === 'function') ? campanaActiva() : null; }
 
 /* ---------- Medición del recorrido de compra (embudo) ----------
    Cuenta pasos (visita, añadir al carrito, abrir el carrito, pulsar pagar,
@@ -186,7 +188,8 @@ const Carrito = {
     // Código de descuento: SOLO sobre los productos (subtotal con 4x3), nunca
     // sobre el envío. El envío gratis ya se decidió arriba, antes del código.
     let descuentoCodigo = 0;
-    if (this.codigo && unidades > 0) {
+    // Durante la campaña (Black Friday) los códigos no se acumulan.
+    if (this.codigo && unidades > 0 && !_campana()) {
       if (this.codigo.pct) descuentoCodigo = subtotalConPromo * (this.codigo.pct / 100);
       else if (this.codigo.amountOff) descuentoCodigo = Math.min(this.codigo.amountOff, subtotalConPromo);
       descuentoCodigo = Math.round(descuentoCodigo * 100) / 100;
@@ -299,7 +302,7 @@ function renderPanelCarrito(c) {
       <div>
         <div class="titulo">${typeof acc==='function'?acc(p.title):p.title}</div>
         ${c.freeByHandle && c.freeByHandle[p.handle] ? `<div class="gratis">🎁 ${c.freeByHandle[p.handle]} de regalo (−${eur(c.freeByHandle[p.handle] * _precioCarrito(p))})</div>` : ''}
-        <div class="card-precio" style="font-size:.9rem;margin:2px 0 0">${eur(_precioCarrito(p))}</div>
+        <div class="card-precio" style="font-size:.9rem;margin:2px 0 0">${(_campana() && typeof precioDe === 'function' && precioDe(p) > _precioCarrito(p)) ? `<s style="color:var(--texto-suave);font-weight:400;margin-right:4px">${eur(precioDe(p))}</s>` : ''}${eur(_precioCarrito(p))}</div>
         <div class="cantidad">
           <button aria-label="Quitar uno" onclick="Carrito.añadir('${p.handle}', -1)">−</button>
           <span>${qty}</span>
@@ -344,12 +347,15 @@ function renderPanelCarrito(c) {
       </label>
       <span style="font-size:.74rem;color:var(--texto-suave)">${c.zonaNoDisponible ? '<span style="color:#C0392B">No enviamos a tu zona</span>' : (!c.cp ? 'para calcular el envío' : (c.envioZona === 'baleares' ? 'Baleares' : 'Península'))}</span>
     </div>
+    ${_campana() ? `<div style="background:#1a1a1a;color:#fff;border-radius:8px;padding:7px 10px;margin:4px 0 8px;font-size:.8rem;text-align:center">🖤 <strong>${_campana().nombre}:</strong> −${_campana().pct} % ya aplicado en cada producto</div>` : ''}
     <div class="fila-resumen"><span>Subtotal (${c.unidades} art.)</span><span>${eur(c.subtotal)}</span></div>
     ${c.ahorroPromo > 0 ? `<div class="fila-resumen"><span class="ahorro">Regalo · ${c.gratisCount} gratis</span><span class="ahorro">−${eur(c.ahorroPromo)}</span></div>` : ''}
     ${c.descuentoCodigo > 0 ? `<div class="fila-resumen"><span class="ahorro">Código ${c.codigo.code}${c.codigo.pct ? ' · ' + c.codigo.pct + '%' : ''}</span><span class="ahorro">−${eur(c.descuentoCodigo)}</span></div>` : ''}
     <div class="fila-resumen"><span>Envío${c.envioZona === 'baleares' ? ' (Baleares)' : ''}</span><span>${c.zonaNoDisponible ? '—' : (c.envioGratis ? 'GRATIS' : eur(c.envio))}</span></div>
     <p style="font-size:.7rem;color:var(--texto-suave);text-align:center;margin:6px 0 6px">4×3: llévate 4, paga 3 (el de menor precio, gratis) · IVA incluido.</p>
-    ${c.codigo
+    ${_campana()
+      ? `<p style="font-size:.74rem;color:var(--texto-suave);margin:0 0 10px;text-align:center">Durante el ${_campana().nombre} el −${_campana().pct} % no se acumula con otros códigos de descuento.</p>`
+      : c.codigo
       ? `<div style="display:flex;align-items:center;justify-content:space-between;gap:8px;background:#eef5f0;border:1px solid #cfe3d7;border-radius:8px;padding:7px 10px;margin:0 0 10px">
            <span style="font-size:.8rem;color:var(--verde-oscuro)">🏷️ Código <strong>${c.codigo.code}</strong> aplicado${c.codigo.pct ? ' (−' + c.codigo.pct + '%)' : ''}</span>
            <button onclick="quitarCodigo()" style="background:none;border:none;color:#C0392B;font-size:.78rem;cursor:pointer;text-decoration:underline">quitar</button>
@@ -380,6 +386,7 @@ function renderPanelCarrito(c) {
 async function aplicarCodigoTexto(code) {
   code = (code || '').trim();
   if (!code) return 'invalido';
+  if (_campana()) return 'campana';
   const ep = (window.SAVIA_CONFIG && (window.SAVIA_CONFIG.checkoutEndpoint || '').trim()) || '';
   if (!ep) return 'error';
   let base; try { base = new URL(ep).origin; } catch { base = ep.replace(/\/(checkout)?\/*$/, ''); }
@@ -417,6 +424,7 @@ async function aplicarCodigo() {
   if (!code) { if (msg) { msg.textContent = 'Escribe un código.'; msg.style.color = '#C0392B'; } return; }
   if (msg) { msg.textContent = 'Comprobando…'; msg.style.color = 'var(--texto-suave)'; }
   const res = await aplicarCodigoTexto(code);
+  if (res === 'campana' && msg) { msg.textContent = 'Durante el Black Friday el −20 % ya está aplicado y no se acumula con otros códigos.'; msg.style.color = 'var(--texto-suave)'; return; }
   if (res === 'invalido' && msg) { msg.textContent = 'Código no válido o caducado.'; msg.style.color = '#C0392B'; }
   else if (res === 'error' && msg) { msg.textContent = 'No se pudo comprobar. Inténtalo de nuevo.'; msg.style.color = '#C0392B'; }
 }

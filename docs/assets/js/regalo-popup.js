@@ -10,6 +10,8 @@
   function guardar(v) { try { localStorage.setItem(KEY, JSON.stringify(v)); } catch (e) {} }
   var st = estado();
   var noMostrar = !!(st && (st.suscrito || (st.cerrado && Date.now() - st.cerrado < 7 * 864e5)));
+  // Durante la campaña (Black Friday) no hay regalo de bienvenida.
+  if (typeof campanaActiva === 'function' && campanaActiva()) noMostrar = true;
 
   var css = '' +
     '.rg-fondo{position:fixed;inset:0;background:rgba(20,30,25,.55);display:flex;align-items:center;justify-content:center;padding:18px;z-index:9999;opacity:0;transition:opacity .25s}' +

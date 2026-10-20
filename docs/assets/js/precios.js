@@ -45,6 +45,47 @@ function precioDe(p) {
   const pct = _dtoCategoria(p);
   return pct ? Math.round(base * (1 - pct / 100) * 100) / 100 : base;
 }
+/* ---------- Campaña temporal (Black Friday) ----------
+   Descuento en el CARRITO (no cambia el precio de la ficha, para no romper la
+   paridad con Amazon). Mismas fechas y % que stripe/worker.js (CAMPANA): el
+   servidor recalcula el cobro, así que el navegador nunca decide el importe.
+   Durante la campaña: no se aceptan otros códigos y no hay regalo de bienvenida.
+   El Worker puede mandar otra en /config (campana) o desactivarla (activa:false). */
+const CAMPANA_DEF = {
+  id: 'BLACKFRIDAY2026', nombre: 'Black Friday', pct: 20,
+  desde: '2026-11-20T00:00:00+01:00', hasta: '2026-12-01T00:00:00+01:00',
+};
+function campanaActiva(ahora) {
+  const c = _cfg().campana || CAMPANA_DEF;
+  if (!c || c.activa === false) return null;
+  let t = ahora || Date.now();
+  // Solo en local, para revisar la campaña antes de tiempo: ?campana=prueba
+  try {
+    if (/^(localhost|127\.0\.0\.1)$/.test(location.hostname) && /[?&]campana=prueba/.test(location.search)) return c;
+  } catch (e) { /* sin location */ }
+  return (t >= Date.parse(c.desde) && t < Date.parse(c.hasta)) ? c : null;
+}
+/* Precio por unidad DENTRO del carrito: el de la ficha con la campaña aplicada.
+   No se acumula con el descuento por familia: se usa el mayor de los dos. */
+function precioCarritoDe(p) {
+  const c = campanaActiva();
+  if (!c) return precioDe(p);
+  const base = _precioBase(p);
+  const pct = Math.max(_dtoCategoria(p), Number(c.pct) || 0);
+  return Math.round(base * (1 - pct / 100) * 100) / 100;
+}
+/* Durante la campaña: cambia la barra promo y oculta el botón de regalo. */
+document.addEventListener('DOMContentLoaded', function () {
+  const c = campanaActiva();
+  if (!c) return;
+  document.documentElement.classList.add('en-campana');
+  document.querySelectorAll('.banner-promo').forEach(function (b) {
+    b.innerHTML = '<strong>🖤 ' + c.nombre.toUpperCase() + ' · −' + c.pct + ' % EN TODO + 4×3</strong> · hasta −40 % ' +
+      '<span class="banner-envio">🚚 ENVÍO GRATIS desde 20&nbsp;€</span> · Hasta el 30 de noviembre';
+  });
+  document.querySelectorAll('.btn-regalo').forEach(function (b) { b.style.display = 'none'; });
+});
+
 function precioAntesDe(p) {
   const ahora = precioDe(p);
   // 1) Oferta explícita por producto (config.ofertas) tiene prioridad.
