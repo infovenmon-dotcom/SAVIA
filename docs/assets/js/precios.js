@@ -98,8 +98,8 @@ document.addEventListener('DOMContentLoaded', function () {
       '<div class="bf-cinta bf-tras" aria-hidden="true"><div class="bf-marquee">' + rep + rep + '</div></div>' +
       '<div class="bf-cinta bf-delante">' +
         '<p class="bf-titulo">BLACK FRIDAY</p>' +
-        '<p class="bf-oferta"><b>−' + c.pct + '%</b> EN TODO <span>+ 4×3</span></p>' +
-        '<p class="bf-hasta">HASTA <b>−40%</b> · DEL 20 AL 30 DE NOVIEMBRE</p>' +
+        '<p class="bf-grande"><small>HASTA</small> −40%</p>' +
+        '<p class="bf-hasta"><b>−' + c.pct + '% EN TODO + 4×3</b> · DEL 20 AL 30 DE NOVIEMBRE</p>' +
       '</div>';
     const logo = hero.querySelector('.hero-logo');
     if (logo && logo.nextSibling) hero.insertBefore(bloque, logo.nextSibling); else hero.prepend(bloque);
