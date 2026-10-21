@@ -84,6 +84,28 @@ document.addEventListener('DOMContentLoaded', function () {
       '<span class="banner-envio">🚚 ENVÍO GRATIS desde 20&nbsp;€</span> · Hasta el 30 de noviembre';
   });
   document.querySelectorAll('.btn-regalo').forEach(function (b) { b.style.display = 'none'; });
+  // Portada: franjas diagonales del Black Friday sobre el vídeo.
+  const hero = document.querySelector('.hero-con-video .hero-inner');
+  if (hero && !document.querySelector('.bf-franjas')) {
+    const f = document.createElement('link');
+    f.rel = 'stylesheet';
+    f.href = 'https://fonts.googleapis.com/css2?family=Anton&display=swap';
+    document.head.appendChild(f);
+    const rep = new Array(8).fill('<span>BLACK FRIDAY</span><i>✦</i>').join('');
+    const bloque = document.createElement('div');
+    bloque.className = 'bf-franjas';
+    bloque.innerHTML =
+      '<div class="bf-cinta bf-tras" aria-hidden="true"><div class="bf-marquee">' + rep + rep + '</div></div>' +
+      '<div class="bf-cinta bf-delante">' +
+        '<p class="bf-titulo">BLACK FRIDAY</p>' +
+        '<p class="bf-oferta"><b>−' + c.pct + '%</b> EN TODO <span>+ 4×3</span></p>' +
+        '<p class="bf-hasta">HASTA <b>−40%</b> · DEL 20 AL 30 DE NOVIEMBRE</p>' +
+      '</div>';
+    const logo = hero.querySelector('.hero-logo');
+    if (logo && logo.nextSibling) hero.insertBefore(bloque, logo.nextSibling); else hero.prepend(bloque);
+    const cta = hero.querySelector('.btn-primario');
+    if (cta) { cta.textContent = 'Aprovecha el Black Friday'; cta.classList.add('bf-cta'); }
+  }
 });
 
 function precioAntesDe(p) {
