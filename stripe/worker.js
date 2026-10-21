@@ -1452,6 +1452,18 @@ async function manejarEtiquetaCTT(request, env, cors) {
   if (!v) return jsonResp({ error: 'no_encontrado' }, 404, cors);
   let rec; try { rec = JSON.parse(v); } catch { return jsonResp({ error: 'corrupto' }, 500, cors); }
 
+  // Si el pedido ya tiene envío en CTT, NO se crea otro: se devuelve el mismo
+  // tracking con su etiqueta (reimprimir). Solo con body.forzar se crea uno nuevo.
+  if (rec.tracking && !body.forzar) {
+    let etiqueta = { pdfBase64: '', thermal: [] };
+    try { etiqueta = await getEtiquetaCTT(rec.tracking, env); } catch (e) { console.error('label (reimprimir):', e); }
+    return jsonResp({ ok: true, yaExistia: true, tracking: rec.tracking, pdfBase64: etiqueta.pdfBase64, thermal: etiqueta.thermal, avisado: false }, 200, cors);
+  }
+  // Candado de 2 min para que dos clics seguidos no creen dos envíos.
+  const candado = 'ctt:creando:' + clave;
+  if (await env.SAVIA_KV.get(candado)) return jsonResp({ error: 'en_curso', detalle: 'Ya se está creando el envío de este pedido; espera unos segundos y recarga la lista.' }, 409, cors);
+  await env.SAVIA_KV.put(candado, '1', { expirationTtl: 120 });
+
   try {
     const envio = await crearEnvioCTT(rec, env);
     if (!envio.shipping_code) return jsonResp({ error: 'sin_codigo', detalle: JSON.stringify(envio.raw).slice(0, 400) }, 502, cors);

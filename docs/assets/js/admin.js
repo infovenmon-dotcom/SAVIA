@@ -816,7 +816,7 @@ function pintarEnvios() {
         <div style="min-width:160px">${prods}</div>
       </div>
       <div class="fila-top" style="margin-top:10px">
-        ${CTT_OK ? `<button class="btn btn-primario btn-sm" onclick="crearEtiquetaCTT(${i})">🏷️ Crear etiqueta CTT</button>` : ''}
+        ${CTT_OK ? `<button class="btn btn-primario btn-sm" onclick="crearEtiquetaCTT(${i})">${p.tracking ? '🖨️ Reimprimir etiqueta' : '🏷️ Crear etiqueta CTT'}</button>` : ''}
         <button class="btn btn-secundario btn-sm" onclick="copiarEnvio(${i})">📋 Copiar datos</button>
         <input type="text" id="trk-${i}" placeholder="Nº seguimiento CTT" value="${_esc(p.tracking || '')}" style="max-width:200px">
         <label style="font-size:.8rem"><input type="checkbox" id="avi-${i}" checked> Avisar al cliente</label>
@@ -916,7 +916,11 @@ async function crearEtiquetaCTT(i) {
   const p = ENVIOS[i]; if (!p) return;
   const r = document.getElementById('env-r-' + i);
   const avisar = document.getElementById('avi-' + i).checked;
-  _msg(r, 'Creando envío en CTT…', '');
+  if (p.tracking && !confirm('Este pedido ya tiene envío en CTT (' + p.tracking + ').\n\nAceptar = volver a imprimir la MISMA etiqueta (no crea otro envío).')) return;
+  const btn = (typeof event !== 'undefined' && event && event.target && event.target.closest) ? event.target.closest('button') : null;
+  if (p._creando) return;
+  p._creando = true; if (btn) { btn.disabled = true; btn.textContent = '⏳ Creando…'; }
+  _msg(r, p.tracking ? 'Recuperando la etiqueta…' : 'Creando envío en CTT… (no pulses otra vez)', '');
   try {
     const resp = await fetch(_base() + '/admin/envio/etiqueta', {
       method: 'POST',
@@ -931,9 +935,11 @@ async function crearEtiquetaCTT(i) {
     // Abrir la etiqueta PDF para imprimir en la térmica.
     if (d.pdfBase64) abrirPdfBase64(d.pdfBase64, 'etiqueta-' + p.tracking + '.pdf');
     else if (d.thermal && d.thermal.length) descargarTexto(d.thermal.join('\n'), 'etiqueta-' + p.tracking + '.zpl');
-    _msg(r, '✔ Envío ' + p.tracking + (d.avisado ? ' · cliente avisado' : ''), 'ok');
+    _msg(r, (d.yaExistia ? '✔ Etiqueta reimpresa del envío ' : '✔ Envío ') + p.tracking + (d.avisado ? ' · cliente avisado' : ''), 'ok');
   } catch (e) {
     _msg(r, 'Error: ' + e.message, 'err');
+  } finally {
+    p._creando = false; if (btn) { btn.disabled = false; btn.textContent = p.tracking ? '🖨️ Reimprimir etiqueta' : '🏷️ Crear etiqueta CTT'; }
   }
 }
 
