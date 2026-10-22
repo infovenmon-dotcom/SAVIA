@@ -49,12 +49,48 @@ function _precioCarrito(p) {
    Es anónimo: no usa cookies, ni identificadores, ni datos personales; solo
    envía el nombre del paso, si es móvil u ordenador y la página. Los
    contadores se ven en el panel /admin, pestaña "Embudo". */
+/* ---------- De dónde viene el visitante (para saber qué canal vende) ----------
+   Se guarda en este navegador 30 días: la etiqueta utm_source de los enlaces
+   (correos de Brevo, newsletter, influencers...) o, si no hay, la web desde la
+   que llegó (Google, Instagram...). Una nueva etiqueta utm sustituye a la
+   anterior. No identifica a nadie: solo el nombre del canal. */
+function _saviaRefCanal(host) {
+  if (!host) return '';
+  if (/(^|\.)google\./.test(host)) return 'google';
+  if (/instagram\./.test(host)) return 'instagram';
+  if (/(facebook|fb)\./.test(host)) return 'facebook';
+  if (/tiktok\./.test(host)) return 'tiktok';
+  if (/bing\./.test(host)) return 'bing';
+  if (/amazon\./.test(host)) return 'amazon';
+  if (/(mail|outlook|gmail)\./.test(host)) return 'email';
+  return host.slice(0, 30);
+}
+function saviaCanal() {
+  const limpio = v => String(v || '').toLowerCase().replace(/[^a-z0-9._-]/g, '').slice(0, 30);
+  try {
+    const q = new URLSearchParams(location.search);
+    let o = null;
+    try { o = JSON.parse(localStorage.getItem('savia_canal') || 'null'); } catch (e) { o = null; }
+    if (o && (Date.now() - (o.t || 0)) > 30 * 86400000) o = null;
+    const utm = limpio(q.get('utm_source'));
+    if (utm || !o) {
+      let host = '';
+      try { host = document.referrer ? new URL(document.referrer).hostname.replace(/^www\./, '') : ''; } catch (e) { host = ''; }
+      if (/saviadealma\.(com|es)$/.test(host)) host = '';
+      o = { s: utm || limpio(_saviaRefCanal(host)) || 'directo', c: limpio(q.get('utm_campaign')), t: Date.now() };
+      try { localStorage.setItem('savia_canal', JSON.stringify(o)); } catch (e) { /* sin almacenamiento */ }
+    }
+    return o;
+  } catch (err) { return { s: 'directo', c: '' }; }
+}
+window.saviaCanal = saviaCanal;
+
 function saviaEvento(e, extra) {
   try {
     const ep = (window.SAVIA_CONFIG && (window.SAVIA_CONFIG.checkoutEndpoint || '').trim()) || '';
     if (!ep) return;
     const movil = !!(window.matchMedia && window.matchMedia('(max-width: 760px)').matches);
-    const body = JSON.stringify(Object.assign({ e: e, m: movil ? 1 : 0, p: location.pathname }, extra || {}));
+    const body = JSON.stringify(Object.assign({ e: e, m: movil ? 1 : 0, p: location.pathname, o: saviaCanal().s }, extra || {}));
     const url = ep.replace(/\/+$/, '') + '/evento';
     if (navigator.sendBeacon) navigator.sendBeacon(url, new Blob([body], { type: 'text/plain' }));
     else fetch(url, { method: 'POST', body: body, keepalive: true, mode: 'no-cors' });
@@ -363,6 +399,7 @@ function renderPanelCarrito(c) {
            <p id="cod-msg" style="font-size:.74rem;margin:5px 2px 0;min-height:1em"></p>
          </div>`}
     ${badgesPago()}
+    ${_cajaGuardarCarrito()}
     <button class="btn btn-secundario btn-bloque" style="margin-top:8px" onclick="cerrarCarrito()">← Seguir comprando</button>
     <div class="panel-cierre">
       <div class="fila-resumen total"><span>Total</span><span>${c.zonaNoDisponible ? '—' : eur(c.total)}</span></div>
@@ -483,5 +520,60 @@ function cerrarCarrito() {
   document.getElementById('overlay')?.classList.remove('abierto');
 }
 
+/* ---------- "Te guardamos el carrito" ----------
+   El cliente puede dejar su email para recibir un enlace que recupera su
+   carrito en cualquier dispositivo. Solo se usa para eso (no le suscribe a la
+   newsletter). En el panel y en el resumen semanal salen los carritos
+   guardados que no han acabado en pedido. */
+function _cajaGuardarCarrito() {
+  let guardado = '';
+  try { guardado = localStorage.getItem('savia_carrito_email') || ''; } catch (e) { guardado = ''; }
+  if (guardado) return `<p style="font-size:.74rem;color:var(--texto-suave);text-align:center;margin:8px 0 0">💾 Carrito guardado · te hemos enviado el enlace a ${guardado.replace(/[<>&"]/g, '')}</p>`;
+  return `<details style="margin:8px 0 0;font-size:.8rem"><summary style="cursor:pointer;color:var(--verde-oscuro)">💾 ¿Lo terminas luego? Te guardamos el carrito</summary>
+      <div style="display:flex;gap:6px;margin-top:6px">
+        <input type="email" id="guardar-email" placeholder="Tu email" autocomplete="email" style="flex:1;min-width:0;padding:8px 10px;border:1px solid #cfcfcf;border-radius:8px;font:inherit">
+        <button class="btn btn-secundario btn-sm" onclick="guardarCarritoEmail()">Guardar</button>
+      </div>
+      <p id="guardar-msg" style="font-size:.72rem;color:var(--texto-suave);margin:5px 2px 0">Te mandamos un enlace para recuperarlo. Solo para eso, sin publicidad.</p>
+    </details>`;
+}
+async function guardarCarritoEmail() {
+  const inp = document.getElementById('guardar-email');
+  const msg = document.getElementById('guardar-msg');
+  const email = (inp && inp.value || '').trim().toLowerCase();
+  if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)) { if (msg) msg.textContent = 'Revisa el email.'; return; }
+  const ep = (window.SAVIA_CONFIG && (window.SAVIA_CONFIG.checkoutEndpoint || '').trim()) || '';
+  if (!ep || !Carrito.totalUnidades()) return;
+  if (msg) msg.textContent = 'Guardando…';
+  try {
+    const r = await fetch(ep.replace(/\/+$/, '') + '/carrito-guardar', {
+      method: 'POST', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email, items: Carrito.items, origen: saviaCanal() }),
+    });
+    if (!r.ok) throw new Error('HTTP ' + r.status);
+    try { localStorage.setItem('savia_carrito_email', email); } catch (e) { /* */ }
+    Carrito.render();
+  } catch (err) { if (msg) msg.textContent = 'No se ha podido guardar. Inténtalo de nuevo.'; }
+}
+window.guardarCarritoEmail = guardarCarritoEmail;
+
+/* Enlace de recuperación: ?carrito=handle:2,otro:1 rellena el carrito. */
+function _recuperarCarritoURL() {
+  try {
+    const v = new URLSearchParams(location.search).get('carrito');
+    if (!v) return;
+    let n = 0;
+    v.split(',').forEach(par => {
+      const [h, c] = par.split(':');
+      const cant = Math.min(20, Math.max(0, parseInt(c, 10) || 0));
+      if (h && /^[a-z0-9-]{1,80}$/.test(h) && cant > 0 && Carrito.vendible(h)) { Carrito.items[h] = cant; n++; }
+    });
+    if (!n) return;
+    Carrito.guardar();
+    Carrito.render();
+    if (typeof abrirCarrito === 'function') setTimeout(abrirCarrito, 400);
+  } catch (err) { /* enlace mal formado: no hacemos nada */ }
+}
+
 Carrito.cargar();
-document.addEventListener('DOMContentLoaded', () => Carrito.render());
+document.addEventListener('DOMContentLoaded', () => { Carrito.render(); setTimeout(_recuperarCarritoURL, 350); });

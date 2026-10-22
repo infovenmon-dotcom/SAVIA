@@ -807,6 +807,7 @@ function pintarEnvios() {
         <div><strong>${_esc(e.nombre || '—')}</strong> · ${_fechaCorta(p.fecha)} ${badge}</div>
         <div class="nota">${p.total != null ? _fmtEur(p.total) : ''}</div>
       </div>
+      ${(p.origen || p.codigo || p.primerPedido != null) ? `<div class="nota" style="margin-top:4px">📍 Llegó por: <strong>${_esc(p.origen || 'sin dato')}</strong>${p.campana ? ' (' + _esc(p.campana) + ')' : ''} · 🏷️ Código: <strong>${_esc(p.codigo || 'ninguno')}</strong>${p.primerPedido === true ? ' · 🆕 primer pedido' : (p.primerPedido === false ? ' · 🔁 repite' : '')}</div>` : ''}
       <div style="display:flex;gap:24px;flex-wrap:wrap;margin-top:6px;font-size:.86rem">
         <div style="min-width:240px">
           <div>${dir || '—'}</div>
@@ -1151,6 +1152,15 @@ function pintarEmbudo(d) {
       <thead><tr><th style="text-align:left">Paso</th><th style="text-align:right">📱 Móvil</th><th style="text-align:right">💻 Ordenador</th><th style="text-align:right">Total</th><th style="text-align:right">% de visitas</th></tr></thead>
       <tbody>${filas}</tbody>
     </table>`;
+  const po = d.porOrigen || {};
+  const canales = Object.entries(po).map(([c, x]) => ({ c, v: x.visita || 0, a: x.carrito_abrir || 0, i: x.pago_iniciar || 0, o: x.pago_ok || 0 })).sort((a, b) => b.v - a.v);
+  document.getElementById('em-tabla').innerHTML += canales.length
+    ? `<h3 style="font-size:1rem;margin:16px 0 6px">Por canal de llegada</h3>
+       <table class="tabla-admin" style="width:100%;border-collapse:collapse">
+         <thead><tr><th style="text-align:left">Canal</th><th style="text-align:right">Visitas</th><th style="text-align:right">Abren carrito</th><th style="text-align:right">Van a pagar</th><th style="text-align:right">Compran</th></tr></thead>
+         <tbody>${canales.map(x => `<tr><td>${_escEm(x.c)}</td><td style="text-align:right">${x.v}</td><td style="text-align:right">${x.a}</td><td style="text-align:right">${x.i}</td><td style="text-align:right"><strong>${x.o}</strong></td></tr>`).join('')}</tbody>
+       </table>`
+    : '<p class="nota" style="margin-top:12px">Por canal: empieza a contar desde que se publica el seguimiento de ventas.</p>';
   const errs = d.errores || [];
   document.getElementById('em-errores').innerHTML = errs.length
     ? `<h3 style="font-size:1rem;margin:0 0 6px">Errores al abrir el pago (últimos ${errs.length})</h3>
@@ -1161,6 +1171,20 @@ function pintarEmbudo(d) {
     : '<p class="nota">Sin errores al abrir el pago en estas fechas.</p>';
 }
 
+
+/* ---------- Resumen semanal (el mismo que llega por correo) ---------- */
+async function verResumen(enviar) {
+  const msg = document.getElementById('res-msg');
+  const caja = document.getElementById('res-caja');
+  _msg(msg, enviar ? 'Enviando…' : 'Calculando…', '');
+  try {
+    const d = await _postAdmin('/admin/resumen', { accion: enviar ? 'enviar' : 'ver', dias: 7 });
+    if (enviar) { _msg(msg, d.ok ? '✔ Enviado a info@saviadealma.com' : 'No se pudo enviar', d.ok ? 'ok' : 'err'); return; }
+    caja.innerHTML = d.html || '';
+    _msg(msg, '', '');
+  } catch (e) { _msg(msg, 'Error: ' + e.message, 'err'); }
+}
+window.verResumen = verResumen;
 
 /* ---------- Mensajes del formulario de contacto ---------- */
 async function cargarMensajes() {

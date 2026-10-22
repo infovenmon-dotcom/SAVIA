@@ -411,6 +411,15 @@ async function crearCheckout(request, env, cors) {
   }
   const cartMeta = JSON.stringify(fisicas);
   if (cartMeta.length <= 480) form.append('metadata[cart]', cartMeta);
+  // Seguimiento de ventas: canal de llegada (utm / web de origen) y código usado.
+  const _lim = v => String(v || '').toLowerCase().replace(/[^a-z0-9._-]/g, '').slice(0, 30);
+  const org = (body.origen && typeof body.origen === 'object') ? body.origen : {};
+  form.append('metadata[origen]', _lim(org.s) || 'directo');
+  if (_lim(org.c)) form.append('metadata[utm_campaign]', _lim(org.c));
+  if (promo && promo.code) form.append('metadata[codigo]', String(promo.code).slice(0, 40));
+  // Casilla de "acepto recibir comunicaciones": Stripe la exige para poder
+  // mandar el correo de recuperación a quien deja el pago a medias.
+  form.append('consent_collection[promotions]', 'auto');
 
   const stripeResp = await fetch('https://api.stripe.com/v1/checkout/sessions', {
     method: 'POST',
@@ -421,7 +430,19 @@ async function crearCheckout(request, env, cors) {
     body: form.toString(),
   });
 
-  const session = await stripeResp.json();
+  let session = await stripeResp.json();
+  // Si Stripe no acepta la casilla de consentimiento en esta cuenta, se repite
+  // sin ella: el pago nunca se bloquea por el seguimiento.
+  if (!stripeResp.ok && /consent/i.test(JSON.stringify(session && session.error || ''))) {
+    form.delete('consent_collection[promotions]');
+    const r2 = await fetch('https://api.stripe.com/v1/checkout/sessions', {
+      method: 'POST',
+      headers: { 'Authorization': 'Bearer ' + env.STRIPE_SECRET_KEY, 'Content-Type': 'application/x-www-form-urlencoded' },
+      body: form.toString(),
+    });
+    session = await r2.json();
+    if (r2.ok) return jsonResp({ url: session.url }, 200, cors);
+  }
   if (!stripeResp.ok) {
     console.error('Stripe error:', session);
     return jsonResp({ error: 'Stripe', detalle: session.error?.message }, 502, cors);
@@ -435,7 +456,7 @@ async function crearCheckout(request, env, cors) {
 /* Devuelve la sesión de Stripe con las líneas de producto expandidas. */
 async function getSesionCompleta(sesion, env) {
   try {
-    const r = await fetch(`https://api.stripe.com/v1/checkout/sessions/${sesion.id}?expand[]=line_items`, {
+    const r = await fetch(`https://api.stripe.com/v1/checkout/sessions/${sesion.id}?expand[]=line_items&expand[]=discounts.promotion_code`, {
       headers: { 'Authorization': 'Bearer ' + env.STRIPE_SECRET_KEY },
     });
     if (r.ok) return await r.json();
@@ -773,11 +794,13 @@ async function manejarWebhook(request, env) {
       //    y UNA vez por persona (regalo:<email>). Así, si ya lo recibió, no se repite.
       let regaloBienvenida = false;
       let emailCli = '';
+      let primerPedido = null;
       try {
         const cfgR = await getConfig(env);
         emailCli = String((sesion.customer_details && sesion.customer_details.email) || '').toLowerCase();
         if (emailCli && env.SAVIA_KV) {
           const prev = await env.SAVIA_KV.get('cliente:' + emailCli);
+          primerPedido = !(parseInt(prev || '0', 10) > 0);
           await env.SAVIA_KV.put('cliente:' + emailCli, String((parseInt(prev || '0', 10) || 0) + 1));
           if (cfgR.regaloBienvenida !== false) {
             const esSub = await env.SAVIA_KV.get('sub:' + emailCli);
@@ -838,7 +861,14 @@ async function manejarWebhook(request, env) {
             total: (full.amount_total != null) ? full.amount_total / 100 : null,
             regalo: regaloBienvenida,
             tracking: '', enviado: false,
+            // Seguimiento: de dónde vino y con qué código compró.
+            origen: (sesion.metadata && sesion.metadata.origen) || '',
+            campana: (sesion.metadata && sesion.metadata.utm_campaign) || '',
+            codigo: _codigoDeSesion(full, sesion),
+            primerPedido,
+            email: emailCli,
           };
+          if (emailCli) { try { await env.SAVIA_KV.delete('carrito:' + emailCli); } catch { /* */ } }
           await env.SAVIA_KV.put(clave, JSON.stringify(rec), { metadata: { fecha, items: cart } });
           // Resumen del último pedido por cliente (para el correo de "bienvenido de nuevo").
           if (emailCli) {
@@ -860,6 +890,21 @@ async function manejarWebhook(request, env) {
     }
   }
   return new Response('ok', { status: 200 });
+}
+
+/* Código de descuento usado en un pago: el del carrito (metadata) o, si lo
+   escribió en la página de Stripe, el que Stripe aplicó. */
+function _codigoDeSesion(full, sesion) {
+  const m = (sesion && sesion.metadata && sesion.metadata.codigo) || '';
+  if (m) return m;
+  try {
+    const d = (full && full.discounts) || [];
+    for (const x of d) {
+      if (x && x.promotion_code && typeof x.promotion_code === 'object' && x.promotion_code.code) return x.promotion_code.code;
+    }
+  } catch { /* */ }
+  const desc = full && full.total_details && full.total_details.amount_discount;
+  return desc > 0 ? '(descuento sin nombre)' : '';
 }
 
 /* ---------- Guardar config desde el panel ---------- */
@@ -1177,6 +1222,8 @@ async function manejarEnviosLista(request, env, cors) {
           clave: k.name, id: rec.id || '', fecha: rec.fecha || 0,
           envio: rec.envio, total: rec.total,
           lineas, tracking: rec.tracking || '', enviado: !!rec.enviado,
+          origen: rec.origen || '', campana: rec.campana || '', codigo: rec.codigo || '',
+          primerPedido: rec.primerPedido == null ? null : !!rec.primerPedido,
         });
       }
       cursor = lst.list_complete ? null : lst.cursor;
@@ -2362,7 +2409,7 @@ async function manejarBaja(request, env) {
   const token = url.searchParams.get('t') || '';
   let ok = false;
   if (email && token && (await nlToken(email, env)) === token) {
-    if (env.SAVIA_KV) await env.SAVIA_KV.put('unsub:' + email, '1');
+    if (env.SAVIA_KV) await env.SAVIA_KV.put('unsub:' + email, String(Math.floor(Date.now() / 1000)));
     ok = true;
   }
   const html = `<!doctype html><html lang="es"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">` +
@@ -2446,6 +2493,7 @@ async function manejarResetCliente(request, env, cors) {
 const PASOS_EMBUDO = ['visita', 'carrito_anadir', 'carrito_abrir', 'pago_iniciar',
   'pago_redirigir', 'pago_error', 'pago_ok', 'pago_cancelado'];
 const TTL_EMBUDO = 60 * 60 * 24 * 180; // se borran solos a los 6 meses
+const PASOS_POR_ORIGEN = ['visita', 'carrito_abrir', 'pago_iniciar', 'pago_ok'];
 
 async function registrarEvento(request, env, cors) {
   const vacio = new Response(null, { status: 204, headers: cors });
@@ -2459,6 +2507,23 @@ async function registrarEvento(request, env, cors) {
   const k = 'ev:' + dia + ':' + paso + ':' + disp;
   const n = (parseInt(await env.SAVIA_KV.get(k), 10) || 0) + 1;
   await env.SAVIA_KV.put(k, String(n), { expirationTtl: TTL_EMBUDO });
+  // Pasos clave contados también por canal de llegada (brevo, google, instagram,
+  // directo...). Solo estos cuatro, para no gastar escrituras de más.
+  if (PASOS_POR_ORIGEN.includes(paso)) {
+    const org = String(b.o || '').toLowerCase().replace(/[^a-z0-9._-]/g, '').slice(0, 30) || 'directo';
+    const ko = 'evo:' + dia + ':' + paso + ':' + org;
+    await env.SAVIA_KV.put(ko, String((parseInt(await env.SAVIA_KV.get(ko), 10) || 0) + 1), { expirationTtl: TTL_EMBUDO });
+  }
+  // Error al abrir el pago: aviso al dueño (como mucho uno cada 6 horas).
+  if (paso === 'pago_error' && hayEmail(env) && env.ORDER_EMAIL_TO && !(await env.SAVIA_KV.get('alerta:pagoerror'))) {
+    await env.SAVIA_KV.put('alerta:pagoerror', '1', { expirationTtl: 6 * 3600 });
+    try {
+      await enviarEmail(env, {
+        to: env.ORDER_EMAIL_TO, subject: '⚠️ Savia de Alma: un cliente no ha podido abrir el pago',
+        html: `<p>Un cliente ha pulsado «Finalizar compra» y el pago no se ha abierto.</p><p>Error: <strong>${_escHtml(String(b.c || '').slice(0, 40))}</strong> ${_escHtml(String(b.d || '').slice(0, 160))}<br>Página: ${_escHtml(String(b.p || '').slice(0, 80))} · ${disp}</p><p>El detalle está en el panel, pestaña Embudo. No se vuelve a avisar en 6 horas.</p>`,
+      });
+    } catch (e) { console.error('alerta pago_error:', e); }
+  }
   if (paso === 'pago_error') {
     const ke = 'everr:' + dia;
     let lista = [];
@@ -2509,7 +2574,188 @@ async function manejarEmbudo(request, env, cors) {
       for (const e of l.reverse()) errores.push({ dia, ...e });
     } catch { /* día sin errores */ }
   }
-  return jsonResp({ pasos: PASOS_EMBUDO, totales, porDia, errores: errores.slice(0, 100) }, 200, cors);
+  const porOrigen = await _embudoPorOrigen(env, desde, hasta);
+  return jsonResp({ pasos: PASOS_EMBUDO, totales, porDia, porOrigen, errores: errores.slice(0, 100) }, 200, cors);
+}
+
+/* { canal: { paso: n } } entre dos días (AAAA-MM-DD). */
+async function _embudoPorOrigen(env, desde, hasta) {
+  const out = {};
+  let cursor;
+  do {
+    const r = await env.SAVIA_KV.list({ prefix: 'evo:', cursor });
+    for (const { name } of r.keys) {
+      const [, dia, paso, org] = name.split(':');
+      if (dia < desde || dia > hasta || !PASOS_EMBUDO.includes(paso)) continue;
+      const n = parseInt(await env.SAVIA_KV.get(name), 10) || 0;
+      out[org] = out[org] || {};
+      out[org][paso] = (out[org][paso] || 0) + n;
+    }
+    cursor = r.list_complete ? undefined : r.cursor;
+  } while (cursor);
+  return out;
+}
+
+/* ---------- Carritos guardados ("Te guardamos el carrito") ----------
+   Público: guarda {items, origen} 30 días bajo carrito:<email> y manda al
+   cliente un enlace que rellena el carrito. No suscribe a la newsletter.
+   El webhook borra el carrito cuando esa persona compra. */
+async function manejarCarritoGuardar(request, env, cors) {
+  let b = {}; try { b = JSON.parse((await request.text()).slice(0, 4000)); } catch { return jsonResp({ ok: false }, 400, cors); }
+  const email = String(b.email || '').trim().toLowerCase().slice(0, 120);
+  if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email) || !env.SAVIA_KV) return jsonResp({ ok: false, error: 'email' }, 400, cors);
+  const items = {};
+  for (const [h, q] of Object.entries(b.items || {})) {
+    const n = Math.min(20, Math.max(0, parseInt(q, 10) || 0));
+    if (/^[a-z0-9-]{1,80}$/.test(h) && n > 0) items[h] = n;
+  }
+  if (!Object.keys(items).length) return jsonResp({ ok: false, error: 'vacio' }, 400, cors);
+  // Máximo 3 avisos al mismo email por día.
+  const kl = 'carritolim:' + email;
+  const usados = parseInt(await env.SAVIA_KV.get(kl), 10) || 0;
+  if (usados >= 3) return jsonResp({ ok: true }, 200, cors);
+  await env.SAVIA_KV.put(kl, String(usados + 1), { expirationTtl: 86400 });
+  const org = (b.origen && typeof b.origen === 'object') ? String(b.origen.s || '').replace(/[^a-z0-9._-]/gi, '').slice(0, 30) : '';
+  await env.SAVIA_KV.put('carrito:' + email, JSON.stringify({ email, items, origen: org, ts: Math.floor(Date.now() / 1000) }), { expirationTtl: 30 * 86400 });
+  if (hayEmail(env)) {
+    let productos = {};
+    try { productos = await cargarProductos(env.PRODUCTS_URL); } catch { /* */ }
+    const enlace = NL_SITE + '/tienda.html?carrito=' + Object.entries(items).map(([h, q]) => h + ':' + q).join(',') + '&utm_source=carrito&utm_medium=email';
+    const lista = Object.entries(items).map(([h, q]) => `<li>${q} × ${_escHtml((productos[h] && productos[h].title) || h)}</li>`).join('');
+    try {
+      await enviarEmail(env, {
+        to: email, fromName: 'Savia de Alma', replyTo: env.ORDER_EMAIL_TO || undefined,
+        subject: '💾 Tu carrito de Savia de Alma está guardado',
+        html: `<div style="font-family:-apple-system,Segoe UI,Roboto,Arial,sans-serif;max-width:560px;margin:0 auto;color:#333;line-height:1.55">` +
+          `<h2 style="color:#1D6B50;font-family:Georgia,serif">Tu carrito te espera</h2><p>Esto es lo que tenías elegido:</p><ul>${lista}</ul>` +
+          `<p style="margin:22px 0"><a href="${enlace}" style="background:#1D6B50;color:#fff;padding:13px 24px;border-radius:8px;text-decoration:none;font-weight:700">Recuperar mi carrito</a></p>` +
+          `<p style="font-size:14px;color:#555">Recuerda: con 4 productos, el de menor precio es gratis (4×3), y el envío es gratis desde 20 €.</p>` +
+          `<p style="color:#aaa;font-size:12px">Te escribimos solo porque nos pediste guardar tu carrito. No te hemos suscrito a nada.</p></div>`,
+      });
+    } catch (e) { console.error('carrito guardado email:', e); }
+  }
+  return jsonResp({ ok: true }, 200, cors);
+}
+
+async function _carritosGuardados(env) {
+  const out = [];
+  if (!env.SAVIA_KV) return out;
+  let cursor;
+  do {
+    const r = await env.SAVIA_KV.list({ prefix: 'carrito:', cursor });
+    for (const { name } of r.keys) {
+      try { const v = JSON.parse(await env.SAVIA_KV.get(name)); if (v) out.push(v); } catch { /* */ }
+    }
+    cursor = r.list_complete ? undefined : r.cursor;
+  } while (cursor);
+  return out.sort((a, b) => (b.ts || 0) - (a.ts || 0));
+}
+
+/* ---------- Resumen semanal de ventas y seguimiento ----------
+   Junta lo de los últimos 7 días: pedidos (con canal, código y si es primer
+   pedido), embudo por canal, altas y bajas de la newsletter, pagos de Stripe
+   que se quedaron a medias y carritos guardados sin comprar. Se envía solo con
+   el temporizador semanal y se puede ver o enviar desde el panel. */
+async function resumenSemanal(env, dias = 7) {
+  const hasta = Math.floor(Date.now() / 1000);
+  const desde = hasta - dias * 86400;
+  const diaD = new Date(desde * 1000).toISOString().slice(0, 10);
+  const diaH = new Date(hasta * 1000).toISOString().slice(0, 10);
+  const r = { desde: diaD, hasta: diaH, pedidos: [], ventas: 0, porCanal: {}, porCodigo: {}, primeros: 0, repiten: 0,
+    embudo: {}, porOrigen: {}, altas: 0, bajas: 0, pagosAMedias: [], carritos: [] };
+  // Pedidos de clientes (no envíos manuales de regalo/prensa/muestra).
+  let cursor;
+  do {
+    const l = await env.SAVIA_KV.list({ prefix: 'pedido:', cursor });
+    for (const { name } of l.keys) {
+      const ts = Number(name.split(':')[1]) || 0;
+      const sec = ts > 1e12 ? Math.floor(ts / 1000) : ts;
+      if (sec < desde || !/:cs_/.test(name)) continue;
+      let rec; try { rec = JSON.parse(await env.SAVIA_KV.get(name)); } catch { continue; }
+      if (!rec) continue;
+      const canal = rec.origen || 'sin dato';
+      const cod = rec.codigo || 'sin código';
+      r.pedidos.push({ fecha: new Date(sec * 1000).toISOString().slice(0, 10), nombre: (rec.envio && rec.envio.nombre) || '', total: rec.total || 0, canal, codigo: cod, primerPedido: rec.primerPedido });
+      r.ventas += Number(rec.total) || 0;
+      r.porCanal[canal] = (r.porCanal[canal] || 0) + 1;
+      r.porCodigo[cod] = (r.porCodigo[cod] || 0) + 1;
+      if (rec.primerPedido === true) r.primeros++; else if (rec.primerPedido === false) r.repiten++;
+    }
+    cursor = l.list_complete ? undefined : l.cursor;
+  } while (cursor);
+  r.ventas = Math.round(r.ventas * 100) / 100;
+  // Embudo total y por canal.
+  cursor = undefined;
+  do {
+    const l = await env.SAVIA_KV.list({ prefix: 'ev:', cursor });
+    for (const { name } of l.keys) {
+      const [, dia, paso] = name.split(':');
+      if (dia < diaD || dia > diaH) continue;
+      r.embudo[paso] = (r.embudo[paso] || 0) + (parseInt(await env.SAVIA_KV.get(name), 10) || 0);
+    }
+    cursor = l.list_complete ? undefined : l.cursor;
+  } while (cursor);
+  r.porOrigen = await _embudoPorOrigen(env, diaD, diaH);
+  // Altas (lead:<ts>:email) y bajas con fecha (unsub:email = ts).
+  cursor = undefined;
+  do {
+    const l = await env.SAVIA_KV.list({ prefix: 'lead:', cursor });
+    for (const { name } of l.keys) { if ((Number(name.split(':')[1]) || 0) >= desde) r.altas++; }
+    cursor = l.list_complete ? undefined : l.cursor;
+  } while (cursor);
+  cursor = undefined;
+  do {
+    const l = await env.SAVIA_KV.list({ prefix: 'unsub:', cursor });
+    for (const { name } of l.keys) { const v = parseInt(await env.SAVIA_KV.get(name), 10) || 0; if (v >= desde) r.bajas++; }
+    cursor = l.list_complete ? undefined : l.cursor;
+  } while (cursor);
+  // Pagos de Stripe que caducaron sin pagar (con email, si lo dejó).
+  try {
+    const q = new URLSearchParams({ limit: '100', status: 'expired', 'created[gte]': String(desde - 86400) });
+    const sr = await fetch('https://api.stripe.com/v1/checkout/sessions?' + q.toString(), { headers: { 'Authorization': 'Bearer ' + env.STRIPE_SECRET_KEY } });
+    const sj = await sr.json();
+    for (const x of (sj.data || [])) {
+      r.pagosAMedias.push({
+        fecha: new Date((x.created || 0) * 1000).toISOString().slice(0, 16).replace('T', ' '),
+        email: (x.customer_details && x.customer_details.email) || '',
+        importe: (x.amount_total || 0) / 100,
+        origen: (x.metadata && x.metadata.origen) || '',
+        recuperar: (x.after_expiration && x.after_expiration.recovery && x.after_expiration.recovery.url) || '',
+      });
+    }
+  } catch (e) { r.errorStripe = String(e.message || e); }
+  r.carritos = (await _carritosGuardados(env)).filter(c => (c.ts || 0) >= desde - 23 * 86400);
+  return r;
+}
+
+function _htmlResumen(r) {
+  const e = _escHtml;
+  const fila = (a, b) => `<tr><td style="padding:4px 10px 4px 0">${e(a)}</td><td style="padding:4px 0;text-align:right"><strong>${e(b)}</strong></td></tr>`;
+  const tabla = obj => Object.keys(obj).length ? `<table style="border-collapse:collapse;font-size:14px">${Object.entries(obj).sort((a, b) => b[1] - a[1]).map(([k, v]) => fila(k, v)).join('')}</table>` : '<p style="color:#888">—</p>';
+  const canales = Object.entries(r.porOrigen).map(([c, p]) => ({ c, v: p.visita || 0, a: p.carrito_abrir || 0, i: p.pago_iniciar || 0, o: p.pago_ok || 0 })).sort((a, b) => b.v - a.v);
+  const eur = n => (Number(n) || 0).toFixed(2).replace('.', ',') + ' €';
+  return `<div style="font-family:-apple-system,Segoe UI,Roboto,Arial,sans-serif;max-width:640px;color:#333;line-height:1.5">` +
+    `<h2 style="color:#1D6B50;margin-bottom:2px">Resumen semanal · Savia de Alma</h2><p style="color:#777;margin-top:0">${e(r.desde)} → ${e(r.hasta)}</p>` +
+    `<p style="font-size:18px"><strong>${r.pedidos.length}</strong> pedidos · <strong>${eur(r.ventas)}</strong> · ${r.primeros} nuevos, ${r.repiten} repiten</p>` +
+    `<h3 style="color:#1D6B50">Pedidos</h3>` + (r.pedidos.length ? `<table style="border-collapse:collapse;font-size:14px">${r.pedidos.map(p => `<tr><td style="padding:3px 10px 3px 0">${e(p.fecha)}</td><td style="padding:3px 10px 3px 0">${e(p.nombre)}</td><td style="padding:3px 10px 3px 0">${eur(p.total)}</td><td style="padding:3px 10px 3px 0">${e(p.canal)}</td><td style="padding:3px 0">${e(p.codigo)}${p.primerPedido ? ' · 1º' : ''}</td></tr>`).join('')}</table>` : '<p style="color:#888">Ninguno esta semana.</p>') +
+    `<h3 style="color:#1D6B50">Ventas por canal</h3>${tabla(r.porCanal)}<h3 style="color:#1D6B50">Códigos usados</h3>${tabla(r.porCodigo)}` +
+    `<h3 style="color:#1D6B50">Recorrido por canal</h3>` + (canales.length ? `<table style="border-collapse:collapse;font-size:14px"><tr style="color:#777"><td style="padding:3px 10px 3px 0">Canal</td><td style="padding:3px 10px">Visitas</td><td style="padding:3px 10px">Abren carrito</td><td style="padding:3px 10px">Van a pagar</td><td style="padding:3px 10px">Compran</td></tr>${canales.map(x => `<tr><td style="padding:3px 10px 3px 0">${e(x.c)}</td><td style="padding:3px 10px;text-align:right">${x.v}</td><td style="padding:3px 10px;text-align:right">${x.a}</td><td style="padding:3px 10px;text-align:right">${x.i}</td><td style="padding:3px 10px;text-align:right">${x.o}</td></tr>`).join('')}</table>` : '<p style="color:#888">Aún sin datos por canal.</p>') +
+    `<p style="font-size:14px">Total: ${r.embudo.visita || 0} visitas · ${r.embudo.carrito_abrir || 0} abren carrito · ${r.embudo.pago_iniciar || 0} van a pagar · ${r.embudo.pago_ok || 0} compran${r.embudo.pago_error ? ' · <span style="color:#C0392B">' + r.embudo.pago_error + ' errores de pago</span>' : ''}</p>` +
+    `<h3 style="color:#1D6B50">Newsletter</h3><p style="font-size:14px">${r.altas} altas · ${r.bajas} bajas</p>` +
+    `<h3 style="color:#1D6B50">Pagos a medias (Stripe)</h3>` + (r.pagosAMedias.length ? `<ul style="font-size:14px">${r.pagosAMedias.map(x => `<li>${e(x.fecha)} · ${eur(x.importe)} · ${x.email ? e(x.email) : 'sin email'}${x.origen ? ' · ' + e(x.origen) : ''}${x.recuperar ? ' · <a href="' + e(x.recuperar) + '">enlace para retomar</a>' : ''}</li>`).join('')}</ul>` : '<p style="color:#888;font-size:14px">Ninguno.</p>') +
+    `<h3 style="color:#1D6B50">Carritos guardados sin comprar</h3>` + (r.carritos.length ? `<ul style="font-size:14px">${r.carritos.map(c => `<li>${e(new Date((c.ts || 0) * 1000).toISOString().slice(0, 10))} · ${e(c.email)} · ${Object.entries(c.items || {}).map(([h, q]) => q + '× ' + h).join(', ')}</li>`).join('')}</ul>` : '<p style="color:#888;font-size:14px">Ninguno.</p>') +
+    `</div>`;
+}
+
+async function manejarResumen(request, env, cors) {
+  if (!_authAdmin(request, env)) return jsonResp({ error: 'no_autorizado' }, 401, cors);
+  let b = {}; try { b = await request.json(); } catch { /* */ }
+  const r = await resumenSemanal(env, Math.min(31, Math.max(1, parseInt(b.dias, 10) || 7)));
+  if (b.accion === 'enviar') {
+    const res = await enviarEmail(env, { to: env.ORDER_EMAIL_TO, subject: `📊 Resumen semanal Savia de Alma · ${r.pedidos.length} pedidos · ${r.ventas.toFixed(2).replace('.', ',')} €`, html: _htmlResumen(r) });
+    return jsonResp({ ok: !!(res && res.ok), resumen: r }, 200, cors);
+  }
+  return jsonResp({ ok: true, resumen: r, html: _htmlResumen(r) }, 200, cors);
 }
 
 /* ---------- Formulario de contacto (público) ----------
@@ -3141,6 +3387,16 @@ export default {
       if (path === '/evento' && request.method === 'POST') {
         return await registrarEvento(request, env, cors);
       }
+      if (path === '/carrito-guardar' && request.method === 'POST') {
+        return await manejarCarritoGuardar(request, env, cors);
+      }
+      if (path === '/admin/resumen' && request.method === 'POST') {
+        return await manejarResumen(request, env, cors);
+      }
+      if (path === '/admin/carritos' && request.method === 'POST') {
+        if (!_authAdmin(request, env)) return jsonResp({ error: 'no_autorizado' }, 401, cors);
+        return jsonResp({ carritos: await _carritosGuardados(env) }, 200, cors);
+      }
       if (path === '/admin/embudo' && request.method === 'POST') {
         return await manejarEmbudo(request, env, cors);
       }
@@ -3171,6 +3427,12 @@ export default {
     ctx.waitUntil(
       enviarSeguimientos(env).catch((e) => console.error('seguimiento cron:', e))
     );
+    // Resumen semanal de ventas y seguimiento al correo de la tienda.
+    ctx.waitUntil((async () => {
+      if (!hayEmail(env) || !env.ORDER_EMAIL_TO || !env.SAVIA_KV) return;
+      const r = await resumenSemanal(env, 7);
+      await enviarEmail(env, { to: env.ORDER_EMAIL_TO, subject: `📊 Resumen semanal Savia de Alma · ${r.pedidos.length} pedidos · ${r.ventas.toFixed(2).replace('.', ',')} €`, html: _htmlResumen(r) });
+    })().catch((e) => console.error('resumen cron:', e)));
   },
 };
 

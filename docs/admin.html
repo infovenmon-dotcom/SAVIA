@@ -348,6 +348,16 @@
         <div id="em-tabla" style="margin-top:14px"></div>
         <div id="em-errores" style="margin-top:14px"></div>
       </div>
+      <div class="admin-caja">
+        <h2 style="color:var(--verde-oscuro);font-size:1.2rem;margin:0 0 4px">📊 Resumen semanal</h2>
+        <p class="nota" style="margin-bottom:12px">Últimos 7 días: pedidos con su canal y código, recorrido por canal, altas y bajas, pagos de Stripe a medias y carritos guardados. Llega solo al correo con el envío semanal del domingo.</p>
+        <div class="fila-top">
+          <button class="btn btn-primario" onclick="verResumen(false)">Ver ahora</button>
+          <button class="btn btn-secundario" onclick="verResumen(true)">Enviármelo al correo</button>
+          <span class="msg" id="res-msg"></span>
+        </div>
+        <div id="res-caja" style="margin-top:14px;overflow-x:auto"></div>
+      </div>
       </div><!-- /tab-embudo -->
       <div id="tab-mensajes" class="oculto">
       <div class="admin-caja" style="margin-top:0">
@@ -378,6 +388,6 @@
 
   <script src="assets/js/config.js"></script>
   <script src="assets/js/products.js?v=20261016-25"></script>
-  <script src="assets/js/admin.js?v=20261022-1"></script>
+  <script src="assets/js/admin.js?v=20261022-2"></script>
 </body>
 </html>

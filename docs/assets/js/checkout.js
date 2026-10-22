@@ -68,6 +68,7 @@ async function finalizarCompra() {
         cp: (typeof window.savia_getCP === 'function' ? window.savia_getCP() : ''),
         codigo: (Carrito.codigo && Carrito.codigo.code) || '',  // código de descuento aplicado
         returnUrl: _urlRetorno(),
+        origen: (typeof saviaCanal === 'function' ? saviaCanal() : null),  // canal de llegada (Brevo, Google...)
       }),
     });
 
