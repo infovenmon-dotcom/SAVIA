@@ -96,6 +96,21 @@ async function putConfig(env, cfg) {
   await env.SAVIA_KV.put('config', JSON.stringify(cfg));
 }
 
+/* ---------- Campaña temporal (Black Friday 2026) ----------
+   −20 % en el carrito sobre todos los productos, del viernes 20 de noviembre
+   a las 00:00 al lunes 30 a las 23:59 (hora peninsular). Se suma al 4×3, NO a
+   otros códigos (REGALATE10, MOMENTO-…) y sin regalo de bienvenida. Espejo de
+   docs/assets/js/precios.js (CAMPANA_DEF). Para cortarla antes: config
+   campanaActiva=false desde el panel o cambiar estas fechas. */
+const CAMPANA = {
+  id: 'BLACKFRIDAY2026', nombre: 'Black Friday', pct: 20,
+  desde: '2026-11-20T00:00:00+01:00', hasta: '2026-12-01T00:00:00+01:00',
+};
+function campanaActiva(cfg, ahora = Date.now()) {
+  if (cfg && cfg.campanaActiva === false) return null;
+  return (ahora >= Date.parse(CAMPANA.desde) && ahora < Date.parse(CAMPANA.hasta)) ? CAMPANA : null;
+}
+
 /* Precio efectivo de una unidad:
    1) base = override en config.precios[handle] si existe, si no el del catálogo.
    2) si la familia del producto tiene descuento en config.descuentosCategoria,
@@ -109,10 +124,12 @@ function precioEfectivo(handle, productos, cfg) {
   }
   const dc = cfg.descuentosCategoria || {};
   const col = productos[handle].collection;
-  const pct = Number(dc[col]);
-  if (isFinite(pct) && pct > 0 && pct < 100) {
-    return Math.round(base * (1 - pct / 100) * 100) / 100;
-  }
+  let pct = Number(dc[col]);
+  if (!(isFinite(pct) && pct > 0 && pct < 100)) pct = 0;
+  // Campaña: no se acumula con el descuento por familia, se usa el mayor.
+  const camp = campanaActiva(cfg);
+  if (camp) pct = Math.max(pct, camp.pct);
+  if (pct) return Math.round(base * (1 - pct / 100) * 100) / 100;
   return base;
 }
 
@@ -359,9 +376,16 @@ async function crearCheckout(request, env, cors) {
   // subtotal con 4x3, sin el código), así que el código nunca quita el envío gratis.
   //   · Si el cliente ya escribió un código válido en el carrito -> lo aplicamos.
   //   · Si no, dejamos el campo nativo de Stripe por si lo introduce en el pago.
-  const promo = await buscarCodigoStripe(env, body.codigo);
-  if (promo && promo.id) form.append('discounts[0][promotion_code]', promo.id);
-  else form.append('allow_promotion_codes', 'true');
+  // Durante la campaña (Black Friday) el −20 % ya va en el precio de cada línea
+  // y NO se aceptan otros códigos.
+  const camp = campanaActiva(cfg);
+  if (camp) {
+    form.append('metadata[campana]', camp.id);
+  } else {
+    const promo = await buscarCodigoStripe(env, body.codigo);
+    if (promo && promo.id) form.append('discounts[0][promotion_code]', promo.id);
+    else form.append('allow_promotion_codes', 'true');
+  }
   form.append('shipping_address_collection[allowed_countries][0]', 'ES');
   // Recuperación de carritos abandonados: si el cliente llega al pago, deja su
   // email pero no paga, Stripe guarda la sesión y (si activas los correos de
@@ -802,7 +826,8 @@ async function manejarWebhook(request, env) {
           const prev = await env.SAVIA_KV.get('cliente:' + emailCli);
           primerPedido = !(parseInt(prev || '0', 10) > 0);
           await env.SAVIA_KV.put('cliente:' + emailCli, String((parseInt(prev || '0', 10) || 0) + 1));
-          if (cfgR.regaloBienvenida !== false) {
+          const enCampana = !!(sesion.metadata && sesion.metadata.campana);
+          if (cfgR.regaloBienvenida !== false && !enCampana) {
             const esSub = await env.SAVIA_KV.get('sub:' + emailCli);
             const yaRegalo = await env.SAVIA_KV.get('regalo:' + emailCli);
             if (esSub && !yaRegalo) {
@@ -3264,6 +3289,7 @@ export default {
           if (!(Number(n) > 0)) agotados.add(h);
         }
         publico.agotados = [...agotados];
+        publico.campana = { ...CAMPANA, activa: cfg.campanaActiva !== false };
         return jsonResp(publico, 200, cors);
       }
       // --- Muro central del panel: bloqueo por fuerza bruta + auth por cabecera.
@@ -3403,6 +3429,7 @@ export default {
       // Validar un código de descuento (lo escribe el cliente en el carrito).
       if (path === '/validar-codigo' && request.method === 'POST') {
         let b = {}; try { b = await request.json(); } catch { /* */ }
+        if (campanaActiva(await getConfig(env))) return jsonResp({ valido: false, motivo: 'campana' }, 200, cors);
         const promo = await buscarCodigoStripe(env, b.codigo);
         if (!promo) return jsonResp({ valido: false }, 200, cors);
         return jsonResp({ valido: true, codigo: promo.code, pct: promo.pct, amountOff: promo.amountOff }, 200, cors);

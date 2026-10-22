@@ -45,6 +45,69 @@ function precioDe(p) {
   const pct = _dtoCategoria(p);
   return pct ? Math.round(base * (1 - pct / 100) * 100) / 100 : base;
 }
+/* ---------- Campaña temporal (Black Friday) ----------
+   Descuento en el CARRITO (no cambia el precio de la ficha, para no romper la
+   paridad con Amazon). Mismas fechas y % que stripe/worker.js (CAMPANA): el
+   servidor recalcula el cobro, así que el navegador nunca decide el importe.
+   Durante la campaña: no se aceptan otros códigos y no hay regalo de bienvenida.
+   El Worker puede mandar otra en /config (campana) o desactivarla (activa:false). */
+const CAMPANA_DEF = {
+  id: 'BLACKFRIDAY2026', nombre: 'Black Friday', pct: 20,
+  desde: '2026-11-20T00:00:00+01:00', hasta: '2026-12-01T00:00:00+01:00',
+};
+function campanaActiva(ahora) {
+  const c = _cfg().campana || CAMPANA_DEF;
+  if (!c || c.activa === false) return null;
+  let t = ahora || Date.now();
+  // Solo en local, para revisar la campaña antes de tiempo: ?campana=prueba
+  try {
+    if (/^(localhost|127\.0\.0\.1)$/.test(location.hostname) && /[?&]campana=prueba/.test(location.search)) return c;
+  } catch (e) { /* sin location */ }
+  return (t >= Date.parse(c.desde) && t < Date.parse(c.hasta)) ? c : null;
+}
+/* Precio por unidad DENTRO del carrito: el de la ficha con la campaña aplicada.
+   No se acumula con el descuento por familia: se usa el mayor de los dos. */
+function precioCarritoDe(p) {
+  const c = campanaActiva();
+  if (!c) return precioDe(p);
+  const base = _precioBase(p);
+  const pct = Math.max(_dtoCategoria(p), Number(c.pct) || 0);
+  return Math.round(base * (1 - pct / 100) * 100) / 100;
+}
+/* Durante la campaña: cambia la barra promo y oculta el botón de regalo. */
+document.addEventListener('DOMContentLoaded', function () {
+  const c = campanaActiva();
+  if (!c) return;
+  document.documentElement.classList.add('en-campana');
+  document.querySelectorAll('.banner-promo').forEach(function (b) {
+    b.innerHTML = '<strong>🖤 ' + c.nombre.toUpperCase() + ' · −' + c.pct + ' % EN TODO + 4×3</strong> · hasta −40 % ' +
+      '<span class="banner-envio">🚚 ENVÍO GRATIS desde 20&nbsp;€</span> · Hasta el 30 de noviembre';
+  });
+  document.querySelectorAll('.btn-regalo').forEach(function (b) { b.style.display = 'none'; });
+  // Portada: franjas diagonales del Black Friday sobre el vídeo.
+  const hero = document.querySelector('.hero-con-video .hero-inner');
+  if (hero && !document.querySelector('.bf-franjas')) {
+    const f = document.createElement('link');
+    f.rel = 'stylesheet';
+    f.href = 'https://fonts.googleapis.com/css2?family=Anton&display=swap';
+    document.head.appendChild(f);
+    const rep = new Array(8).fill('<span>BLACK FRIDAY</span><i>✦</i>').join('');
+    const bloque = document.createElement('div');
+    bloque.className = 'bf-franjas';
+    bloque.innerHTML =
+      '<div class="bf-cinta bf-tras" aria-hidden="true"><div class="bf-marquee">' + rep + rep + '</div></div>' +
+      '<div class="bf-cinta bf-delante">' +
+        '<p class="bf-titulo">BLACK FRIDAY</p>' +
+        '<p class="bf-grande"><small>HASTA</small> −40%</p>' +
+        '<p class="bf-hasta"><b>−' + c.pct + '% EN TODO + 4×3</b> · DEL 20 AL 30 DE NOVIEMBRE</p>' +
+      '</div>';
+    const logo = hero.querySelector('.hero-logo');
+    if (logo && logo.nextSibling) hero.insertBefore(bloque, logo.nextSibling); else hero.prepend(bloque);
+    const cta = hero.querySelector('.btn-primario');
+    if (cta) { cta.textContent = 'Aprovecha el Black Friday'; cta.classList.add('bf-cta'); }
+  }
+});
+
 function precioAntesDe(p) {
   const ahora = precioDe(p);
   // 1) Oferta explícita por producto (config.ofertas) tiene prioridad.

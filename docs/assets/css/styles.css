@@ -1942,3 +1942,58 @@ a.card-img, a.combina-img { color: inherit; text-decoration: none; }
   .ritual-escala li { padding: 6px 10px; font-size: .82rem; }
   .ritual-escala strong { font-size: 1.05rem; }
 }
+
+/* ===========================================================================
+   Black Friday (solo en campaña: html.en-campana, lo pone precios.js)
+   Dos franjas cruzadas sobre el vídeo de portada: una de fondo que corre
+   en bucle y la principal con la oferta.
+   =========================================================================== */
+.en-campana .hero-con-video { overflow: hidden; }
+.en-campana .hero-con-video .hero-tagline,
+.en-campana .hero-con-video .hero-sub,
+.en-campana .hero-con-video .hero-badges { display: none; }
+.en-campana .hero-con-video .hero-logo { width: 130px; margin-bottom: 4px; }
+.bf-franjas { position: relative; margin: 30px 0 40px; height: clamp(250px, 34vw, 380px); }
+.bf-cinta {
+  position: absolute; left: 50%; top: 50%; width: 140vw;
+  translate: -50% -50%;
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+}
+.bf-tras {
+  rotate: 6deg; height: 54px; background: #C9A227; color: #111; overflow: hidden;
+  box-shadow: 0 10px 30px rgba(0,0,0,.35);
+}
+.bf-marquee {
+  display: flex; gap: 22px; white-space: nowrap; align-items: center;
+  font-family: "Anton", "Arial Narrow", Impact, sans-serif; font-size: 30px; letter-spacing: .04em;
+  animation: bf-correr 26s linear infinite;
+}
+.bf-marquee i { font-style: normal; font-size: 18px; }
+@keyframes bf-correr { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+.bf-delante {
+  rotate: -5deg; background: #0b0b0b; color: #fff; padding: 16px 0 18px;
+  border-top: 4px solid #C9A227; border-bottom: 4px solid #C9A227;
+  box-shadow: 0 18px 50px rgba(0,0,0,.55);
+}
+.hero .bf-delante p { margin: 0; max-width: none; opacity: 1; font-family: "Anton", "Arial Narrow", Impact, sans-serif; text-transform: uppercase; line-height: 1; }
+.hero .bf-delante .bf-titulo { font-size: clamp(40px, 7vw, 84px); letter-spacing: .03em; color: #fff; }
+.hero .bf-delante .bf-grande {
+  font-size: clamp(64px, 12vw, 150px); color: #E0B83A; letter-spacing: .01em; margin-top: 2px !important;
+  display: flex; align-items: center; gap: .12em; text-shadow: 0 4px 0 #7a5e10;
+}
+.hero .bf-delante .bf-grande small { font-size: .32em; color: #fff; writing-mode: vertical-rl; rotate: 180deg; letter-spacing: .08em; text-shadow: none; }
+.hero .bf-delante .bf-oferta { font-size: clamp(24px, 4.2vw, 46px); margin-top: 6px !important; letter-spacing: .02em; }
+.bf-oferta b { color: #E0B83A; font-weight: 400; font-size: 1.25em; }
+.bf-oferta span { color: #E0B83A; }
+.hero .bf-delante .bf-hasta { font-family: var(--fuente-cuerpo) !important; font-weight: 700; font-size: clamp(12px, 1.6vw, 16px); letter-spacing: .14em; color: #e9e2cf; margin-top: 10px !important; }
+.bf-hasta b { color: #E0B83A; }
+.hero .btn-primario.bf-cta { background: #E0B83A; color: #111; font-weight: 800; text-transform: uppercase; letter-spacing: .05em; }
+.hero .btn-primario.bf-cta:hover { background: #fff; }
+@media (max-width: 37.5em) {
+  .bf-franjas { margin: 18px 0 26px; height: 260px; }
+  .bf-tras { height: 40px; rotate: 8deg; }
+  .bf-marquee { font-size: 22px; }
+  .bf-delante { rotate: -6deg; padding: 12px 0 14px; }
+  .hero .bf-delante .bf-hasta { font-size: 10.5px; letter-spacing: .08em; max-width: 92vw; }
+}
+@media (prefers-reduced-motion: reduce) { .bf-marquee { animation: none; } }
