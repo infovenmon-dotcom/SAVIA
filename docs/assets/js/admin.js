@@ -593,7 +593,7 @@ function nlTest() {
 }
 function nlEnviarYa() {
   if (!confirm('¿Enviar el correo semanal AHORA a todos los suscriptores?')) return;
-  _nlPost({ accion: 'enviar_ya' }, (d) => `✓ Enviado a ${d.enviados || 0} de ${d.total || 0} suscriptores.`);
+  _nlPost({ accion: 'enviar_ya' }, (d) => `✓ En cola para ${d.encolados || 0} suscriptores: sale por tandas en las próximas horas.`);
 }
 async function verSuscriptores() {
   const msg = document.getElementById('nl-subs-msg');

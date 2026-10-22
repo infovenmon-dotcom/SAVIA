@@ -493,11 +493,12 @@ async function getSesionCompleta(sesion, env) {
    { ok, status, body, proveedor }. */
 function hayEmail(env) { return !!(env.RESEND_API_KEY || env.EMAIL_API_KEY); }
 
-async function enviarEmail(env, { to, subject, html, replyTo, fromName }) {
+async function enviarEmail(env, { to, subject, html, replyTo, fromName, soloBrevo }) {
   const fromEmail = env.ORDER_EMAIL_FROM || env.ORDER_EMAIL_TO;
   const nombre = fromName || 'Savia de Alma';
+  let resendFallo = false;
   if (!to || !fromEmail) return { ok: false, status: 0, body: 'faltan destinatario/remitente', proveedor: null };
-  if (env.RESEND_API_KEY) {
+  if (env.RESEND_API_KEY && !(soloBrevo && env.EMAIL_API_KEY)) {
     const cuerpo = { from: `${nombre} <${fromEmail}>`, to: [to], subject, html };
     if (replyTo) cuerpo.reply_to = replyTo;
     const r = await fetch('https://api.resend.com/emails', {
@@ -510,6 +511,7 @@ async function enviarEmail(env, { to, subject, html, replyTo, fromName }) {
     // se reintenta por Brevo para que los avisos de pedido no se pierdan.
     if (res.ok || !env.EMAIL_API_KEY) return res;
     console.error('resend falló, reintento por Brevo:', res.status, res.body);
+    resendFallo = true;
   }
   if (env.EMAIL_API_KEY) {
     const payload = { sender: { email: fromEmail, name: nombre }, to: [{ email: to }], subject, htmlContent: html };
@@ -519,7 +521,7 @@ async function enviarEmail(env, { to, subject, html, replyTo, fromName }) {
       headers: { 'api-key': env.EMAIL_API_KEY, 'Content-Type': 'application/json', 'accept': 'application/json' },
       body: JSON.stringify(payload),
     });
-    return { ok: r.ok, status: r.status, body: (await r.text()).slice(0, 600), proveedor: 'brevo' };
+    return { ok: r.ok, status: r.status, body: (await r.text()).slice(0, 600), proveedor: 'brevo', resendFallo };
   }
   return { ok: false, status: 0, body: 'sin proveedor de email', proveedor: null };
 }
@@ -2427,6 +2429,217 @@ async function enviarNewsletterSemanal(env, opts = {}) {
   return { ok: true, destacado: prod.handle, enviados, total: destinatarios.length };
 }
 
+/* ---------- Cola de correos masivos ----------
+   Los envíos a toda la lista (newsletter del domingo, campañas) ya no salen de
+   golpe: se apunta un "trabajo" con la lista de emails y un temporizador cada
+   15 minutos manda una tanda de COLA_LOTE. Así no se pasa ni el límite de
+   peticiones del Worker ni el cupo diario de los proveedores (Resend ~100/día,
+   Brevo 300/día): cuando Resend se agota, sigue por Brevo, y si se agotan los
+   dos, continúa al día siguiente. Una sola escritura por tanda. */
+const COLA_LOTE = 12;
+const CUPO_DIA = { resend: 95, brevo: 285 };
+const CRON_SEMANAL = '0 8 * * 0';          // domingos 08:00 UTC (9:00 en invierno, 10:00 en verano)
+// Correos de campaña con fecha: se apuntan solos a la cola cuando llega su hora
+// (y hasta 36 h después, por si el Worker se despliega tarde). Cada uno, una vez.
+const ENVIOS_PROGRAMADOS = [
+  { id: 'bf-previa', cuando: '2026-11-18T10:00:00+01:00' },
+  { id: 'bf-lanzamiento', cuando: '2026-11-20T08:00:00+01:00' },
+  { id: 'bf-ultimos', cuando: '2026-11-29T10:00:00+01:00' },
+];
+
+async function _encolar(env, tpl, emails, extra = {}) {
+  if (!env.SAVIA_KV || !emails.length) return { ok: true, encolados: 0 };
+  const id = tpl + '-' + Date.now();
+  await env.SAVIA_KV.put('colajob:' + id, JSON.stringify({ id, tpl, extra, emails, pos: 0, enviados: 0, fallos: 0, creado: Date.now() }), { expirationTtl: 14 * 86400 });
+  let jobs = []; try { jobs = JSON.parse(await env.SAVIA_KV.get('colajobs')) || []; } catch { jobs = []; }
+  jobs.push(id);
+  await env.SAVIA_KV.put('colajobs', JSON.stringify(jobs));
+  return { ok: true, encolados: emails.length, trabajo: id };
+}
+
+async function encolarNewsletterSemanal(env) {
+  const prods = await cargarCatalogoCompleto(env.PRODUCTS_URL);
+  if (!prods.length) return { ok: false, motivo: 'catálogo vacío' };
+  const cfg = await getConfig(env);
+  const prod = await elegirDestacado(env, prods, cfg, true);
+  const r = await _encolar(env, 'semanal', await nlDestinatarios(env), { handle: prod.handle });
+  return { ...r, destacado: prod.handle };
+}
+
+async function estadoCola(env) {
+  let jobs = []; try { jobs = JSON.parse(await env.SAVIA_KV.get('colajobs')) || []; } catch { jobs = []; }
+  const out = [];
+  for (const id of jobs) {
+    try { const j = JSON.parse(await env.SAVIA_KV.get('colajob:' + id)); if (j) out.push({ id, tpl: j.tpl, total: j.emails.length, pos: j.pos, enviados: j.enviados, fallos: j.fallos }); } catch { /* */ }
+  }
+  const dia = new Date(Date.now()).toISOString().slice(0, 10);
+  let cupo = {}; try { cupo = JSON.parse(await env.SAVIA_KV.get('cupo:' + dia)) || {}; } catch { cupo = {}; }
+  const prog = [];
+  for (const p of ENVIOS_PROGRAMADOS) prog.push({ ...p, hecho: !!(await env.SAVIA_KV.get('programado:' + p.id)) });
+  return { ok: true, trabajos: out, cupoHoy: cupo, programados: prog };
+}
+
+/* Apunta los correos programados cuya hora ha llegado. */
+async function revisarProgramados(env, ahora = Date.now()) {
+  for (const p of ENVIOS_PROGRAMADOS) {
+    const t = Date.parse(p.cuando);
+    if (ahora < t || ahora > t + 36 * 3600 * 1000) continue;
+    if (await env.SAVIA_KV.get('programado:' + p.id)) continue;
+    await env.SAVIA_KV.put('programado:' + p.id, String(ahora), { expirationTtl: 120 * 86400 });
+    await _encolar(env, p.id, await nlDestinatarios(env));
+  }
+}
+
+/* Manda una tanda del primer trabajo de la cola. */
+async function procesarCola(env) {
+  if (!env.SAVIA_KV || !hayEmail(env)) return { ok: false };
+  let jobs = []; try { jobs = JSON.parse(await env.SAVIA_KV.get('colajobs')) || []; } catch { jobs = []; }
+  if (!jobs.length) return { ok: true, vacia: true };
+  const id = jobs[0];
+  let job; try { job = JSON.parse(await env.SAVIA_KV.get('colajob:' + id)); } catch { job = null; }
+  if (!job) { await env.SAVIA_KV.put('colajobs', JSON.stringify(jobs.slice(1))); return { ok: true, descartado: id }; }
+  const dia = new Date(Date.now()).toISOString().slice(0, 10);
+  let cupo = {}; try { cupo = JSON.parse(await env.SAVIA_KV.get('cupo:' + dia)) || {}; } catch { cupo = {}; }
+  cupo.resend = cupo.resend || 0; cupo.brevo = cupo.brevo || 0;
+  const hayResend = !!env.RESEND_API_KEY, hayBrevo = !!env.EMAIL_API_KEY;
+  // Para la plantilla semanal hace falta el catálogo (una vez por tanda).
+  let ctxSemanal = null;
+  if (job.tpl === 'semanal') {
+    const prods = await cargarCatalogoCompleto(env.PRODUCTS_URL);
+    const cfg = await getConfig(env);
+    const prod = prods.find(x => x.handle === (job.extra && job.extra.handle)) || prods[0];
+    ctxSemanal = { prods, cfg, prod, resenas: await cargarResenas(env.PRODUCTS_URL) };
+  }
+  let n = 0;
+  while (job.pos < job.emails.length && n < COLA_LOTE) {
+    const quedaResend = hayResend && cupo.resend < CUPO_DIA.resend;
+    const quedaBrevo = hayBrevo && cupo.brevo < CUPO_DIA.brevo;
+    if (!quedaResend && !quedaBrevo) break; // cupo del día agotado: sigue mañana
+    const to = job.emails[job.pos];
+    try {
+      if (!(await env.SAVIA_KV.get('unsub:' + to))) {
+        const token = await nlToken(to, env);
+        const unsub = nlWorker(env) + '/unsubscribe?e=' + encodeURIComponent(to) + '&amp;t=' + token;
+        const { subject, html } = job.tpl === 'semanal'
+          ? construirCorreoSemanal(ctxSemanal.prod, ctxSemanal.prods, ctxSemanal.cfg, unsub, ctxSemanal.resenas)
+          : construirCorreoBF(job.tpl, unsub);
+        const r = await enviarEmail(env, { to, subject, html, replyTo: env.ORDER_EMAIL_TO || undefined, fromName: 'Savia de Alma', soloBrevo: !quedaResend });
+        // Si Resend ha dicho que no (cupo del día), no se vuelve a probar hoy.
+        if (r && r.resendFallo) cupo.resend = CUPO_DIA.resend;
+        if (r && r.ok) { job.enviados++; if (r.proveedor === 'resend') cupo.resend++; else cupo.brevo++; }
+        else {
+          job.fallos++;
+          if (r && r.proveedor === 'brevo' && (r.status === 429 || r.status === 402)) cupo.brevo = CUPO_DIA.brevo;
+        }
+      }
+    } catch (e) { job.fallos++; console.error('cola envio', to, e); }
+    job.pos++; n++;
+  }
+  await env.SAVIA_KV.put('cupo:' + dia, JSON.stringify(cupo), { expirationTtl: 3 * 86400 });
+  if (job.pos >= job.emails.length) {
+    await env.SAVIA_KV.put('colajobs', JSON.stringify(jobs.slice(1)));
+    await env.SAVIA_KV.put('colahecho:' + id, JSON.stringify({ tpl: job.tpl, total: job.emails.length, enviados: job.enviados, fallos: job.fallos, fin: Date.now() }), { expirationTtl: 60 * 86400 });
+    await env.SAVIA_KV.delete('colajob:' + id);
+  } else {
+    await env.SAVIA_KV.put('colajob:' + id, JSON.stringify(job), { expirationTtl: 14 * 86400 });
+  }
+  return { ok: true, trabajo: id, tanda: n, pos: job.pos, total: job.emails.length };
+}
+
+/* ---------- Recuperar pagos a medias ----------
+   Stripe guarda los pagos que se quedan sin terminar y da un enlace para
+   retomarlos, pero el correo lo manda la tienda. Una vez por hora se revisan
+   las sesiones caducadas de los últimos 2 días: si el cliente dejó su email y
+   aceptó recibir comunicaciones (casilla de la página de pago), se le manda UN
+   recordatorio con el enlace. Nunca a quien ya ha comprado después. */
+async function recuperarPagosAMedias(env) {
+  if (!env.STRIPE_SECRET_KEY || !env.SAVIA_KV || !hayEmail(env)) return { ok: false };
+  const desde = Math.floor(Date.now() / 1000) - 2 * 86400;
+  const q = new URLSearchParams({ limit: '50', status: 'expired', 'created[gte]': String(desde) });
+  const r = await fetch('https://api.stripe.com/v1/checkout/sessions?' + q.toString(), { headers: { 'Authorization': 'Bearer ' + env.STRIPE_SECRET_KEY } });
+  if (!r.ok) return { ok: false, status: r.status };
+  const j = await r.json();
+  let enviados = 0;
+  for (const x of (j.data || [])) {
+    if (enviados >= 5) break;
+    const email = String((x.customer_details && x.customer_details.email) || '').toLowerCase();
+    const url = x.after_expiration && x.after_expiration.recovery && x.after_expiration.recovery.url;
+    const acepta = x.consent && x.consent.promotions === 'opt_in';
+    if (!email || !url || !acepta) continue;
+    if (await env.SAVIA_KV.get('recup:' + x.id)) continue;
+    await env.SAVIA_KV.put('recup:' + x.id, '1', { expirationTtl: 30 * 86400 });
+    if (await env.SAVIA_KV.get('unsub:' + email)) continue;
+    try { const u = JSON.parse(await env.SAVIA_KV.get('ultimopedido:' + email)); if (u && u.fecha >= x.created) continue; } catch { /* sin pedidos */ }
+    if (await env.SAVIA_KV.get('recupmail:' + email)) continue; // uno por persona cada 7 días
+    await env.SAVIA_KV.put('recupmail:' + email, '1', { expirationTtl: 7 * 86400 });
+    const importe = ((x.amount_total || 0) / 100).toFixed(2).replace('.', ',');
+    const res = await enviarEmail(env, {
+      to: email, fromName: 'Savia de Alma', replyTo: env.ORDER_EMAIL_TO || undefined,
+      subject: '🌿 Tu pedido de Savia de Alma se quedó a medias',
+      html: `<div style="font-family:-apple-system,Segoe UI,Roboto,Arial,sans-serif;max-width:560px;margin:0 auto;color:#333;line-height:1.55">` +
+        `<h2 style="color:#1D6B50;font-family:Georgia,serif">¿Se te quedó algo a medias?</h2>` +
+        `<p>Empezaste un pedido de <strong>${importe} €</strong> en Savia de Alma y no llegó a completarse. Te lo hemos guardado tal cual: con un clic lo retomas donde lo dejaste.</p>` +
+        `<p style="margin:22px 0"><a href="${_escHtml(url)}" style="background:#1D6B50;color:#fff;padding:13px 24px;border-radius:8px;text-decoration:none;font-weight:700">Terminar mi pedido</a></p>` +
+        `<p style="font-size:14px;color:#555">Si tuviste algún problema al pagar, responde a este correo y te ayudamos.</p>` +
+        `<p style="color:#1D6B50;font-weight:600">Savia de Alma 💚</p></div>`,
+    });
+    if (res && res.ok) enviados++;
+  }
+  return { ok: true, enviados };
+}
+
+/* ---------- Correos del Black Friday 2026 ---------- */
+function construirCorreoBF(tipo, unsub) {
+  const utm = `?utm_source=newsletter&amp;utm_medium=email&amp;utm_campaign=${tipo}`;
+  const T = {
+    'bf-previa': {
+      subject: '⏳ El viernes empieza nuestro Black Friday (hasta −40 %)',
+      antetitulo: 'Te avisamos antes que a nadie',
+      titulo: 'Del viernes 20 al lunes 30',
+      intro: 'Este viernes arranca el <strong>Black Friday de Savia de Alma</strong>: <strong>−20 % en toda la tienda</strong> y, además, nuestro <strong>4×3</strong> de siempre. Juntos, hasta un <strong>40 % menos</strong>.',
+      cierre: 'Buen momento para dejar listos los regalos de Navidad (o darte un capricho). Ve haciendo tu lista: el viernes el descuento se aplica solo.',
+      boton: 'Ir preparando mi lista', ruta: '/rituales/',
+    },
+    'bf-lanzamiento': {
+      subject: '🖤 Black Friday: −20 % en todo + 4×3 (hasta −40 %)',
+      antetitulo: 'Ya ha empezado',
+      titulo: 'Hasta −40 % en toda la tienda',
+      intro: 'Desde hoy y hasta el <strong>lunes 30 de noviembre</strong>: <strong>−20 % en todos los productos</strong> y, encima, el <strong>4×3</strong> (de cada 4, el de menor precio te sale gratis). No necesitas código: el descuento ya está aplicado en la web.',
+      cierre: 'Champús, jabones, desodorantes, rituales completos… y el envío es gratis desde 20 €.',
+      boton: 'Aprovechar el Black Friday', ruta: '/tienda.html',
+    },
+    'bf-ultimos': {
+      subject: '⌛ Últimas horas: el Black Friday acaba mañana lunes',
+      antetitulo: 'Últimos días',
+      titulo: 'Acaba el lunes 30 a medianoche',
+      intro: 'Te queda poco para aprovechar el <strong>−20 % en toda la tienda</strong> sumado al <strong>4×3</strong>: hasta un <strong>40 % menos</strong>. El lunes 30 a las 23:59 vuelven los precios de siempre.',
+      cierre: 'Si estabas pensando en los regalos de Navidad, este es el momento. El envío es gratis desde 20 €.',
+      boton: 'Ver la tienda antes de que acabe', ruta: '/tienda.html',
+    },
+  }[tipo] || null;
+  const t = T || {};
+  // Ejemplo real: 4 champús de 10,99 € → 4×3 (paga 3) y −20 %.
+  const ej = (n => n.toFixed(2).replace('.', ','))(10.99 * 3 * 0.8);
+  const html =
+    `<div style="font-family:-apple-system,Segoe UI,Roboto,Arial,sans-serif;max-width:560px;margin:0 auto;color:#333;line-height:1.55">` +
+    `<div style="background:#0b0b0b;color:#fff;text-align:center;padding:26px 18px 22px;border-radius:12px">` +
+    `<div style="font-size:12px;letter-spacing:3px;text-transform:uppercase;color:#E0B83A;font-weight:700">${t.antetitulo}</div>` +
+    `<div style="font-family:Impact,'Arial Black',Arial,sans-serif;font-size:44px;line-height:1.05;letter-spacing:1px;margin:8px 0 4px">BLACK FRIDAY</div>` +
+    `<div style="font-family:Impact,'Arial Black',Arial,sans-serif;font-size:58px;line-height:1;color:#E0B83A">HASTA −40 %</div>` +
+    `<div style="font-size:13px;letter-spacing:2px;color:#e9e2cf;margin-top:10px;font-weight:700">−20 % EN TODO + 4×3 · DEL 20 AL 30 DE NOVIEMBRE</div></div>` +
+    `<h2 style="color:#1D6B50;font-family:Georgia,serif;margin:22px 0 8px">${t.titulo}</h2>` +
+    `<p>${t.intro}</p>` +
+    `<table role="presentation" style="width:100%;border-collapse:collapse;margin:14px 0"><tr>` +
+    `<td style="padding:12px;border:1px solid #e7ded2;background:#f6f3ec;text-align:center;font-size:14px">Ejemplo: <strong>4 champús sólidos</strong><br>` +
+    `<span style="text-decoration:line-through;color:#999">43,96 €</span> → <strong style="font-size:20px;color:#1D6B50">${ej} €</strong><br><span style="color:#777;font-size:12px">4×3 + −20 % · un 40 % menos</span></td></tr></table>` +
+    `<p>${t.cierre}</p>` +
+    `<p style="margin:24px 0 8px;text-align:center"><a href="${NL_SITE}${t.ruta}${utm}" style="background:#0b0b0b;color:#E0B83A;padding:14px 26px;border-radius:8px;text-decoration:none;font-weight:800;letter-spacing:1px;text-transform:uppercase">${t.boton}</a></p>` +
+    `<p style="font-size:13px;color:#777;text-align:center">Durante el Black Friday no se acumulan otros códigos de descuento: ya tienes el mejor precio del año.</p>` +
+    `<p style="color:#1D6B50;font-weight:600;margin-top:24px">Gracias por estar ahí 💚<br>Savia de Alma</p>` +
+    `<hr style="border:none;border-top:1px solid #eee"><p style="color:#aaa;font-size:12px">Recibes este correo porque estás suscrito a la newsletter de Savia de Alma. <a href="${unsub}" style="color:#aaa">Darme de baja</a>.</p></div>`;
+  return { subject: t.subject || 'Black Friday en Savia de Alma', html };
+}
+
 /* Baja de la newsletter (enlace del correo). Devuelve una página simpática. */
 async function manejarBaja(request, env) {
   const url = new URL(request.url);
@@ -2464,7 +2677,18 @@ async function manejarNewsletter(request, env, cors) {
     return jsonResp(await enviarNewsletterSemanal(env, { soloA: to, avanzar: false }), 200, cors);
   }
   if (accion === 'enviar_ya') {
-    return jsonResp(await enviarNewsletterSemanal(env, { avanzar: true }), 200, cors);
+    return jsonResp(await encolarNewsletterSemanal(env), 200, cors);
+  }
+  if (accion === 'prueba_bf') {
+    const to = body.to || env.ORDER_EMAIL_TO;
+    const tipo = ['bf-previa', 'bf-lanzamiento', 'bf-ultimos'].includes(body.tipo) ? body.tipo : 'bf-lanzamiento';
+    const token = await nlToken(to, env);
+    const { subject, html } = construirCorreoBF(tipo, nlWorker(env) + '/unsubscribe?e=' + encodeURIComponent(to) + '&amp;t=' + token);
+    const r = await enviarEmail(env, { to, subject: '[PRUEBA] ' + subject, html, replyTo: env.ORDER_EMAIL_TO || undefined, fromName: 'Savia de Alma' });
+    return jsonResp({ ok: !!(r && r.ok), tipo }, 200, cors);
+  }
+  if (accion === 'cola') {
+    return jsonResp(await estadoCola(env), 200, cors);
   }
   if (accion === 'suscriptores') {
     if (!env.SAVIA_KV) return jsonResp({ total: 0, suscriptores: [] }, 200, cors);
@@ -3447,9 +3671,23 @@ export default {
 
   // Temporizador semanal (domingos): envía el correo del "producto de la semana".
   async scheduled(event, env, ctx) {
-    ctx.waitUntil(
-      enviarNewsletterSemanal(env, { avanzar: true }).catch((e) => console.error('newsletter cron:', e))
-    );
+    // Temporizador cada 15 min: correos programados + una tanda de la cola.
+    if (event.cron !== CRON_SEMANAL) {
+      ctx.waitUntil((async () => {
+        if (!env.SAVIA_KV) return;
+        await revisarProgramados(env);
+        await procesarCola(env);
+        // Una vez por hora: recordatorio de pagos a medias.
+        if (new Date(Date.now()).getUTCMinutes() < 15) await recuperarPagosAMedias(env);
+      })().catch((e) => console.error('cola cron:', e)));
+      return;
+    }
+    // Domingo: newsletter a la cola (salvo durante el Black Friday, que ya
+    // tiene sus propios correos), seguimiento post-compra y resumen semanal.
+    ctx.waitUntil((async () => {
+      if (campanaActiva(await getConfig(env))) { console.log('newsletter semanal omitida: campaña activa'); return; }
+      await encolarNewsletterSemanal(env);
+    })().catch((e) => console.error('newsletter cron:', e)));
     // Seguimiento post-compra con código "Ya eres sostenible" (una vez por pedido).
     ctx.waitUntil(
       enviarSeguimientos(env).catch((e) => console.error('seguimiento cron:', e))
