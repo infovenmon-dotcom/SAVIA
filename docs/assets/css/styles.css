@@ -1779,7 +1779,7 @@ a.card-img, a.combina-img { color: inherit; text-decoration: none; }
    Menu principal por necesidades (tools/menu.js + assets/js/menu.js)
    Ordenador: grupos en linea con desplegable. Movil: boton "Menu" con panel.
    =========================================================================== */
-.menu-nec { flex: 1 1 auto; display: flex; justify-content: center; min-width: 0; }
+.menu-nec { flex: 1 1 auto; display: flex; justify-content: center; justify-content: safe center; min-width: 0; }
 .menu-nec .mn-lista { list-style: none; margin: 0; padding: 0; display: flex; align-items: center; gap: 4px; }
 .menu-nec .mn-lista > li { position: relative; }
 .menu-nec .mn-top {
@@ -1812,12 +1812,13 @@ a.card-img, a.combina-img { color: inherit; text-decoration: none; }
 .menu-nec .mn-sub a:hover { color: var(--verde-oscuro); text-decoration: underline; text-underline-offset: 3px; }
 .mn-abrir { display: none; }
 
-@media (hover: hover) and (min-width: 62em) {
+@media (hover: hover) and (min-width: 75em) {
   .menu-nec .mn-g:hover > .mn-sub { display: flex; }
 }
 
-/* Movil y tablet: un solo boton "Menu" que despliega todo debajo de la cabecera */
-@media (max-width: 61.99em) {
+/* Movil, tablet y portatiles pequenos: un solo boton "Menu" que despliega todo
+   debajo de la cabecera (por debajo de 1200 px los 6 grupos no caben en linea). */
+@media (max-width: 74.99em) {
   .menu-nec.mn-js { flex: 0 0 auto; justify-content: flex-start; }
   .menu-nec.mn-js .mn-abrir {
     display: inline-flex; align-items: center; gap: .5em; padding: 8px 12px;
@@ -1997,3 +1998,35 @@ a.card-img, a.combina-img { color: inherit; text-decoration: none; }
   .hero .bf-delante .bf-hasta { font-size: 10.5px; letter-spacing: .08em; max-width: 92vw; }
 }
 @media (prefers-reduced-motion: reduce) { .bf-marquee { animation: none; } }
+
+/* ---------- Ajustes de cabecera y barra (vista de ordenador y móvil) ---------- */
+/* Entre 1200 y 1400 px el botón de regalo usa su texto corto para que el menú
+   no se monte sobre el logo ni sobre el botón. */
+@media (max-width: 87.5em) {
+  .btn-regalo .br-largo { display: none; }
+  .btn-regalo .br-corto { display: inline; }
+  .menu-nec .mn-top { padding: 8px 8px; }
+}
+/* Barra promo: por debajo de 1100 px solo lo esencial (no ocupa dos o tres líneas). */
+@media (max-width: 68.75em) {
+  .banner-promo .bp-extra { display: none; }
+}
+@media (max-width: 600px) {
+  .banner-promo { padding: 10px 12px; line-height: 1.45; }
+}
+/* Con el botón "Menú", que quede junto al logo y regalo + carrito a la derecha. */
+@media (max-width: 74.99em) {
+  .menu-nec.mn-js { flex: 1 1 auto; justify-content: flex-start; }
+}
+/* Filtros de la tienda en móvil: una sola fila que se desliza, para que los
+   productos se vean sin tener que bajar media pantalla de botones. */
+@media (max-width: 600px) {
+  .chips#chips-categorias {
+    flex-wrap: nowrap; justify-content: flex-start; overflow-x: auto;
+    -webkit-overflow-scrolling: touch; scrollbar-width: none;
+    margin: 0 -16px; padding: 2px 16px 8px;
+    scroll-snap-type: x proximity;
+  }
+  .chips#chips-categorias::-webkit-scrollbar { display: none; }
+  .chips#chips-categorias .chip { flex: 0 0 auto; scroll-snap-align: start; }
+}

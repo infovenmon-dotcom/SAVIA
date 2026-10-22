@@ -716,9 +716,11 @@ function cerrarGracias() {
 function iniciarBannerRotativo() {
   const b = document.querySelector('.banner-promo');
   if (!b) return;
+  // Durante el Black Friday no hay 10 % ni regalo de bienvenida: no se rota.
+  if (document.documentElement.classList.contains('en-campana') || (typeof campanaActiva === 'function' && campanaActiva())) return;
   const slides = [
     b.innerHTML.trim(),
-    '👋 ¿Aún no nos conoces? Te lo ponemos fácil: <strong>10&nbsp;% en tu 1.ª compra</strong> <span class="banner-envio">+ jabonera y bolsa de sisal de regalo 🎁</span>',
+    '👋 <span class="bp-extra">¿Aún no nos conoces? Te lo ponemos fácil: </span><strong>10&nbsp;% en tu 1.ª compra</strong> <span class="banner-envio">+ jabonera y bolsa de sisal de regalo 🎁</span>',
   ];
   if (slides.length < 2) return;
   let i = 0;

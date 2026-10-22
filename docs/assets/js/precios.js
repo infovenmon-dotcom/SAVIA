@@ -80,8 +80,8 @@ document.addEventListener('DOMContentLoaded', function () {
   if (!c) return;
   document.documentElement.classList.add('en-campana');
   document.querySelectorAll('.banner-promo').forEach(function (b) {
-    b.innerHTML = '<strong>🖤 ' + c.nombre.toUpperCase() + ' · −' + c.pct + ' % EN TODO + 4×3</strong> · hasta −40 % ' +
-      '<span class="banner-envio">🚚 ENVÍO GRATIS desde 20&nbsp;€</span> · Hasta el 30 de noviembre';
+    b.innerHTML = '<strong>🖤 ' + c.nombre.toUpperCase() + ' · −' + c.pct + ' % EN TODO + 4×3</strong><span class="bp-extra"> · hasta −40 %</span> ' +
+      '<span class="banner-envio">🚚 ENVÍO GRATIS desde 20&nbsp;€</span><span class="bp-extra"> · Hasta el 30 de noviembre</span>';
   });
   document.querySelectorAll('.btn-regalo').forEach(function (b) { b.style.display = 'none'; });
   // Portada: franjas diagonales del Black Friday sobre el vídeo.
