@@ -65,8 +65,8 @@ id = "4dc06d48c3d54e4dabe001c8370b5adc"
 # El handler scheduled() del Worker sigue intacto; solo cambia dónde se define
 # el horario (panel en vez de este archivo).
 
-# Temporizadores del Worker (sustituyen a los puestos en el panel de Cloudflare):
-#  - domingo 08:00 UTC: newsletter semanal (a la cola), seguimiento post-compra y resumen.
-#  - cada 15 min: correos programados (Black Friday) y una tanda de la cola de correos.
-[triggers]
-crons = ["0 8 * * 0", "*/15 * * * *"]
+# Temporizadores: se configuran en el panel de Cloudflare (Workers → savia-pago →
+# Settings → Triggers → Cron). Recomendado: "0 8 * * 0" (domingo) y "*/15 * * * *"
+# (cola de correos). Ponerlos aquí hacía fallar el despliegue automático (Workers
+# Builds). El código funciona con cualquier temporizador semanal y, si falta el de
+# 15 min, las visitas de la web hacen avanzar la cola.
