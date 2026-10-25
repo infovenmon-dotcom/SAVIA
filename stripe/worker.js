@@ -2479,6 +2479,30 @@ async function estadoCola(env) {
   return { ok: true, trabajos: out, cupoHoy: cupo, programados: prog };
 }
 
+/* Hace avanzar la cola como mucho una vez cada 10 min aunque falle el temporizador. */
+async function _colaPorTrafico(env) {
+  const ult = parseInt(await env.SAVIA_KV.get('cola:ultima'), 10) || 0;
+  if (Date.now() - ult < 10 * 60 * 1000) return;
+  await env.SAVIA_KV.put('cola:ultima', String(Date.now()), { expirationTtl: 86400 });
+  await revisarProgramados(env);
+  await procesarCola(env);
+}
+
+/* Tareas del domingo, una sola vez por semana aunque haya más de un temporizador. */
+async function tareasSemanales(env) {
+  const semana = new Date(Date.now() - ((new Date().getUTCDay() + 6) % 7) * 86400000).toISOString().slice(0, 10);
+  if (await env.SAVIA_KV.get('semanal:' + semana)) return { ok: true, yaHecho: semana };
+  await env.SAVIA_KV.put('semanal:' + semana, String(Date.now()), { expirationTtl: 30 * 86400 });
+  if (!campanaActiva(await getConfig(env))) await encolarNewsletterSemanal(env);
+  else console.log('newsletter semanal omitida: campaña activa');
+  try { await enviarSeguimientos(env); } catch (e) { console.error('seguimiento:', e); }
+  if (hayEmail(env) && env.ORDER_EMAIL_TO) {
+    const r = await resumenSemanal(env, 7);
+    await enviarEmail(env, { to: env.ORDER_EMAIL_TO, subject: `📊 Resumen semanal Savia de Alma · ${r.pedidos.length} pedidos · ${r.ventas.toFixed(2).replace('.', ',')} €`, html: _htmlResumen(r) });
+  }
+  return { ok: true, semana };
+}
+
 /* Apunta los correos programados cuya hora ha llegado. */
 async function revisarProgramados(env, ahora = Date.now()) {
   for (const p of ENVIOS_PROGRAMADOS) {
@@ -2689,6 +2713,12 @@ async function manejarNewsletter(request, env, cors) {
   }
   if (accion === 'cola') {
     return jsonResp(await estadoCola(env), 200, cors);
+  }
+  if (accion === 'procesar_cola') {
+    await revisarProgramados(env);
+    const r = await procesarCola(env);
+    await env.SAVIA_KV.put('cola:ultima', String(Date.now()), { expirationTtl: 86400 });
+    return jsonResp({ ...r, estado: await estadoCola(env) }, 200, cors);
   }
   if (accion === 'suscriptores') {
     if (!env.SAVIA_KV) return jsonResp({ total: 0, suscriptores: [] }, 200, cors);
@@ -3490,7 +3520,7 @@ async function manejarOpinionesAdmin(request, env, cors) {
 }
 
 export default {
-  async fetch(request, env) {
+  async fetch(request, env, ctx) {
     const allowed = env.ALLOWED_ORIGIN || '*';
     const cors = corsHeaders(allowed);
     const url = new URL(request.url);
@@ -3635,6 +3665,9 @@ export default {
       }
       // Embudo de compra: la web suma pasos anónimos (público, sin datos personales).
       if (path === '/evento' && request.method === 'POST') {
+        // Red de seguridad: si el temporizador de 15 min no estuviera activo,
+        // las visitas de la web también hacen avanzar la cola de correos.
+        if (ctx && env.SAVIA_KV) ctx.waitUntil(_colaPorTrafico(env).catch((e) => console.error('cola trafico:', e)));
         return await registrarEvento(request, env, cors);
       }
       if (path === '/carrito-guardar' && request.method === 'POST') {
@@ -3671,33 +3704,20 @@ export default {
 
   // Temporizador semanal (domingos): envía el correo del "producto de la semana".
   async scheduled(event, env, ctx) {
-    // Temporizador cada 15 min: correos programados + una tanda de la cola.
-    if (event.cron !== CRON_SEMANAL) {
-      ctx.waitUntil((async () => {
-        if (!env.SAVIA_KV) return;
-        await revisarProgramados(env);
-        await procesarCola(env);
-        // Una vez por hora: recordatorio de pagos a medias.
-        if (new Date(Date.now()).getUTCMinutes() < 15) await recuperarPagosAMedias(env);
-      })().catch((e) => console.error('cola cron:', e)));
-      return;
-    }
-    // Domingo: newsletter a la cola (salvo durante el Black Friday, que ya
-    // tiene sus propios correos), seguimiento post-compra y resumen semanal.
+    // Temporizador frecuente ("*/15 ..."): correos programados + una tanda de la cola.
+    // Cualquier otro (el semanal, se llame como se llame en Cloudflare): tareas del
+    // domingo una vez por semana, y también una tanda de la cola.
+    const frecuente = /^\*\/\d+\s/.test(String(event.cron || ''));
     ctx.waitUntil((async () => {
-      if (campanaActiva(await getConfig(env))) { console.log('newsletter semanal omitida: campaña activa'); return; }
-      await encolarNewsletterSemanal(env);
-    })().catch((e) => console.error('newsletter cron:', e)));
-    // Seguimiento post-compra con código "Ya eres sostenible" (una vez por pedido).
-    ctx.waitUntil(
-      enviarSeguimientos(env).catch((e) => console.error('seguimiento cron:', e))
-    );
-    // Resumen semanal de ventas y seguimiento al correo de la tienda.
-    ctx.waitUntil((async () => {
-      if (!hayEmail(env) || !env.ORDER_EMAIL_TO || !env.SAVIA_KV) return;
-      const r = await resumenSemanal(env, 7);
-      await enviarEmail(env, { to: env.ORDER_EMAIL_TO, subject: `📊 Resumen semanal Savia de Alma · ${r.pedidos.length} pedidos · ${r.ventas.toFixed(2).replace('.', ',')} €`, html: _htmlResumen(r) });
-    })().catch((e) => console.error('resumen cron:', e)));
+      if (!env.SAVIA_KV) return;
+      // El domingo, el temporizador semanal solo hace lo suyo (para no pasar el
+      // límite de peticiones del Worker); la cola la siguen moviendo los de 15 min.
+      if (!frecuente && new Date().getUTCDay() === 0) { const t = await tareasSemanales(env); if (!t.yaHecho) return; }
+      await env.SAVIA_KV.put('cola:ultima', String(Date.now()), { expirationTtl: 86400 });
+      await revisarProgramados(env);
+      await procesarCola(env);
+      if (frecuente && new Date(Date.now()).getUTCMinutes() < 15) await recuperarPagosAMedias(env);
+    })().catch((e) => console.error('cron:', e)));
   },
 };
 

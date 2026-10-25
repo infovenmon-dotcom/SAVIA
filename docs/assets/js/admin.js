@@ -595,6 +595,21 @@ function nlEnviarYa() {
   if (!confirm('¿Enviar el correo semanal AHORA a todos los suscriptores?')) return;
   _nlPost({ accion: 'enviar_ya' }, (d) => `✓ En cola para ${d.encolados || 0} suscriptores: sale por tandas en las próximas horas.`);
 }
+/* Estado de la cola de correos y envío manual por tandas (por si el
+   temporizador de Cloudflare no estuviera activo). */
+async function nlCola(enviar) {
+  const msg = document.getElementById('nl-msg') || document.getElementById('nl-subs-msg');
+  try {
+    let d = await _postAdmin('/admin/newsletter', { accion: enviar ? 'procesar_cola' : 'cola' });
+    const est = enviar ? d.estado : d;
+    const t = (est.trabajos || []).map(j => `${j.tpl}: ${j.pos}/${j.total} (${j.enviados} enviados, ${j.fallos} fallos)`).join(' · ') || 'sin envíos en cola';
+    const p = (est.programados || []).map(x => `${x.id} ${x.hecho ? '✔' : new Date(x.cuando).toLocaleString('es-ES', { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' })}`).join(' · ');
+    if (msg) _msg(msg, `📬 Cola: ${t}. Programados: ${p}.`, 'ok');
+    if (enviar && (est.trabajos || []).length && confirm('Tanda enviada. ¿Mandar la siguiente dentro de 1 minuto? (deja esta pestaña abierta)')) setTimeout(() => nlCola(true), 60000);
+  } catch (e) { if (msg) _msg(msg, 'Error: ' + e.message, 'err'); }
+}
+window.nlCola = nlCola;
+
 async function verSuscriptores() {
   const msg = document.getElementById('nl-subs-msg');
   const cont = document.getElementById('nl-subs');
