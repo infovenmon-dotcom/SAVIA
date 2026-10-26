@@ -33,7 +33,7 @@
     '.rg-ok{display:none}.rg-hecho .rg-ok{display:block}.rg-hecho .rg-pedir{display:none}' +
     /* Cinta de la esquina: la oferta se queda "aparcada" tras cerrar la ventana */
     '.rg-cinta{position:fixed;left:0;bottom:0;width:150px;height:150px;overflow:hidden;z-index:110;pointer-events:none}' +
-    '.rg-cinta-b{position:absolute;left:-62px;bottom:38px;width:240px;transform:rotate(45deg);background:#143228;color:#fff;border:0;font:800 13px/1.2 "DM Sans",-apple-system,Segoe UI,Roboto,sans-serif;letter-spacing:.04em;text-align:center;padding:10px 0;box-shadow:0 4px 14px rgba(0,0,0,.28);cursor:pointer;pointer-events:auto}' +
+    '.rg-cinta-b{position:absolute;left:-62px;bottom:38px;width:240px;transform:rotate(45deg);background:#0b0b0b;color:#fff;border:0;font:800 13px/1.2 "DM Sans",-apple-system,Segoe UI,Roboto,sans-serif;letter-spacing:.04em;text-align:center;padding:10px 0;box-shadow:0 4px 14px rgba(0,0,0,.28);cursor:pointer;pointer-events:auto}' +
     '.rg-cinta-b b{color:#E8C76A}' +
     '.rg-cinta-x{position:absolute;left:84px;bottom:84px;width:26px;height:26px;border-radius:50%;border:2px solid #fff;background:#143228;color:#fff;font:700 15px/1 sans-serif;display:grid;place-items:center;cursor:pointer;pointer-events:auto;box-shadow:0 2px 8px rgba(0,0,0,.3)}' +
     'body.con-cinta .a11y-btn{bottom:150px}body.con-cinta .a11y-panel{bottom:210px}' +
@@ -64,7 +64,7 @@
     ponerCss();
     var c = document.createElement('div');
     c.className = 'rg-cinta';
-    c.innerHTML = '<button class="rg-cinta-b" type="button" aria-label="Ver tu regalo de bienvenida: 10 % de descuento y regalo en tu primer pedido">🎁 <b>−10 %</b> + REGALO</button>' +
+    c.innerHTML = '<button class="rg-cinta-b" type="button" aria-label="Apúntate: acceso anticipado al Black Friday, 10 % y regalo en tu primer pedido">🖤 <b>BLACK FRIDAY</b> · ENTÉRATE</button>' +
       '<button class="rg-cinta-x" type="button" aria-label="Ocultar la oferta">×</button>';
     document.body.appendChild(c);
     document.body.classList.add('con-cinta');
@@ -87,18 +87,19 @@
       '<div class="rg-caja">' +
         '<button class="rg-x" type="button" aria-label="Cerrar">×</button>' +
         '<div class="rg-pedir">' +
-          '<span class="rg-tag">🎁 REGALO DE BIENVENIDA</span>' +
-          '<h2 class="rg-tit">¿Todavía no has pedido tu regalo?</h2>' +
-          '<p class="rg-sub">En tu <strong>primer pedido</strong> te regalamos:</p>' +
+          '<span class="rg-tag" style="background:#0b0b0b">🖤 BLACK FRIDAY</span>' +
+          '<h2 class="rg-tit">¿Quieres saber lo que hemos preparado para Black Friday?</h2>' +
+          '<p class="rg-sub">Apúntate y <strong>entérate antes que nadie</strong>: los suscriptores entran con acceso anticipado.</p>' +
+          '<p class="rg-sub" style="margin-top:4px">Y si quieres probarnos ya, en tu <strong>primer pedido</strong> te regalamos:</p>' +
           '<div class="rg-imgs"><img src="assets/img/products/jabonera-bambu.jpg" alt="Jabonera de bambú"><span class="rg-plus">+</span><img src="assets/img/products/esponja-exfoliante.jpg" alt="Bolsa de sisal"></div>' +
           '<p class="rg-diez"><b>4×3</b> siempre en todos los productos<br>y <b>−10 %</b> en tu primer pedido</p>' +
-          '<form class="rg-form"><input type="email" name="email" required placeholder="Tu email" autocomplete="email" inputmode="email"><button type="submit">Quiero mi regalo</button></form>' +
+          '<form class="rg-form"><input type="email" name="email" required placeholder="Tu email" autocomplete="email" inputmode="email"><button type="submit">Apuntarme</button></form>' +
           '<p class="rg-legal">Un correo a la semana, sin spam. Te das de baja cuando quieras. <a href="privacidad.html">Privacidad</a></p>' +
         '</div>' +
         '<div class="rg-ok">' +
           '<span class="rg-tag">✓ ¡HECHO!</span>' +
-          '<h2 class="rg-tit">Tu regalo está reservado</h2>' +
-          '<p class="rg-sub">Te hemos enviado un email. Tu <strong>10 % ya está aplicado</strong> en el carrito y la jabonera + bolsa de sisal irán en tu primer pedido.</p>' +
+          '<h2 class="rg-tit">¡Ya estás dentro!</h2>' +
+          '<p class="rg-sub">Te avisaremos del <strong>Black Friday antes que a nadie</strong>. Y si quieres probarnos ya, tu <strong>10 % está aplicado</strong> en el carrito y la jabonera + bolsa de sisal irán en tu primer pedido.</p>' +
           (tienda ? '<button class="rg-btn rg-seguir" type="button">Seguir comprando</button>' : '<a class="rg-btn" href="tienda.html">Ir a la tienda</a>') +
         '</div>' +
       '</div>';

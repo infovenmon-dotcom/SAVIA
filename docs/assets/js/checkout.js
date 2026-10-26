@@ -69,6 +69,7 @@ async function finalizarCompra() {
         codigo: (Carrito.codigo && Carrito.codigo.code) || '',  // código de descuento aplicado
         returnUrl: _urlRetorno(),
         origen: (typeof saviaCanal === 'function' ? saviaCanal() : null),  // canal de llegada (Brevo, Google...)
+        acceso: (typeof accesoGuardado === 'function' ? accesoGuardado() : ''),  // acceso anticipado Black Friday
       }),
     });
 

@@ -106,9 +106,29 @@ const CAMPANA = {
   id: 'BLACKFRIDAY2026', nombre: 'Black Friday', pct: 20,
   desde: '2026-11-20T00:00:00+01:00', hasta: '2026-12-01T00:00:00+01:00',
 };
+// Acceso anticipado: los suscritos con su enlace personal tienen los precios
+// del Black Friday desde esta fecha (el resto, desde CAMPANA.desde).
+const ACCESO_DESDE = '2026-11-10T00:00:00+01:00';
 function campanaActiva(cfg, ahora = Date.now()) {
   if (cfg && cfg.campanaActiva === false) return null;
-  return (ahora >= Date.parse(CAMPANA.desde) && ahora < Date.parse(CAMPANA.hasta)) ? CAMPANA : null;
+  if (ahora >= Date.parse(CAMPANA.desde) && ahora < Date.parse(CAMPANA.hasta)) return CAMPANA;
+  // cfg._acceso lo pone crearCheckout solo tras comprobar el enlace del suscrito.
+  if (cfg && cfg._acceso && ahora >= Date.parse(ACCESO_DESDE) && ahora < Date.parse(CAMPANA.hasta)) return CAMPANA;
+  return null;
+}
+/* Enlace personal de acceso anticipado: <email>.<firma>. */
+async function accesoToken(email, env) { return nlToken('acceso:' + String(email).toLowerCase(), env); }
+async function accesoValido(acc, env) {
+  const v = String(acc || '');
+  const i = v.lastIndexOf('.');
+  if (i < 3) return null;
+  const email = v.slice(0, i).trim().toLowerCase(), t = v.slice(i + 1);
+  if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)) return null;
+  return (t && (await accesoToken(email, env)) === t) ? email : null;
+}
+function accesoUrl(email, token, campana) {
+  return NL_SITE + '/tienda.html?acceso=' + encodeURIComponent(String(email).toLowerCase() + '.' + token) +
+    '&amp;utm_source=newsletter&amp;utm_medium=email&amp;utm_campaign=' + (campana || 'bf-acceso');
 }
 
 /* Precio efectivo de una unidad:
@@ -340,7 +360,9 @@ async function crearCheckout(request, env, cors) {
   const items = body.items || {};
   const returnUrl = body.returnUrl || env.ALLOWED_ORIGIN || '*';
 
-  const cfg = await getConfig(env);
+  let cfg = await getConfig(env);
+  // Acceso anticipado del Black Friday (enlace personal del suscrito).
+  if (body.acceso && (await accesoValido(body.acceso, env))) cfg = { ...cfg, _acceso: true };
 
   // Seguridad de stock: si estamos de vacaciones, no se cobra aquí.
   if (cfg.modoVacaciones) {
@@ -1763,6 +1785,22 @@ async function manejarSuscripcion(request, env, cors) {
   const pie = `<p style="color:#8a9b6a;font-weight:600">Savia de Alma · Cosmética sólida natural</p>` +
     `<hr style="border:none;border-top:1px solid #eee"><p style="color:#aaa;font-size:12px">Recibes este correo porque te apuntaste en saviadealma.com. Puedes darte de baja respondiendo a este correo.</p>`;
 
+  // Black Friday: quien se apunta antes del 10/11 recibe el acceso ese día; quien
+  // se apunta durante el acceso anticipado lo recibe ya en este correo.
+  let bloqueBF = '';
+  const ahoraMs = Date.now();
+  if (ahoraMs < Date.parse(ACCESO_DESDE)) {
+    bloqueBF = `<div style="margin:20px 0;padding:16px;background:#0b0b0b;color:#fff;border-radius:12px;text-align:center">` +
+      `<div style="font-size:12px;letter-spacing:2px;color:#E0B83A;font-weight:700">BLACK FRIDAY</div>` +
+      `<div style="font-size:16px;margin-top:6px">Ya estás dentro: el <strong>10 de noviembre</strong> te llega tu <strong>acceso anticipado</strong>, 10 días antes que nadie.</div></div>`;
+  } else if (ahoraMs < Date.parse(CAMPANA.desde)) {
+    const url = accesoUrl(email, await accesoToken(email, env), 'bf-acceso-bienvenida');
+    bloqueBF = `<div style="margin:20px 0;padding:16px;background:#0b0b0b;color:#fff;border-radius:12px;text-align:center">` +
+      `<div style="font-size:12px;letter-spacing:2px;color:#E0B83A;font-weight:700">ACCESO ANTICIPADO · BLACK FRIDAY</div>` +
+      `<div style="font-size:16px;margin:6px 0 12px">−20 % en toda la tienda + 4×3 (hasta −40 %), antes que nadie.</div>` +
+      `<a href="${url}" style="background:#E0B83A;color:#111;padding:11px 20px;border-radius:8px;text-decoration:none;font-weight:800">Entrar con mi acceso</a></div>`;
+  }
+
   let subject, html;
   if (yaRegalo) {
     // Ya recibió el regalo antes: correo de "bienvenido de nuevo" con su último pedido.
@@ -1780,7 +1818,7 @@ async function manejarSuscripcion(request, env, cors) {
       `<div style="font-family:-apple-system,Segoe UI,Roboto,Arial,sans-serif;max-width:560px;margin:0 auto;color:#333">` +
       `<h2 style="color:#6b7a4f">¡Nos alegra tenerte de nuevo por aquí! 🌿</h2>` +
       `<p>Ya disfrutaste de tu <strong>regalo de bienvenida</strong> en un pedido anterior, así que esta vez no se repite —pero nos hace mucha ilusión seguir contigo.</p>` +
-      resumen +
+      resumen + bloqueBF +
       `<p>Y, como siempre, cada domingo te escribimos con algo útil sobre cuidado natural y cosmética sólida. 💚</p>` +
       cta + pie + `</div>`;
   } else {
@@ -1797,6 +1835,7 @@ async function manejarSuscripcion(request, env, cors) {
         `<div style="margin-top:12px"><a href="${NL_SITE}/tienda.html?codigo=REGALATE10&amp;utm_source=newsletter&amp;utm_medium=email&amp;utm_content=bienvenida" style="background:#B07A2E;color:#fff;padding:11px 22px;border-radius:8px;text-decoration:none;font-weight:600">🛍️ Comprar con mi 10 %</a></div>` +
         `<div style="color:#aaa;font-size:12px;margin-top:8px">Se aplica solo en tu primer pedido. El botón ya lo activa por ti.</div>` +
       `</div>` +
+      bloqueBF +
       `<p>Y recuerda nuestra promo: <strong>por cada 3 productos, el 4º gratis</strong> (el de menor valor). Envío gratis desde 20 €.</p>` +
       `<p style="margin-top:18px">Además, cada <strong>domingo</strong> te escribimos con <strong>algo útil</strong> —nunca solo promociones:</p>` +
       `<ul style="padding-left:18px;color:#444;line-height:1.7;margin:6px 0 0">` +
@@ -2443,7 +2482,8 @@ const CRON_SEMANAL = '0 8 * * 0';          // domingos 08:00 UTC (9:00 en invier
 // Correos de campaña con fecha: se apuntan solos a la cola cuando llega su hora
 // (y hasta 36 h después, por si el Worker se despliega tarde). Cada uno, una vez.
 const ENVIOS_PROGRAMADOS = [
-  { id: 'bf-previa', cuando: '2026-11-18T10:00:00+01:00' },
+  { id: 'bf-acceso', cuando: '2026-11-10T09:00:00+01:00' },
+  { id: 'bf-recordatorio', cuando: '2026-11-15T10:00:00+01:00' },
   { id: 'bf-lanzamiento', cuando: '2026-11-20T08:00:00+01:00' },
   { id: 'bf-ultimos', cuando: '2026-11-29T10:00:00+01:00' },
 ];
@@ -2494,8 +2534,9 @@ async function tareasSemanales(env) {
   const semana = new Date(Date.now() - ((new Date().getUTCDay() + 6) % 7) * 86400000).toISOString().slice(0, 10);
   if (await env.SAVIA_KV.get('semanal:' + semana)) return { ok: true, yaHecho: semana };
   await env.SAVIA_KV.put('semanal:' + semana, String(Date.now()), { expirationTtl: 30 * 86400 });
-  if (!campanaActiva(await getConfig(env))) await encolarNewsletterSemanal(env);
-  else console.log('newsletter semanal omitida: campaña activa');
+  const enVentanaBF = Date.now() >= Date.parse(ACCESO_DESDE) && Date.now() < Date.parse(CAMPANA.hasta);
+  if (!campanaActiva(await getConfig(env)) && !enVentanaBF) await encolarNewsletterSemanal(env);
+  else console.log('newsletter semanal omitida: Black Friday (acceso anticipado o campaña)');
   try { await enviarSeguimientos(env); } catch (e) { console.error('seguimiento:', e); }
   if (hayEmail(env) && env.ORDER_EMAIL_TO) {
     const r = await resumenSemanal(env, 7);
@@ -2547,7 +2588,7 @@ async function procesarCola(env) {
         const unsub = nlWorker(env) + '/unsubscribe?e=' + encodeURIComponent(to) + '&amp;t=' + token;
         const { subject, html } = job.tpl === 'semanal'
           ? construirCorreoSemanal(ctxSemanal.prod, ctxSemanal.prods, ctxSemanal.cfg, unsub, ctxSemanal.resenas)
-          : construirCorreoBF(job.tpl, unsub);
+          : construirCorreoBF(job.tpl, unsub, accesoUrl(to, await accesoToken(to, env), job.tpl));
         const r = await enviarEmail(env, { to, subject, html, replyTo: env.ORDER_EMAIL_TO || undefined, fromName: 'Savia de Alma', soloBrevo: !quedaResend });
         // Si Resend ha dicho que no (cupo del día), no se vuelve a probar hoy.
         if (r && r.resendFallo) cupo.resend = CUPO_DIA.resend;
@@ -2614,9 +2655,25 @@ async function recuperarPagosAMedias(env) {
 }
 
 /* ---------- Correos del Black Friday 2026 ---------- */
-function construirCorreoBF(tipo, unsub) {
+function construirCorreoBF(tipo, unsub, enlaceAcceso) {
   const utm = `?utm_source=newsletter&amp;utm_medium=email&amp;utm_campaign=${tipo}`;
   const T = {
+    'bf-acceso': {
+      subject: '🖤 Tu acceso anticipado al Black Friday ya está abierto',
+      antetitulo: 'Solo para suscriptores',
+      titulo: 'Entras 10 días antes que nadie',
+      intro: 'Te lo prometimos: esto es lo que hemos preparado. <strong>−20 % en toda la tienda + nuestro 4×3</strong>, hasta un <strong>40 % menos</strong>. Para el resto empieza el 20 de noviembre; <strong>para ti, desde hoy</strong>.',
+      cierre: 'El enlace es personal: entra con él y verás los precios del Black Friday en el carrito. Válido hasta el 30 de noviembre.',
+      boton: 'Entrar con mi acceso', acceso: true,
+    },
+    'bf-recordatorio': {
+      subject: '⏳ Tu acceso anticipado sigue abierto (hasta −40 %)',
+      antetitulo: 'Recordatorio',
+      titulo: 'Te quedan 5 días de ventaja',
+      intro: 'Tu <strong>acceso anticipado al Black Friday</strong> sigue abierto: <strong>−20 % en toda la tienda + 4×3</strong>. El 20 de noviembre se abre a todo el mundo; si hay algo que no quieres que se agote, ahora es el momento.',
+      cierre: 'Entra con tu enlace personal para ver los precios del Black Friday en el carrito.',
+      boton: 'Entrar con mi acceso', acceso: true,
+    },
     'bf-previa': {
       subject: '⏳ El viernes empieza nuestro Black Friday (hasta −40 %)',
       antetitulo: 'Te avisamos antes que a nadie',
@@ -2658,7 +2715,7 @@ function construirCorreoBF(tipo, unsub) {
     `<td style="padding:12px;border:1px solid #e7ded2;background:#f6f3ec;text-align:center;font-size:14px">Ejemplo: <strong>4 champús sólidos</strong><br>` +
     `<span style="text-decoration:line-through;color:#999">43,96 €</span> → <strong style="font-size:20px;color:#1D6B50">${ej} €</strong><br><span style="color:#777;font-size:12px">4×3 + −20 % · un 40 % menos</span></td></tr></table>` +
     `<p>${t.cierre}</p>` +
-    `<p style="margin:24px 0 8px;text-align:center"><a href="${NL_SITE}${t.ruta}${utm}" style="background:#0b0b0b;color:#E0B83A;padding:14px 26px;border-radius:8px;text-decoration:none;font-weight:800;letter-spacing:1px;text-transform:uppercase">${t.boton}</a></p>` +
+    `<p style="margin:24px 0 8px;text-align:center"><a href="${t.acceso && enlaceAcceso ? enlaceAcceso : NL_SITE + t.ruta + utm}" style="background:#0b0b0b;color:#E0B83A;padding:14px 26px;border-radius:8px;text-decoration:none;font-weight:800;letter-spacing:1px;text-transform:uppercase">${t.boton}</a></p>` +
     `<p style="font-size:13px;color:#777;text-align:center">Durante el Black Friday no se acumulan otros códigos de descuento: ya tienes el mejor precio del año.</p>` +
     `<p style="color:#1D6B50;font-weight:600;margin-top:24px">Gracias por estar ahí 💚<br>Savia de Alma</p>` +
     `<hr style="border:none;border-top:1px solid #eee"><p style="color:#aaa;font-size:12px">Recibes este correo porque estás suscrito a la newsletter de Savia de Alma. <a href="${unsub}" style="color:#aaa">Darme de baja</a>.</p></div>`;
@@ -2706,9 +2763,9 @@ async function manejarNewsletter(request, env, cors) {
   }
   if (accion === 'prueba_bf') {
     const to = body.to || env.ORDER_EMAIL_TO;
-    const tipo = ['bf-previa', 'bf-lanzamiento', 'bf-ultimos'].includes(body.tipo) ? body.tipo : 'bf-lanzamiento';
+    const tipo = ['bf-acceso', 'bf-recordatorio', 'bf-lanzamiento', 'bf-ultimos'].includes(body.tipo) ? body.tipo : 'bf-acceso';
     const token = await nlToken(to, env);
-    const { subject, html } = construirCorreoBF(tipo, nlWorker(env) + '/unsubscribe?e=' + encodeURIComponent(to) + '&amp;t=' + token);
+    const { subject, html } = construirCorreoBF(tipo, nlWorker(env) + '/unsubscribe?e=' + encodeURIComponent(to) + '&amp;t=' + token, accesoUrl(to, await accesoToken(to, env), tipo));
     const r = await enviarEmail(env, { to, subject: '[PRUEBA] ' + subject, html, replyTo: env.ORDER_EMAIL_TO || undefined, fromName: 'Savia de Alma' });
     return jsonResp({ ok: !!(r && r.ok), tipo }, 200, cors);
   }
@@ -3670,6 +3727,11 @@ export default {
         // las visitas de la web también hacen avanzar la cola de correos.
         if (ctx && env.SAVIA_KV) ctx.waitUntil(_colaPorTrafico(env).catch((e) => console.error('cola trafico:', e)));
         return await registrarEvento(request, env, cors);
+      }
+      if (path === '/acceso' && request.method === 'POST') {
+        let b = {}; try { b = await request.json(); } catch { /* */ }
+        const email = await accesoValido(b.acceso, env);
+        return jsonResp({ ok: !!email, desde: ACCESO_DESDE, hasta: CAMPANA.hasta }, 200, cors);
       }
       if (path === '/carrito-guardar' && request.method === 'POST') {
         return await manejarCarritoGuardar(request, env, cors);

@@ -721,6 +721,7 @@ function iniciarBannerRotativo() {
   const slides = [
     b.innerHTML.trim(),
     '👋 <span class="bp-extra">¿Aún no nos conoces? Te lo ponemos fácil: </span><strong>10&nbsp;% en tu 1.ª compra</strong> <span class="banner-envio">+ jabonera y bolsa de sisal de regalo 🎁</span>',
+    '🖤 <strong>¿Quieres saber lo que preparamos para Black Friday?</strong> <span class="banner-envio" style="cursor:pointer" onclick="window.abrirRegalo&&abrirRegalo()">Apúntate y entérate antes</span>',
   ];
   if (slides.length < 2) return;
   let i = 0;

@@ -55,10 +55,33 @@ const CAMPANA_DEF = {
   id: 'BLACKFRIDAY2026', nombre: 'Black Friday', pct: 20,
   desde: '2026-11-20T00:00:00+01:00', hasta: '2026-12-01T00:00:00+01:00',
 };
+/* Acceso anticipado: el suscrito entra con su enlace personal (?acceso=...),
+   el servidor lo comprueba y desde ACCESO_DESDE ve y paga los precios del
+   Black Friday. Sin enlace válido, el servidor cobra el precio normal. */
+const ACCESO_DESDE = '2026-11-10T00:00:00+01:00';
+function accesoGuardado() {
+  try { const a = JSON.parse(localStorage.getItem('savia_acceso') || 'null'); return a && a.ok ? a.v : ''; } catch (e) { return ''; }
+}
+window.accesoGuardado = accesoGuardado;
+(function () {
+  try {
+    const v = new URLSearchParams(location.search).get('acceso');
+    if (!v) return;
+    const ep = ((window.SAVIA_CONFIG || {}).checkoutEndpoint || '').trim().replace(/\/+$/, '');
+    if (!ep) return;
+    fetch(ep + '/acceso', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ acceso: v }) })
+      .then(r => r.json()).then(d => {
+        if (!d || !d.ok) return;
+        try { localStorage.setItem('savia_acceso', JSON.stringify({ v: v, ok: true, t: Date.now() })); } catch (e) { /* */ }
+        if (Date.now() >= Date.parse(ACCESO_DESDE) && !document.documentElement.classList.contains('en-campana')) location.reload();
+      }).catch(() => {});
+  } catch (e) { /* enlace mal formado */ }
+})();
 function campanaActiva(ahora) {
   const c = _cfg().campana || CAMPANA_DEF;
   if (!c || c.activa === false) return null;
   let t = ahora || Date.now();
+  if (accesoGuardado() && t >= Date.parse(ACCESO_DESDE) && t < Date.parse(c.hasta)) return c;
   // Solo en local, para revisar la campaña antes de tiempo: ?campana=prueba
   try {
     if (/^(localhost|127\.0\.0\.1)$/.test(location.hostname) && /[?&]campana=prueba/.test(location.search)) return c;
