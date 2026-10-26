@@ -379,10 +379,11 @@ async function crearCheckout(request, env, cors) {
   // Durante la campaña (Black Friday) el −20 % ya va en el precio de cada línea
   // y NO se aceptan otros códigos.
   const camp = campanaActiva(cfg);
+  let promo = null;
   if (camp) {
     form.append('metadata[campana]', camp.id);
   } else {
-    const promo = await buscarCodigoStripe(env, body.codigo);
+    promo = await buscarCodigoStripe(env, body.codigo);
     if (promo && promo.id) form.append('discounts[0][promotion_code]', promo.id);
     else form.append('allow_promotion_codes', 'true');
   }
