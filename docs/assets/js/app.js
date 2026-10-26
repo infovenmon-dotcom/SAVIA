@@ -720,8 +720,8 @@ function iniciarBannerRotativo() {
   if (document.documentElement.classList.contains('en-campana') || (typeof campanaActiva === 'function' && campanaActiva())) return;
   const slides = [
     b.innerHTML.trim(),
+    '🖤 <strong>BLACK FRIDAY</strong> <span class="bp-extra">· ¿Quieres saber lo que hemos preparado? </span><span class="banner-envio" style="cursor:pointer" onclick="window.abrirRegalo&&abrirRegalo()">Apúntate y entérate antes</span>',
     '👋 <span class="bp-extra">¿Aún no nos conoces? Te lo ponemos fácil: </span><strong>10&nbsp;% en tu 1.ª compra</strong> <span class="banner-envio">+ jabonera y bolsa de sisal de regalo 🎁</span>',
-    '🖤 <strong>¿Quieres saber lo que preparamos para Black Friday?</strong> <span class="banner-envio" style="cursor:pointer" onclick="window.abrirRegalo&&abrirRegalo()">Apúntate y entérate antes</span>',
   ];
   if (slides.length < 2) return;
   let i = 0;
@@ -729,7 +729,7 @@ function iniciarBannerRotativo() {
   setInterval(() => {
     if (document.hidden) return; // no rotar con la pestaña en segundo plano
     b.style.opacity = '0';
-    setTimeout(() => { i = (i + 1) % slides.length; b.innerHTML = slides[i]; b.style.opacity = '1'; }, 400);
+    setTimeout(() => { i = (i + 1) % slides.length; b.innerHTML = slides[i]; b.classList.toggle('bp-negro', slides[i].indexOf('BLACK FRIDAY') > -1); b.style.opacity = '1'; }, 400);
   }, 5000);
 }
 

@@ -172,6 +172,9 @@ img { max-width: 100%; display: block; }
   letter-spacing: .4px;
 }
 .banner-promo strong { color: var(--dorado-claro); font-weight: 800; letter-spacing: .6px; }
+.banner-promo { transition: opacity .4s ease, background .4s ease; }
+.banner-promo.bp-negro { background: #0b0b0b; border-bottom: 2px solid #C9A227; }
+.banner-promo.bp-negro .banner-envio { background: #E0B83A; color: #0b0b0b; }
 .banner-envio {
   display: inline-block;
   background: var(--dorado-claro);

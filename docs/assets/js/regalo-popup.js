@@ -30,6 +30,19 @@
     '.rg-form input{font:inherit;font-size:16px;padding:13px 14px;border:1.5px solid #cfc6ba;border-radius:12px;background:#fff;width:100%;box-sizing:border-box}' +
     '.rg-form button,.rg-btn{font:inherit;font-weight:700;font-size:16px;padding:14px;border:0;border-radius:12px;background:#1D6B50;color:#fff;cursor:pointer;text-decoration:none;display:block}' +
     '.rg-legal{font-size:11.5px;color:#777;margin:10px 0 0}.rg-legal a{color:#777}' +
+    '.rg-negro{background:#0b0b0b;color:#eee;border:1.5px solid #C9A227}' +
+    '.rg-negro .rg-x{color:#bbb}' +
+    '.rg-bf{font-family:"Playfair Display",Georgia,serif;font-weight:700;font-size:46px;line-height:.98;letter-spacing:.05em;color:#E0B83A;margin:4px 0 2px;text-transform:uppercase}' +
+    '.rg-bf-s{font-size:12px;font-weight:800;letter-spacing:.32em;color:#fff;margin:0}' +
+    '.rg-negro .rg-tit{color:#fff;font-size:23px;margin:10px 0 6px}' +
+    '.rg-negro .rg-sub strong{color:#E0B83A}' +
+    '.rg-sep{border:0;border-top:1px solid #333;margin:12px 0}' +
+    '.rg-negro .rg-imgs img{width:78px;height:78px}' +
+    '.rg-negro .rg-diez b{color:#E0B83A}' +
+    '.rg-negro .rg-form input{border-color:#444}' +
+    '.rg-negro .rg-form button,.rg-negro .rg-btn{background:#E0B83A;color:#0b0b0b}' +
+    '.rg-negro .rg-tag{background:#E0B83A!important;color:#0b0b0b}' +
+    '.rg-negro .rg-legal,.rg-negro .rg-legal a{color:#999}' +
     '.rg-ok{display:none}.rg-hecho .rg-ok{display:block}.rg-hecho .rg-pedir{display:none}' +
     /* Cinta de la esquina: la oferta se queda "aparcada" tras cerrar la ventana */
     '.rg-cinta{position:fixed;left:0;bottom:0;width:150px;height:150px;overflow:hidden;z-index:110;pointer-events:none}' +
@@ -84,12 +97,14 @@
     var d = document.createElement('div');
     d.className = 'rg-fondo'; d.setAttribute('role', 'dialog'); d.setAttribute('aria-modal', 'true'); d.setAttribute('aria-label', 'Regalo de bienvenida');
     d.innerHTML =
-      '<div class="rg-caja">' +
+      '<div class="rg-caja rg-negro">' +
         '<button class="rg-x" type="button" aria-label="Cerrar">×</button>' +
         '<div class="rg-pedir">' +
-          '<span class="rg-tag" style="background:#0b0b0b">🖤 BLACK FRIDAY</span>' +
-          '<h2 class="rg-tit">¿Quieres saber lo que hemos preparado para Black Friday?</h2>' +
-          '<p class="rg-sub">Apúntate y <strong>entérate antes que nadie</strong>: los suscriptores entran con acceso anticipado.</p>' +
+          '<p class="rg-bf-s">🖤 SE ACERCA</p>' +
+          '<div class="rg-bf">Black<br>Friday</div>' +
+          '<h2 class="rg-tit">¿Quieres saber lo que hemos preparado?</h2>' +
+          '<p class="rg-sub">Apúntate y <strong>entérate antes que nadie</strong>: los suscriptores entran con <strong>acceso anticipado</strong>.</p>' +
+          '<hr class="rg-sep">' +
           '<p class="rg-sub" style="margin-top:4px">Y si quieres probarnos ya, en tu <strong>primer pedido</strong> te regalamos:</p>' +
           '<div class="rg-imgs"><img src="assets/img/products/jabonera-bambu.jpg" alt="Jabonera de bambú"><span class="rg-plus">+</span><img src="assets/img/products/esponja-exfoliante.jpg" alt="Bolsa de sisal"></div>' +
           '<p class="rg-diez"><b>4×3</b> siempre en todos los productos<br>y <b>−10 %</b> en tu primer pedido</p>' +
@@ -98,6 +113,7 @@
         '</div>' +
         '<div class="rg-ok">' +
           '<span class="rg-tag">✓ ¡HECHO!</span>' +
+          '<div class="rg-bf" style="font-size:40px;margin-top:10px">Black Friday</div>' +
           '<h2 class="rg-tit">¡Ya estás dentro!</h2>' +
           '<p class="rg-sub">Te avisaremos del <strong>Black Friday antes que a nadie</strong>. Y si quieres probarnos ya, tu <strong>10 % está aplicado</strong> en el carrito y la jabonera + bolsa de sisal irán en tu primer pedido.</p>' +
           (tienda ? '<button class="rg-btn rg-seguir" type="button">Seguir comprando</button>' : '<a class="rg-btn" href="tienda.html">Ir a la tienda</a>') +
