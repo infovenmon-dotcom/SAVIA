@@ -30,11 +30,56 @@
     '.rg-form input{font:inherit;font-size:16px;padding:13px 14px;border:1.5px solid #cfc6ba;border-radius:12px;background:#fff;width:100%;box-sizing:border-box}' +
     '.rg-form button,.rg-btn{font:inherit;font-weight:700;font-size:16px;padding:14px;border:0;border-radius:12px;background:#1D6B50;color:#fff;cursor:pointer;text-decoration:none;display:block}' +
     '.rg-legal{font-size:11.5px;color:#777;margin:10px 0 0}.rg-legal a{color:#777}' +
-    '.rg-ok{display:none}.rg-hecho .rg-ok{display:block}.rg-hecho .rg-pedir{display:none}';
+    '.rg-ok{display:none}.rg-hecho .rg-ok{display:block}.rg-hecho .rg-pedir{display:none}' +
+    /* Cinta de la esquina: la oferta se queda "aparcada" tras cerrar la ventana */
+    '.rg-cinta{position:fixed;left:0;bottom:0;width:150px;height:150px;overflow:hidden;z-index:110;pointer-events:none}' +
+    '.rg-cinta-b{position:absolute;left:-62px;bottom:38px;width:240px;transform:rotate(45deg);background:#143228;color:#fff;border:0;font:800 13px/1.2 "DM Sans",-apple-system,Segoe UI,Roboto,sans-serif;letter-spacing:.04em;text-align:center;padding:10px 0;box-shadow:0 4px 14px rgba(0,0,0,.28);cursor:pointer;pointer-events:auto}' +
+    '.rg-cinta-b b{color:#E8C76A}' +
+    '.rg-cinta-x{position:absolute;left:84px;bottom:84px;width:26px;height:26px;border-radius:50%;border:2px solid #fff;background:#143228;color:#fff;font:700 15px/1 sans-serif;display:grid;place-items:center;cursor:pointer;pointer-events:auto;box-shadow:0 2px 8px rgba(0,0,0,.3)}' +
+    'body.con-cinta .a11y-btn{bottom:150px}body.con-cinta .a11y-panel{bottom:210px}' +
+    '@media (prefers-reduced-motion:no-preference){.rg-cinta-b{animation:rgCinta .5s ease-out}}' +
+    '@keyframes rgCinta{from{transform:rotate(45deg) translateY(40px);opacity:0}to{transform:rotate(45deg);opacity:1}}';
+
+  function ponerCss() {
+    if (document.getElementById('rg-css')) return;
+    var s = document.createElement('style'); s.id = 'rg-css'; s.textContent = css; document.head.appendChild(s);
+  }
+  /* Cinta "−10 % + regalo" en la esquina inferior izquierda. Sale cuando el
+     cliente ha cerrado la ventana sin apuntarse; al tocarla se vuelve a abrir.
+     Con su ✕ se quita durante esta visita. No sale a quien ya se apuntó, ni
+     durante la campaña (Black Friday), ni en el panel. */
+  function cintaPermitida() {
+    var e = estado() || {};
+    if (e.suscrito || /admin\.html/.test(location.pathname)) return false;
+    if (typeof campanaActiva === 'function' && campanaActiva()) return false;
+    try { if (sessionStorage.getItem('savia_cinta_off')) return false; } catch (er) {}
+    return true;
+  }
+  function quitarCinta() {
+    var c = document.querySelector('.rg-cinta'); if (c) c.remove();
+    document.body.classList.remove('con-cinta');
+  }
+  function ponerCinta() {
+    if (!cintaPermitida() || document.querySelector('.rg-cinta, .rg-fondo')) return;
+    ponerCss();
+    var c = document.createElement('div');
+    c.className = 'rg-cinta';
+    c.innerHTML = '<button class="rg-cinta-b" type="button" aria-label="Ver tu regalo de bienvenida: 10 % de descuento y regalo en tu primer pedido">🎁 <b>−10 %</b> + REGALO</button>' +
+      '<button class="rg-cinta-x" type="button" aria-label="Ocultar la oferta">×</button>';
+    document.body.appendChild(c);
+    document.body.classList.add('con-cinta');
+    c.querySelector('.rg-cinta-b').onclick = function () { quitarCinta(); crear(); };
+    c.querySelector('.rg-cinta-x').onclick = function () {
+      try { sessionStorage.setItem('savia_cinta_off', '1'); } catch (er) {}
+      quitarCinta();
+    };
+  }
+  window.saviaCinta = ponerCinta;
 
   function crear() {
     if (document.querySelector('.rg-fondo')) return;
-    var s = document.createElement('style'); s.textContent = css; document.head.appendChild(s);
+    quitarCinta();
+    ponerCss();
     var tienda = /tienda\.html/.test(location.pathname);
     var d = document.createElement('div');
     d.className = 'rg-fondo'; d.setAttribute('role', 'dialog'); d.setAttribute('aria-modal', 'true'); d.setAttribute('aria-label', 'Regalo de bienvenida');
@@ -59,7 +104,7 @@
       '</div>';
     document.body.appendChild(d);
     requestAnimationFrame(function () { d.classList.add('rg-on'); });
-    function cerrar() { if (!(estado() || {}).suscrito) guardar({ cerrado: Date.now() }); d.classList.remove('rg-on'); setTimeout(function () { d.remove(); }, 250); }
+    function cerrar() { if (!(estado() || {}).suscrito) guardar({ cerrado: Date.now() }); d.classList.remove('rg-on'); setTimeout(function () { d.remove(); ponerCinta(); }, 250); }
     d.querySelector('.rg-x').onclick = cerrar;
     d.addEventListener('click', function (e) { if (e.target === d) cerrar(); });
     document.addEventListener('keydown', function (e) { if (e.key === 'Escape') cerrar(); });
@@ -104,7 +149,9 @@
     crear();
   }
   function iniciar() {
-    if (noMostrar || /admin\.html/.test(location.pathname)) return;
+    // Quien ya cerró la ventana (y no se apuntó) ve la cinta desde el principio.
+    if (noMostrar) { setTimeout(ponerCinta, 1200); return; }
+    if (/admin\.html/.test(location.pathname)) return;
     setTimeout(intentar, desdeAnuncio ? 900 : 5000);
   }
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', iniciar); else iniciar();

@@ -212,7 +212,7 @@ module.exports = [
     elegir: [
       'Para la ducha, una jabonera de bambú o la jabonera trío si usas varias pastillas.',
       'Para viajar, la bolsa de sisal o un neceser.',
-      'Para el baño diario, el cepillo de dientes de bambú y el cepillo de pelo de madera.',
+      'Para el baño diario, el cepillo de dientes de bambú.',
     ],
     uso: 'Deja que la jabonera se seque entre usos y límpiala de vez en cuando con agua. Las piezas de bambú y madera duran más si no se quedan en agua.',
     preguntas: [

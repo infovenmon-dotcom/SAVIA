@@ -268,15 +268,15 @@ function recomendable(p) {
    producto), aqui SI entran los "Proximamente": sirven para anunciarlos.
    Regla: nada de la propia categoria, y lo agotado no se ensena. */
 const CROSS_COL = {
-  champus:          ['acondicionador-coco', 'cepillo-pelo-madera', 'jabonera-pequena'],
-  acondicionadores: ['champu-cafeina-canela', 'cepillo-pelo-madera', 'jabonera-pequena'],
+  champus:          ['acondicionador-coco', 'jabonera-pequena', 'neceser-blanco'],
+  acondicionadores: ['champu-cafeina-canela', 'jabonera-pequena', 'neceser-blanco'],
   jabones:          ['jabonera-metalica', 'jabonera-bambu', 'esponja-exfoliante'],
   exfoliantes:      ['esponja-konjac', 'esponja-exfoliante', 'jabonera-bambu'],
   depilacion:       ['esponja-exfoliante', 'sales-epsom-500', 'jabonera-bambu'],
   desodorantes:     ['jabon-naranja-canela', 'neceser-blanco', 'esponja-exfoliante'],
-  faciales:         ['esponja-konjac', 'cepillo-facial', 'set-contorno-facial', 'jabonera-pequena'],
+  faciales:         ['esponja-konjac', 'jabonera-pequena', 'neceser-rosa'],
   afeitado:         ['kit-afeitado-completo', 'kit-afeitado', 'jabonera-metalica', 'esponja-exfoliante'],
-  ceras:            ['champu-cafeina-canela', 'cepillo-pelo-madera', 'jabonera-pequena'],
+  ceras:            ['champu-cafeina-canela', 'jabonera-pequena', 'neceser-blanco'],
   accesorios:       ['jabon-lavanda', 'champu-cafeina-canela', 'espuma-afeitar-avellana'],
   'sales-epsom':    ['jabon-lavanda', 'esponja-exfoliante', 'jabonera-metalica'],
 };

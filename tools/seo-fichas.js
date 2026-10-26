@@ -61,17 +61,13 @@ const SEO = {
   'esponja-exfoliante': ['Bolsa de sisal natural para jabón sólido', 'Bolsa de sisal natural: portajabón y exfoliante a la vez para aprovechar tu jabón sólido hasta el final.', 'acc'],
   'cepillo-dientes-bambu': ['Cepillo de dientes de bambú', 'Cepillo de dientes con mango de bambú natural: el gesto de cada día con mucho menos plástico.', 'acc'],
   'esponja-konjac': ['Esponja facial de konjac con nuez', 'Esponja facial de konjac 100 % vegetal y biodegradable con nuez molida: limpia a diario sin resecar.', 'acc'],
-  'set-contorno-facial': ['Set de contorno facial · Cepillo, gua sha y varilla', 'Set de masaje facial con cepillo, gua sha y varilla de ojos: el masaje de siempre, sin aparatos.', 'acc'],
   'jabonera-metalica': ['Jabonera trío de acero y bambú para 3 jabones', 'Jabonera de acero sobre base de bambú para tres jabones: elige cada día según cómo te sientes.', 'acc'],
-  'cepillo-facial': ['Cepillo linfático facial', 'Cepillo facial para el masaje linfático y la limpieza diaria del rostro, solo o con tu limpiador sólido.', 'acc'],
-  'cepillo-pelo-madera': ['Cepillo de pelo de madera', 'Cepillo de pelo de madera natural de cuerpo a púas: desenreda sin tirones y sin plástico.', 'acc'],
   'espejo-led': ['Espejo de bolsillo con luz LED recargable', 'Espejo de bolsillo con luz LED recargable por USB: luz perfecta en el bolso o de viaje.', 'acc'],
   'kit-afeitado': ['Kit de afeitado · Brocha, bol y soporte', 'Kit de afeitado con brocha, bol y soporte para tu espuma de afeitar sólida. Adiós al aerosol.', 'acc'],
   'kit-afeitado-completo': ['Kit de afeitado completo con espuma sólida', 'Kit de afeitado completo: soporte, bol, brocha y espuma de afeitar sólida de aceite de avellana. Ideal para regalar.', 'acc'],
   'sales-epsom-500': ['Sales de Epsom puras · 500 g', 'Sales de Epsom 100 % puras (sulfato de magnesio) sin perfume ni aditivos, para baños de pies y de relax. 500 g.', 'acc'],
   'neceser-blanco': ['Neceser crema para cosmética sólida', 'Neceser para tu rutina sólida: sin botes ni derrames. Para viajar, el gimnasio o el baño.', 'acc'],
   'neceser-rosa': ['Neceser rosa para cosmética sólida', 'Neceser para tu rutina sólida: sin botes ni derrames. Para viajar, el gimnasio o el baño.', 'acc'],
-  'neceser-organizador-espejo': ['Neceser organizador con espejo · Rosa', 'Neceser organizador con espejo en la tapa para llevar tu rutina sólida de viaje sin botes.', 'acc'],
 };
 
 function seoDe(p) {

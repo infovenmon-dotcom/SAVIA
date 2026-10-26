@@ -47,7 +47,7 @@ window.SAVIA_DATA = {
     {
       "slug": "accesorios",
       "name": "Accesorios",
-      "count": 15,
+      "count": 11,
       "exclusiveWeb": true
     },
     {
@@ -2361,56 +2361,6 @@ window.SAVIA_DATA = {
       "proximamente": true
     },
     {
-      "emoji": "💆",
-      "exclusiveWeb": true,
-      "bestSeller": false,
-      "tags": [
-        "gua sha",
-        "facial",
-        "masaje",
-        "ritual",
-        "contorno",
-        "accesorio"
-      ],
-      "images": [
-        "assets/img/products/set-contorno-facial.jpg"
-      ],
-      "specs": {
-        "peso": "~110 g el set",
-        "natural": "Un ritual de masaje manual, sin pilas ni electricidad",
-        "fabricacion": "Cepillo de 8 × 7 cm con base efecto madera · Gua sha de 9 cm y varilla de ojos de 12 cm en resina de tono ámbar · Uso manual"
-      },
-      "handle": "set-contorno-facial",
-      "title": "Set de Contorno Facial · Cepillo, Gua Sha y Varilla",
-      "price": 16.99,
-      "sku": "SDA-AC-CONTORNO",
-      "type": "Accesorio facial",
-      "collection": "accesorios",
-      "collectionName": "Accesorios",
-      "image": "assets/img/products/set-contorno-facial.jpg",
-      "lema": "Pequeños detalles, grandes rituales.",
-      "short": "El masaje facial de siempre, sin aparatos: cepillo, gua sha y varilla de ojos.",
-      "descripcion": "El gua sha es una técnica tradicional de masaje que solo necesita tus manos y una herramienta. Este set reúne tres, sin pilas ni enchufes: un cepillo para el masaje en seco, un gua sha para mandíbula, pómulos y frente, y una varilla para el contorno de ojos. Son ligeras, fáciles de limpiar y para usar durante años.",
-      "indicado": "Para quien quiere sacar más partido a lo que ya se aplica en la cara.",
-      "modoUso": "Ritual de 5 minutos. 1) Cepillo, en seco (1-2 min): con la piel seca y limpia, haz pasadas suaves hacia fuera y hacia el cuello: de la barbilla a las orejas, de la nariz a las sienes y de la frente al nacimiento del pelo. 2) Gua sha (2-3 min): aplica unas gotas de aceite o tu crema para que la piel deslice, apoya el borde casi plano y desliza del centro hacia fuera: mandíbula, de la barbilla a la oreja; pómulo, de la nariz a la sien; frente, del centro a las sienes. 5-6 pasadas por zona, lentas y sin presionar. 3) Varilla (1 min): con un toque de crema de contorno, da pasadas muy suaves del lagrimal a la sien, bajo el ojo y por el párpado fijo. Por la mañana para despertar el rostro, o por la noche como momento de pausa. Limpia las piezas con agua y jabón después de cada uso.",
-      "destacado": "♻️ Tres herramientas manuales y duraderas, sin pilas ni aparatos eléctricos.",
-      "precauciones": "No usar sobre piel irritada, con heridas o justo después de un tratamiento facial.",
-      "features": [
-        "Cepillo de 8 × 7 cm con base efecto madera",
-        "Gua sha de 9 cm en resina ámbar",
-        "Varilla de ojos de 12 cm en resina ámbar",
-        "Sin pilas ni enchufe",
-        "Uso manual"
-      ],
-      "bullets": [
-        "SIN PILAS NI ENCHUFE: un ritual 100 % manual.",
-        "TÉCNICA TRADICIONAL: el masaje gua sha de toda la vida.",
-        "DURADERAS: se limpian con agua y jabón.",
-        "SET DE 3 PIEZAS: cepillo, gua sha y varilla de ojos."
-      ],
-      "proximamente": true
-    },
-    {
       "emoji": "🧼",
       "exclusiveWeb": true,
       "bestSeller": false,
@@ -2456,101 +2406,6 @@ window.SAVIA_DATA = {
         "TUS JABONES DURAN MÁS: se secan entre usos y no se deshacen.",
         "TRES JABONES, TRES MOMENTOS: calma, energía y limpieza profunda.",
         "ELIGE CADA DÍA: el jabón que te pide el cuerpo."
-      ]
-    },
-    {
-      "emoji": "🪮",
-      "exclusiveWeb": true,
-      "bestSeller": false,
-      "tags": [
-        "cepillo",
-        "facial",
-        "limpieza",
-        "masaje",
-        "madera",
-        "accesorio"
-      ],
-      "images": [
-        "assets/img/products/cepillo-facial.jpg"
-      ],
-      "specs": {
-        "peso": "~35 g",
-        "natural": "Masaje manual, sin pilas ni electricidad",
-        "fabricacion": "Base efecto madera con cerdas suaves, disponible en rosa o marrón · 8 × 7 cm · Uso manual · Se vende por unidad"
-      },
-      "handle": "cepillo-facial",
-      "title": "Cepillo Linfático Facial",
-      "price": 8.99,
-      "sku": "SDA-AC-CEPFACIAL",
-      "type": "Accesorio facial",
-      "collection": "accesorios",
-      "collectionName": "Accesorios",
-      "image": "assets/img/products/cepillo-facial.jpg",
-      "lema": "Tu rostro, en buenas manos.",
-      "short": "Un masaje facial sin aparatos ni productos: solo el cepillo, tus manos y dos minutos.",
-      "descripcion": "Un ritual de cuidado que no necesita pilas, enchufes ni cosméticos: solo este cepillo y dos minutos de masaje en seco, siguiendo los contornos del rostro hacia el cuello. También puedes usarlo con tu limpiador sólido para limpiar con suavidad. Reutilizable durante mucho tiempo.",
-      "indicado": "Para la limpieza diaria del rostro, solo o con tu limpiador facial sólido.",
-      "modoUso": "Masaje en seco (2-3 minutos): 1) Con la piel seca y limpia, haz pasadas suaves y cortas, siempre hacia fuera y hacia el cuello. 2) De la barbilla hacia las orejas. 3) De los lados de la nariz hacia las sienes. 4) De la frente hacia el nacimiento del pelo. 5) Termina con pasadas descendentes por los laterales del cuello. Sin presionar: el cepillo solo debe deslizarse. Para limpiar el rostro, humedece las cerdas, aplica tu limpiador sólido y haz círculos suaves. Aclara el cepillo después de cada uso y déjalo secar con las cerdas hacia abajo.",
-      "destacado": "♻️ Herramienta manual y reutilizable: sin pilas, sin enchufe y sin necesidad de productos.",
-      "precauciones": "No usar sobre piel irritada, con heridas o con granos inflamados.",
-      "features": [
-        "Medidas: 8 × 7 cm",
-        "Base efecto madera",
-        "Cerdas suaves en rosa o marrón",
-        "Uso manual",
-        "Se vende por unidad"
-      ],
-      "bullets": [
-        "SIN PILAS NI ENCHUFE: masaje 100 % manual.",
-        "SIN PRODUCTOS: el masaje en seco no necesita cosméticos.",
-        "REUTILIZABLE: muchos meses de uso con un simple aclarado.",
-        "TAMAÑO PALMA: 8 × 7 cm, con cerdas suaves."
-      ],
-      "proximamente": true
-    },
-    {
-      "emoji": "🪵",
-      "exclusiveWeb": true,
-      "bestSeller": false,
-      "tags": [
-        "cepillo",
-        "madera",
-        "cabello",
-        "zero waste",
-        "accesorio"
-      ],
-      "images": [
-        "assets/img/products/cepillo-pelo-madera.jpg"
-      ],
-      "specs": {
-        "peso": "~95 g",
-        "natural": "Cuerpo y púas de madera natural",
-        "fabricacion": "Cuerpo de madera · Púas de madera con punta redondeada · Base acolchada"
-      },
-      "handle": "cepillo-pelo-madera",
-      "title": "Cepillo de Pelo de Madera",
-      "price": 13.99,
-      "sku": "SDA-AC-CEPPELO",
-      "type": "Accesorio",
-      "collection": "accesorios",
-      "collectionName": "Accesorios",
-      "image": "assets/img/products/cepillo-pelo-madera.jpg",
-      "lema": "Cuidado natural para tu cabello.",
-      "short": "Madera natural de cuerpo a púas: desenreda sin tirones y sin plástico en las púas.",
-      "descripcion": "Cuerpo y púas de madera natural, redondeadas en la punta para desenredar sin tirones y masajear el cuero cabelludo. La madera genera menos electricidad estática que el plástico, así que el pelo se encrespa menos. Bien cuidado, te acompañará muchos años.",
-      "indicado": "Para todo tipo de cabello, y especialmente si se te encrespa al cepillarlo.",
-      "modoUso": "Cepilla de puntas a raíces, por mechones. Retira el pelo después de cada uso y límpialo de vez en cuando con un paño húmedo, sin sumergirlo en agua.",
-      "destacado": "🌿 Cuerpo y púas de madera natural.",
-      "features": [
-        "Cuerpo de madera",
-        "Púas de madera con punta redondeada",
-        "Base acolchada"
-      ],
-      "bullets": [
-        "MADERA NATURAL: cuerpo y púas.",
-        "MENOS ESTÁTICA: menos encrespamiento que con un cepillo de plástico.",
-        "PÚAS REDONDEADAS: masaje suave del cuero cabelludo.",
-        "PARA MUCHOS AÑOS: duradero y fácil de cuidar."
       ]
     },
     {
@@ -2815,55 +2670,6 @@ window.SAVIA_DATA = {
           "nombre": "Rosa"
         }
       ]
-    },
-    {
-      "emoji": "💄",
-      "exclusiveWeb": true,
-      "bestSeller": false,
-      "tags": [
-        "neceser",
-        "organizador",
-        "espejo",
-        "viaje",
-        "accesorio"
-      ],
-      "images": [
-        "assets/img/products/neceser-organizador-espejo.jpg"
-      ],
-      "specs": {
-        "peso": "~230 g",
-        "natural": "No es natural: es duradero y reutilizable",
-        "fabricacion": "Exterior en polipiel con forro de poliéster · Separadores ajustables · Espejo en la tapa · Cremallera y asa · 22,5 × 10,5 × 11 cm"
-      },
-      "handle": "neceser-organizador-espejo",
-      "title": "Neceser Organizador con Espejo · Rosa",
-      "price": 12.99,
-      "sku": "SDA-AC-NECESER-ORG",
-      "type": "Accesorio",
-      "collection": "accesorios",
-      "collectionName": "Accesorios",
-      "image": "assets/img/products/neceser-organizador-espejo.jpg",
-      "lema": "Tu ritual, siempre contigo.",
-      "short": "Tu rutina sólida ordenada y lista para viajar, con espejo en la tapa.",
-      "destacado": "♻️ Reutilizable y pensado para tu rutina sólida, sin botes ni miniaturas de plástico.",
-      "descripcion": "Pensado para quien ha cambiado los botes por cosméticos sólidos y lo quiere todo en su sitio. Sus separadores ajustables guardan cada pastilla, cepillo y accesorio por separado, y en la tapa tiene un espejo para retoques rápidos. Es duradero y se limpia fácilmente, para acompañarte viaje tras viaje.",
-      "indicado": "Para quien viaja a menudo y quiere llevar su rutina entera sin botes de viaje.",
-      "modoUso": "Coloca los separadores a tu medida y guarda tus productos en sus cajitas de viaje. Límpialo con un paño húmedo y déjalo secar abierto.",
-      "features": [
-        "Medidas: 22,5 × 10,5 × 11 cm",
-        "Exterior en polipiel",
-        "Forro interior",
-        "Separadores ajustables",
-        "Espejo en la tapa",
-        "Cremallera y asa"
-      ],
-      "bullets": [
-        "PARA TU RUTINA SÓLIDA: sin botes ni miniaturas de plástico.",
-        "TODO ORDENADO: separadores interiores ajustables.",
-        "ESPEJO INTEGRADO: en la tapa, para retoques donde estés.",
-        "DURADERO: se limpia con un paño húmedo."
-      ],
-      "proximamente": true
     },
     {
       "emoji": "🪒",

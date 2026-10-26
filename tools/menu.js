@@ -32,8 +32,6 @@ const GRUPOS = [
     C('Productos', [
       L('Limpiadores faciales', '/limpiador-facial-solido/'),
       L('Esponja de konjac', '/producto/esponja-konjac/'),
-      L('Cepillo facial', '/producto/cepillo-facial/'),
-      L('Set de contorno facial', '/producto/set-contorno-facial/'),
     ]),
     C('Según tu piel', [
       L('Sensible', SEL('rostro', 'sensible')),
