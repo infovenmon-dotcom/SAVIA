@@ -2708,7 +2708,7 @@ function construirCorreoBF(tipo, unsub, enlaceAcceso) {
     `<div style="font-size:12px;letter-spacing:3px;text-transform:uppercase;color:#E0B83A;font-weight:700">${t.antetitulo}</div>` +
     `<div style="font-family:Impact,'Arial Black',Arial,sans-serif;font-size:44px;line-height:1.05;letter-spacing:1px;margin:8px 0 4px">BLACK FRIDAY</div>` +
     `<div style="font-family:Impact,'Arial Black',Arial,sans-serif;font-size:58px;line-height:1;color:#E0B83A">HASTA −40 %</div>` +
-    `<div style="font-size:13px;letter-spacing:2px;color:#e9e2cf;margin-top:10px;font-weight:700">−20 % EN TODO + 4×3 · DEL 20 AL 30 DE NOVIEMBRE</div></div>` +
+    `<div style="font-size:13px;letter-spacing:2px;color:#e9e2cf;margin-top:10px;font-weight:700">−20 % EN TODO + 4×3 · ${t.acceso ? 'PARA TI YA · HASTA EL 30 DE NOVIEMBRE' : 'DEL 20 AL 30 DE NOVIEMBRE'}</div></div>` +
     `<h2 style="color:#1D6B50;font-family:Georgia,serif;margin:22px 0 8px">${t.titulo}</h2>` +
     `<p>${t.intro}</p>` +
     `<table role="presentation" style="width:100%;border-collapse:collapse;margin:14px 0"><tr>` +
