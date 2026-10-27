@@ -151,7 +151,7 @@
   try { if (!sessionStorage.getItem('savia_origen')) sessionStorage.setItem('savia_origen', calcOrigen()); } catch (e) {}
   function origen() { try { return sessionStorage.getItem('savia_origen') || calcOrigen(); } catch (e) { return calcOrigen(); } }
   window.saviaOrigen = origen;
-  var desdeAnuncio = q.has('regalo') || /tiktok|instagram|facebook|ig|fb/i.test(q.get('utm_source') || '');
+  var desdeAnuncio = q.has('regalo') || /tiktok|instagram|facebook|ig|fb/i.test(q.get('utm_source') || '') || (function () { try { return /(tiktok|instagram|facebook)\./i.test(new URL(document.referrer).hostname); } catch (e) { return false; } })();
   /* No interrumpir. La ventana salta a los 5 s pase lo que pase, y si para
      entonces el cliente tiene abierto el carrito o una ficha se le planta
      encima: ocupa la pantalla entera con z-index 9999, muy por encima del
