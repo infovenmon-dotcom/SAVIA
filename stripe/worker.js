@@ -2687,7 +2687,7 @@ function construirCorreoBF(tipo, unsub, enlaceAcceso) {
       antetitulo: 'Ya ha empezado',
       titulo: 'Hasta −40 % en toda la tienda',
       intro: 'Desde hoy y hasta el <strong>lunes 30 de noviembre</strong>: <strong>−20 % en todos los productos</strong> y, encima, el <strong>4×3</strong> (de cada 4, el de menor precio te sale gratis). No necesitas código: el descuento ya está aplicado en la web.',
-      cierre: 'Champús, jabones, desodorantes, rituales completos… y el envío es gratis desde 20 €.',
+      cierre: 'Champús, jabones, desodorantes, rituales completos… y el envío es gratis desde 20&nbsp;€.',
       boton: 'Aprovechar el Black Friday', ruta: '/tienda.html',
     },
     'bf-ultimos': {
@@ -2695,27 +2695,28 @@ function construirCorreoBF(tipo, unsub, enlaceAcceso) {
       antetitulo: 'Últimos días',
       titulo: 'Acaba el lunes 30 a medianoche',
       intro: 'Te queda poco para aprovechar el <strong>−20 % en toda la tienda</strong> sumado al <strong>4×3</strong>: hasta un <strong>40 % menos</strong>. El lunes 30 a las 23:59 vuelven los precios de siempre.',
-      cierre: 'Si estabas pensando en los regalos de Navidad, este es el momento. El envío es gratis desde 20 €.',
-      boton: 'Ver la tienda antes de que acabe', ruta: '/tienda.html',
+      cierre: 'Si estabas pensando en los regalos de Navidad, este es el momento. El envío es gratis desde 20&nbsp;€.',
+      boton: 'Ver la tienda', ruta: '/tienda.html',
     },
   }[tipo] || null;
   const t = T || {};
   // Ejemplo real: 4 champús de 10,99 € → 4×3 (paga 3) y −20 %.
   const ej = (n => n.toFixed(2).replace('.', ','))(10.99 * 3 * 0.8);
   const html =
+    `<style>a[x-apple-data-detectors]{color:inherit!important;text-decoration:none!important;font:inherit!important}u+#body a{color:inherit;text-decoration:none}</style>` +
     `<div style="font-family:-apple-system,Segoe UI,Roboto,Arial,sans-serif;max-width:560px;margin:0 auto;color:#333;line-height:1.55">` +
     `<div style="background:#0b0b0b;color:#fff;text-align:center;padding:26px 18px 22px;border-radius:12px">` +
     `<div style="font-size:12px;letter-spacing:3px;text-transform:uppercase;color:#E0B83A;font-weight:700">${t.antetitulo}</div>` +
     `<div style="font-family:Impact,'Arial Black',Arial,sans-serif;font-size:44px;line-height:1.05;letter-spacing:1px;margin:8px 0 4px">BLACK FRIDAY</div>` +
-    `<div style="font-family:Impact,'Arial Black',Arial,sans-serif;font-size:58px;line-height:1;color:#E0B83A">HASTA −40 %</div>` +
+    `<div style="font-family:Impact,'Arial Black',Arial,sans-serif;font-size:58px;line-height:1;color:#E0B83A">HASTA −40&nbsp;%</div>` +
     `<div style="font-size:13px;letter-spacing:2px;color:#e9e2cf;margin-top:10px;font-weight:700">−20 % EN TODO + 4×3 · ${t.acceso ? 'PARA TI YA · HASTA EL 30 DE NOVIEMBRE' : 'DEL 20 AL 30 DE NOVIEMBRE'}</div></div>` +
     `<h2 style="color:#1D6B50;font-family:Georgia,serif;margin:22px 0 8px">${t.titulo}</h2>` +
     `<p>${t.intro}</p>` +
     `<table role="presentation" style="width:100%;border-collapse:collapse;margin:14px 0"><tr>` +
     `<td style="padding:12px;border:1px solid #e7ded2;background:#f6f3ec;text-align:center;font-size:14px">Ejemplo: <strong>4 champús sólidos</strong><br>` +
-    `<span style="text-decoration:line-through;color:#999">43,96 €</span> → <strong style="font-size:20px;color:#1D6B50">${ej} €</strong><br><span style="color:#777;font-size:12px">4×3 + −20 % · un 40 % menos</span></td></tr></table>` +
+    `<span style="text-decoration:line-through;color:#999">43,96&nbsp;€</span> → <strong style="font-size:20px;color:#1D6B50">${ej}&nbsp;€</strong><br><span style="color:#777;font-size:12px">4×3 + −20 % · un 40 % menos</span></td></tr></table>` +
     `<p>${t.cierre}</p>` +
-    `<p style="margin:24px 0 8px;text-align:center"><a href="${t.acceso && enlaceAcceso ? enlaceAcceso : NL_SITE + t.ruta + utm}" style="background:#0b0b0b;color:#E0B83A;padding:14px 26px;border-radius:8px;text-decoration:none;font-weight:800;letter-spacing:1px;text-transform:uppercase">${t.boton}</a></p>` +
+    `<p style="margin:24px 0 8px;text-align:center"><a href="${t.acceso && enlaceAcceso ? enlaceAcceso : NL_SITE + t.ruta + utm}" style="display:inline-block;max-width:100%;box-sizing:border-box;background:#0b0b0b;color:#E0B83A;padding:14px 24px;border-radius:8px;text-decoration:none;font-weight:800;font-size:15px;line-height:1.3;letter-spacing:.5px;text-transform:uppercase">${t.boton}</a></p>` +
     `<p style="font-size:13px;color:#777;text-align:center">Durante el Black Friday no se acumulan otros códigos de descuento: ya tienes el mejor precio del año.</p>` +
     `<p style="color:#1D6B50;font-weight:600;margin-top:24px">Gracias por estar ahí 💚<br>Savia de Alma</p>` +
     `<hr style="border:none;border-top:1px solid #eee"><p style="color:#aaa;font-size:12px">Recibes este correo porque estás suscrito a la newsletter de Savia de Alma. <a href="${unsub}" style="color:#aaa">Darme de baja</a>.</p></div>`;
