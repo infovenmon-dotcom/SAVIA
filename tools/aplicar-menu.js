@@ -7,7 +7,7 @@ const fs = require('fs');
 const path = require('path');
 const { menuHTML } = require('./menu');
 const RAIZ = path.join(__dirname, '..', 'docs');
-const V = '20261026-2';
+const V = '20261027-1';
 
 const estaticas = fs.readdirSync(RAIZ).filter(f => f.endsWith('.html') && f !== 'admin.html');
 let n = 0;
