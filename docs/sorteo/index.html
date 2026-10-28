@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sorteo Black Friday · Savia de Alma</title>
+  <meta name="description" content="Sorteamos una caja regalo Savia de Alma con 4 productos a elegir. Apúntate a la newsletter y síguenos en Instagram y TikTok para sumar participaciones. Sorteo el 10 de noviembre.">
+  <meta name="robots" content="noindex, follow">
+  <link rel="canonical" href="https://saviadealma.com/sorteo/">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Savia de Alma">
+  <meta property="og:url" content="https://saviadealma.com/sorteo/">
+  <meta property="og:title" content="🎁 Sorteo · Caja regalo Savia de Alma">
+  <meta property="og:description" content="4 productos a elegir. Hasta 3 participaciones. Sorteo el 10 de noviembre.">
+  <meta property="og:image" content="https://saviadealma.com/assets/img/bf/acondicionadores.jpg">
+  <meta name="theme-color" content="#0b0b0b">
+  <link rel="icon" href="/assets/img/favicon.ico">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700;800&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+  <style>
+    :root { --oro: #E0B83A; --negro: #0b0b0b; --crema: #e9e2cf; }
+    * { box-sizing: border-box; }
+    html, body { margin: 0; background: var(--negro); color: #eee; font-family: "DM Sans", -apple-system, Segoe UI, Roboto, sans-serif; }
+    a { color: var(--oro); }
+    .wrap { max-width: 560px; margin: 0 auto; padding: 22px 16px 40px; text-align: center; }
+    .logo { width: 84px; height: auto; display: block; margin: 0 auto 18px; opacity: .95; }
+    .ante { font-size: 12px; font-weight: 800; letter-spacing: .32em; color: #fff; margin: 0; }
+    h1 { font-family: "Playfair Display", Georgia, serif; font-weight: 700; color: var(--oro); text-transform: uppercase;
+         font-size: clamp(46px, 14vw, 72px); line-height: .98; letter-spacing: .05em; margin: 8px 0 6px; }
+    .pregunta { font-family: "Playfair Display", Georgia, serif; font-size: clamp(22px, 6vw, 28px); line-height: 1.2; color: #fff; margin: 12px 0 10px; }
+    .sub { font-size: 16px; line-height: 1.5; margin: 0 auto 18px; max-width: 30em; }
+    .sub strong { color: var(--oro); }
+    form { display: flex; flex-direction: column; gap: 10px; margin: 0 auto; max-width: 420px; }
+    input[type=email] { font: inherit; font-size: 16px; padding: 15px 14px; border-radius: 12px; border: 1.5px solid #444; background: #fff; color: #222; width: 100%; }
+    button, .btn { font: inherit; font-weight: 800; font-size: 16px; letter-spacing: .03em; padding: 15px; border: 0; border-radius: 12px; background: var(--oro); color: var(--negro);
+                   cursor: pointer; text-decoration: none; display: block; text-align: center; }
+    button:disabled { opacity: .6; }
+    .legal { font-size: 12px; color: #999; margin: 10px 0 0; }
+    .legal a { color: #999; }
+    .ventajas { list-style: none; padding: 0; margin: 26px auto 0; max-width: 440px; text-align: left; display: grid; gap: 10px; }
+    .ventajas li { background: #161616; border: 1px solid #2a2a2a; border-radius: 12px; padding: 12px 14px; font-size: 15px; line-height: 1.45; }
+    .ventajas b { color: var(--oro); }
+    .fotos { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin: 26px 0 0; }
+    .fotos img { width: 100%; height: auto; aspect-ratio: 4 / 5; object-fit: cover; border-radius: 12px; display: block; }
+    .ok { display: none; }
+    .hecho .ok { display: block; }
+    .hecho .pedir { display: none; }
+    .ok h2 { font-family: "Playfair Display", Georgia, serif; color: #fff; font-size: 28px; margin: 6px 0 8px; }
+    .ok p { font-size: 16px; line-height: 1.5; margin: 0 0 16px; }
+    .pie { margin-top: 28px; font-size: 14px; color: #aaa; }
+    .pie a { color: var(--crema); }
+    .error { color: #ffb4a8; font-size: 14px; min-height: 1em; margin: 4px 0 0; }
+
+    .campo { text-align: left; }
+    .campo label { display: block; font-size: 13px; color: #ccc; margin: 0 0 4px 2px; }
+    .campo .plus { color: var(--oro); font-weight: 800; }
+    input[type=text] { font: inherit; font-size: 16px; padding: 13px 14px; border-radius: 12px; border: 1.5px solid #444; background: #fff; color: #222; width: 100%; }
+    .check { display: flex; gap: 10px; align-items: flex-start; text-align: left; font-size: 13px; line-height: 1.45; color: #ccc; }
+    .check input { width: 20px; height: 20px; margin: 2px 0 0; flex: 0 0 auto; accent-color: var(--oro); }
+    .premio { background: #161616; border: 1px solid #3a3220; border-radius: 14px; padding: 14px; margin: 0 auto 18px; max-width: 440px; font-size: 16px; line-height: 1.45; }
+    .premio b { color: var(--oro); }
+    .pasos { counter-reset: p; list-style: none; padding: 0; margin: 0 auto 18px; max-width: 440px; text-align: left; display: grid; gap: 8px; }
+    .pasos li { background: #161616; border: 1px solid #2a2a2a; border-radius: 12px; padding: 10px 12px 10px 44px; position: relative; font-size: 15px; }
+    .pasos li::before { counter-increment: p; content: counter(p); position: absolute; left: 12px; top: 9px; width: 22px; height: 22px; border-radius: 50%; background: var(--oro); color: #000; font-weight: 800; font-size: 13px; display: grid; place-items: center; }
+    .pasos b { color: var(--oro); }
+    .ok .contador { font-size: 64px; line-height: 1; margin: 10px 0 0; font-family: "Playfair Display", Georgia, serif; color: var(--oro); margin: 4px 0; }
+    .seguir { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin: 0 0 14px; }
+    .seguir a { background: #1d1d1d; border: 1px solid #333; color: #fff; text-decoration: none; padding: 12px; border-radius: 12px; font-weight: 700; font-size: 14px; }
+  </style>
+</head>
+<body>
+  <main class="wrap" id="sorteo">
+    <a href="/"><img class="logo" src="/assets/img/logo-blanco.png" alt="Savia de Alma" width="84" height="84"></a>
+    <p class="ante">🎁 SORTEO BLACK FRIDAY</p>
+    <h1>Sorteo</h1>
+
+    <section class="pedir">
+      <p class="premio">Sorteamos <b>una caja regalo Savia de Alma con 4 productos a elegir</b>. El <b>lunes 10 de noviembre</b>, el día que abrimos el Black Friday a los suscriptores.</p>
+      <ol class="pasos">
+        <li>Apúntate a la newsletter → <b>1 participación</b></li>
+        <li>Síguenos en Instagram <a href="https://www.instagram.com/savia_dealma/" target="_blank" rel="noopener">@savia_dealma</a> → <b>+1</b></li>
+        <li>Síguenos en TikTok <a href="https://www.tiktok.com/@saviadealma" target="_blank" rel="noopener">@saviadealma</a> → <b>+1</b></li>
+      </ol>
+      <form id="form-sorteo" novalidate>
+        <div class="campo"><label for="email">Tu email (obligatorio)</label>
+          <input id="email" type="email" name="email" required placeholder="tu@email.com" autocomplete="email" inputmode="email"></div>
+        <div class="campo"><label for="ig">Tu usuario de Instagram <span class="plus">+1</span> (si nos sigues)</label>
+          <input id="ig" type="text" name="ig" placeholder="@tuusuario" autocomplete="off" autocapitalize="none" spellcheck="false"></div>
+        <div class="campo"><label for="tt">Tu usuario de TikTok <span class="plus">+1</span> (si nos sigues)</label>
+          <input id="tt" type="text" name="tt" placeholder="@tuusuario" autocomplete="off" autocapitalize="none" spellcheck="false"></div>
+        <label class="check"><input type="checkbox" name="acepta" id="acepta"> <span>Acepto las <a href="/sorteo/bases/" target="_blank">bases del sorteo</a> y suscribirme a la newsletter de Savia de Alma (un correo a la semana, te das de baja cuando quieras). <a href="/privacidad.html" target="_blank">Privacidad</a>.</span></label>
+        <button type="submit">Participar en el sorteo</button>
+        <p class="error" id="error" role="alert"></p>
+      </form>
+      <p class="legal">Mayores de 18 años residentes en España peninsular y Baleares. Hasta el domingo 9 de noviembre a las 23:59. Promoción no patrocinada ni avalada por Instagram ni TikTok.</p>
+    </section>
+
+    <section class="ok" aria-live="polite">
+      <p class="ante">✓ ¡ESTÁS DENTRO!</p>
+      <p class="contador" id="n-part">1</p>
+      <h2 id="t-part">participación en el sorteo</h2>
+      <p id="m-part">¿Quieres sumar más? Síguenos y vuelve a apuntarte con el mismo email añadiendo tu usuario.</p>
+      <div class="seguir">
+        <a href="https://www.instagram.com/savia_dealma/" target="_blank" rel="noopener">Seguir en Instagram</a>
+        <a href="https://www.tiktok.com/@saviadealma" target="_blank" rel="noopener">Seguir en TikTok</a>
+      </div>
+      <p>El <strong style="color:var(--oro)">10 de noviembre</strong> sorteamos la caja y te llega a tu correo el <strong style="color:var(--oro)">acceso anticipado al Black Friday</strong>. Y si quieres probarnos ya, tu <strong style="color:var(--oro)">10 % está aplicado</strong> en el carrito.</p>
+      <a class="btn" href="/tienda.html?utm_source=sorteo">Ver la tienda</a>
+    </section>
+
+    <section class="cerrado" hidden>
+      <p class="premio">El plazo para participar terminó el 9 de noviembre. ¡Gracias a todos! Anunciamos el ganador en Instagram, TikTok y la newsletter.</p>
+      <a class="btn" href="/tienda.html?utm_source=sorteo">Ver la tienda</a>
+    </section>
+
+    <div class="fotos" aria-hidden="true">
+      <img src="/assets/img/bf/jabones.jpg" alt="" loading="lazy" width="560" height="700">
+      <img src="/assets/img/bf/champus.jpg" alt="" loading="lazy" width="560" height="700">
+      <img src="/assets/img/bf/acondicionadores.jpg" alt="" loading="lazy" width="560" height="700">
+      <img src="/assets/img/bf/desodorantes.jpg" alt="" loading="lazy" width="560" height="700">
+    </div>
+
+    <p class="pie">Cosmética sólida natural, hecha a mano en España · <a href="/">saviadealma.com</a></p>
+  </main>
+
+  <script src="/assets/js/config.js"></script>
+  <script>
+  (function () {
+    var EP = ((window.SAVIA_CONFIG || {}).checkoutEndpoint || '').trim().replace(/\/+$/, '');
+    var FIN = Date.parse('2026-11-09T23:59:59+01:00');
+    var q = new URLSearchParams(location.search);
+    function limpio(v) { return String(v || '').toLowerCase().replace(/[^a-z0-9._-]/g, '').slice(0, 30); }
+    function refCanal(h) {
+      if (!h) return '';
+      if (/instagram\./.test(h)) return 'instagram';
+      if (/tiktok\./.test(h)) return 'tiktok';
+      if (/(facebook|fb)\./.test(h)) return 'facebook';
+      if (/(^|\.)google\./.test(h)) return 'google';
+      return h.slice(0, 30);
+    }
+    function canal() {
+      var o = null;
+      try { o = JSON.parse(localStorage.getItem('savia_canal') || 'null'); } catch (e) { o = null; }
+      if (o && Date.now() - (o.t || 0) > 30 * 864e5) o = null;
+      var utm = limpio(q.get('utm_source'));
+      if (utm || !o) {
+        var host = '';
+        try { host = document.referrer ? new URL(document.referrer).hostname.replace(/^www\./, '') : ''; } catch (e) { host = ''; }
+        if (/saviadealma\.(com|es)$/.test(host)) host = '';
+        o = { s: utm || limpio(refCanal(host)) || 'directo', c: limpio(q.get('utm_campaign')), t: Date.now() };
+        try { localStorage.setItem('savia_canal', JSON.stringify(o)); } catch (e) {}
+      }
+      return o;
+    }
+    var c = canal();
+    try {
+      if (EP && !sessionStorage.getItem('savia_visita')) {
+        sessionStorage.setItem('savia_visita', '1');
+        var movil = window.matchMedia && window.matchMedia('(max-width: 760px)').matches;
+        var b = JSON.stringify({ e: 'visita', m: movil ? 1 : 0, p: location.pathname, o: c.s });
+        if (navigator.sendBeacon) navigator.sendBeacon(EP + '/evento', new Blob([b], { type: 'text/plain' }));
+      }
+    } catch (e) {}
+
+    var raiz = document.getElementById('sorteo');
+    if (Date.now() > FIN) { raiz.querySelector('.pedir').hidden = true; raiz.querySelector('.cerrado').hidden = false; return; }
+
+    var nombres = { tiktok: 'TikTok', instagram: 'Instagram', ig: 'Instagram', facebook: 'Facebook', fb: 'Facebook', google: 'Google' };
+    var f = document.getElementById('form-sorteo');
+    function mostrar(n) {
+      document.getElementById('n-part').textContent = n;
+      document.getElementById('t-part').textContent = n === 1 ? 'participación en el sorteo' : 'participaciones en el sorteo';
+      if (n >= 3) document.getElementById('m-part').textContent = '¡Tienes el máximo! Comprobaremos que nos sigues si resultas ganador/a.';
+      raiz.classList.add('hecho');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+    f.onsubmit = function (e) {
+      e.preventDefault();
+      var err = document.getElementById('error');
+      var email = (f.email.value || '').trim();
+      if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)) { err.textContent = 'Revisa el email, parece que falta algo.'; f.email.focus(); return false; }
+      if (!f.acepta.checked) { err.textContent = 'Para participar tienes que aceptar las bases.'; return false; }
+      err.textContent = '';
+      var btn = f.querySelector('button'); btn.disabled = true; btn.textContent = 'Un momento…';
+      fetch(EP + '/sorteo', { method: 'POST', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email: email, ig: f.ig.value, tt: f.tt.value, acepta: true, canal: nombres[c.s] || c.s || 'directo' }) })
+        .then(function (r) { return r.json(); })
+        .then(function (j) {
+          if (!j || !j.ok) {
+            btn.disabled = false; btn.textContent = 'Participar en el sorteo';
+            err.textContent = j && j.error === 'cerrado' ? 'El plazo del sorteo ha terminado.' : 'No se ha podido registrar. Inténtalo de nuevo en un momento.';
+            return;
+          }
+          try { localStorage.setItem('savia_regalo_popup', JSON.stringify({ suscrito: Date.now() })); } catch (er) {}
+          if (!j.yaSuscrito) try { localStorage.setItem('savia_codigo', JSON.stringify({ code: 'REGALATE10', pct: 10, amountOff: 0 })); } catch (er) {}
+          mostrar(j.participaciones || 1);
+        })
+        .catch(function () { btn.disabled = false; btn.textContent = 'Participar en el sorteo'; err.textContent = 'Sin conexión. Inténtalo de nuevo.'; });
+      return false;
+    };
+  })();
+  </script>
+</body>
+</html>

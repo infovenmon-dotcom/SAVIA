@@ -610,6 +610,41 @@ async function nlCola(enviar) {
 }
 window.nlCola = nlCola;
 
+/* ---------- Sorteo Black Friday ---------- */
+async function sorteoVer() {
+  const m = document.getElementById('sorteo-msg');
+  try {
+    const d = await _postAdmin('/admin/sorteo', {});
+    const g = document.getElementById('sorteo-ganador'); if (g && d.ganador && !g.value) g.value = d.ganador;
+    _msg(m, `👥 ${d.personas} personas · ${d.participaciones} participaciones (Instagram: ${d.conIg} · TikTok: ${d.conTt})${d.ganador ? ' · Ganador guardado: ' + d.ganador : ''}`, 'ok');
+  } catch (e) { _msg(m, 'Error: ' + e.message, 'err'); }
+}
+function _descargar(nombre, texto) {
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(new Blob([texto], { type: 'text/plain;charset=utf-8' }));
+  a.download = nombre; document.body.appendChild(a); a.click(); a.remove();
+}
+async function sorteoDescargar() {
+  const m = document.getElementById('sorteo-msg');
+  try {
+    const d = await _postAdmin('/admin/sorteo', { accion: 'csv' });
+    if (!d.personas) { _msg(m, 'Aún no hay participantes.', 'err'); return; }
+    _descargar('sorteo-para-lanzo.txt', d.lanzo);
+    _descargar('sorteo-clave-PRIVADO.csv', 'alias, email, instagram, tiktok\n' + d.clave);
+    _msg(m, `✓ Descargados 2 archivos: «sorteo-para-lanzo.txt» (pégalo en Lanzo → Importación manual; sin emails) y «sorteo-clave-PRIVADO.csv» (para saber quién es el ganador; no lo compartas). ${d.participaciones} participaciones de ${d.personas} personas.`, 'ok');
+  } catch (e) { _msg(m, 'Error: ' + e.message, 'err'); }
+}
+async function sorteoGanador() {
+  const m = document.getElementById('sorteo-msg');
+  const v = (document.getElementById('sorteo-ganador').value || '').trim();
+  if (v && !confirm(`¿Guardar «${v}» como ganador? Saldrá en el correo de acceso anticipado.`)) return;
+  try {
+    const d = await _postAdmin('/admin/sorteo', { accion: 'ganador', ganador: v });
+    _msg(m, d.ganador ? `✓ Ganador guardado: ${d.ganador}. Saldrá en el correo del 10/11.` : '✓ Ganador borrado: el correo dirá que se anuncia en redes.', 'ok');
+  } catch (e) { _msg(m, 'Error: ' + e.message, 'err'); }
+}
+window.sorteoVer = sorteoVer; window.sorteoDescargar = sorteoDescargar; window.sorteoGanador = sorteoGanador;
+
 async function verSuscriptores() {
   const msg = document.getElementById('nl-subs-msg');
   const cont = document.getElementById('nl-subs');

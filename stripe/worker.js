@@ -2488,6 +2488,90 @@ const ENVIOS_PROGRAMADOS = [
   { id: 'bf-ultimos', cuando: '2026-11-29T10:00:00+01:00' },
 ];
 
+/* ---------- Sorteo Black Friday ----------
+   Participa quien se apunta a la newsletter (1 participación) y suma una más
+   por cada red en la que dice seguirnos (Instagram, TikTok). Solo se comprueba
+   el seguimiento del ganador. La lista se exporta para Lanzo (importación
+   manual: una línea por participación) y allí se sortea con certificado. */
+const SORTEO = {
+  inicio: '2026-10-28T00:00:00+01:00',
+  fin: '2026-11-09T23:59:59+01:00',
+  premio: 'una caja regalo Savia de Alma con 4 productos a elegir',
+};
+const _handle = v => String(v || '').trim().replace(/^https?:\/\/(www\.)?(instagram|tiktok)\.com\/@?/i, '').replace(/^@+/, '').replace(/[/?#].*$/, '').toLowerCase().replace(/[^a-z0-9._]/g, '').slice(0, 30);
+
+async function manejarSorteo(request, env, cors) {
+  let b = {}; try { b = JSON.parse((await request.text()).slice(0, 2000)); } catch { return jsonResp({ ok: false, error: 'json' }, 400, cors); }
+  const ahora = Date.now();
+  if (ahora < Date.parse(SORTEO.inicio) || ahora > Date.parse(SORTEO.fin)) return jsonResp({ ok: false, error: 'cerrado' }, 200, cors);
+  const email = String(b.email || '').trim().toLowerCase().slice(0, 120);
+  if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)) return jsonResp({ ok: false, error: 'email' }, 400, cors);
+  if (b.acepta !== true) return jsonResp({ ok: false, error: 'bases' }, 400, cors);
+  if (!env.SAVIA_KV) return jsonResp({ ok: false, error: 'kv' }, 500, cors);
+  const ig = _handle(b.ig), tt = _handle(b.tt);
+  const canal = String(b.canal || '').replace(/[^\p{L}\p{N} .\-]/gu, '').slice(0, 20) || 'directo';
+  const previo = JSON.parse(await env.SAVIA_KV.get('sorteo:' + email) || 'null');
+  const reg = { email, ig: ig || (previo && previo.ig) || '', tt: tt || (previo && previo.tt) || '', ts: (previo && previo.ts) || Math.floor(ahora / 1000), canal: (previo && previo.canal) || canal };
+  await env.SAVIA_KV.put('sorteo:' + email, JSON.stringify(reg));
+  // Alta en la newsletter (con su correo de bienvenida) solo si aún no estaba suscrito.
+  const yaSuscrito = (await env.SAVIA_KV.get('sub:' + email)) && !(await env.SAVIA_KV.get('unsub:' + email));
+  if (!yaSuscrito) {
+    try {
+      await manejarSuscripcion(new Request('https://interno/subscribe', { method: 'POST', body: JSON.stringify({ email, origen: 'Sorteo BF · ' + canal }) }), env, cors);
+    } catch (e) { console.error('sorteo-sub:', e); }
+  }
+  const participaciones = 1 + (reg.ig ? 1 : 0) + (reg.tt ? 1 : 0);
+  return jsonResp({ ok: true, participaciones, yaSuscrito: !!yaSuscrito }, 200, cors);
+}
+
+async function _listaSorteo(env) {
+  const out = []; let cursor;
+  do {
+    const r = await env.SAVIA_KV.list({ prefix: 'sorteo:', cursor });
+    for (const { name } of r.keys) {
+      if (name === 'sorteo:ganador') continue;
+      try { const v = JSON.parse(await env.SAVIA_KV.get(name)); if (v && v.email) out.push(v); } catch { /* */ }
+    }
+    cursor = r.list_complete ? undefined : r.cursor;
+  } while (cursor);
+  // Solo cuentan quienes siguen suscritos.
+  const vivos = [];
+  for (const v of out) if (!(await env.SAVIA_KV.get('unsub:' + v.email))) vivos.push(v);
+  return vivos.sort((a, b) => a.ts - b.ts);
+}
+async function _aliasSorteo(email) {
+  const [u, d] = email.split('@');
+  const h = Array.from(new Uint8Array(await crypto.subtle.digest('SHA-256', new TextEncoder().encode(email)))).slice(0, 2).map(x => x.toString(16).padStart(2, '0')).join('');
+  return u.slice(0, 2) + '***@' + d.split('.')[0].slice(0, 2) + '***-' + h + 'x';
+}
+async function manejarAdminSorteo(request, env, cors) {
+  let b = {}; try { b = await request.json(); } catch { b = {}; }
+  if (!env.SAVIA_KV) return jsonResp({ ok: false }, 500, cors);
+  if (b.accion === 'ganador') {
+    const g = String(b.ganador || '').trim().slice(0, 80);
+    if (g) await env.SAVIA_KV.put('sorteo:ganador', g); else await env.SAVIA_KV.delete('sorteo:ganador');
+    return jsonResp({ ok: true, ganador: g || null }, 200, cors);
+  }
+  const lista = await _listaSorteo(env);
+  const ganador = await env.SAVIA_KV.get('sorteo:ganador');
+  const conIg = lista.filter(v => v.ig).length, conTt = lista.filter(v => v.tt).length;
+  const resumen = { ok: true, personas: lista.length, participaciones: lista.length + conIg + conTt, conIg, conTt, fin: SORTEO.fin, premio: SORTEO.premio, ganador };
+  if (b.accion === 'csv') {
+    const lineas = [];
+    const claves = [];
+    for (const v of lista) {
+      const a = await _aliasSorteo(v.email);
+      lineas.push(`${a}, newsletter`);
+      if (v.ig) lineas.push(`${a}, instagram @${v.ig}`);
+      if (v.tt) lineas.push(`${a}, tiktok @${v.tt}`);
+      claves.push(`${a}, ${v.email}, ${v.ig ? '@' + v.ig : ''}, ${v.tt ? '@' + v.tt : ''}`);
+    }
+    // lanzo: para pegar en Lanzo (sin emails). clave: privado, para identificar al ganador.
+    return jsonResp({ ...resumen, lanzo: lineas.join('\n'), clave: claves.join('\n') }, 200, cors);
+  }
+  return jsonResp(resumen, 200, cors);
+}
+
 async function _encolar(env, tpl, emails, extra = {}) {
   if (!env.SAVIA_KV || !emails.length) return { ok: true, encolados: 0 };
   const id = tpl + '-' + Date.now();
@@ -2588,7 +2672,7 @@ async function procesarCola(env) {
         const unsub = nlWorker(env) + '/unsubscribe?e=' + encodeURIComponent(to) + '&amp;t=' + token;
         const { subject, html } = job.tpl === 'semanal'
           ? construirCorreoSemanal(ctxSemanal.prod, ctxSemanal.prods, ctxSemanal.cfg, unsub, ctxSemanal.resenas)
-          : construirCorreoBF(job.tpl, unsub, accesoUrl(to, await accesoToken(to, env), job.tpl));
+          : construirCorreoBF(job.tpl, unsub, accesoUrl(to, await accesoToken(to, env), job.tpl), job.tpl === 'bf-acceso' ? await env.SAVIA_KV.get('sorteo:ganador') : null);
         const r = await enviarEmail(env, { to, subject, html, replyTo: env.ORDER_EMAIL_TO || undefined, fromName: 'Savia de Alma', soloBrevo: !quedaResend });
         // Si Resend ha dicho que no (cupo del día), no se vuelve a probar hoy.
         if (r && r.resendFallo) cupo.resend = CUPO_DIA.resend;
@@ -2655,7 +2739,7 @@ async function recuperarPagosAMedias(env) {
 }
 
 /* ---------- Correos del Black Friday 2026 ---------- */
-function construirCorreoBF(tipo, unsub, enlaceAcceso) {
+function construirCorreoBF(tipo, unsub, enlaceAcceso, ganador) {
   const utm = `?utm_source=newsletter&amp;utm_medium=email&amp;utm_campaign=${tipo}`;
   const T = {
     'bf-acceso': {
@@ -2716,6 +2800,14 @@ function construirCorreoBF(tipo, unsub, enlaceAcceso) {
     `<td style="padding:12px;border:1px solid #e7ded2;background:#f6f3ec;text-align:center;font-size:14px">Ejemplo: <strong>4 champús sólidos</strong><br>` +
     `<span style="text-decoration:line-through;color:#999">43,96&nbsp;€</span> → <strong style="font-size:20px;color:#1D6B50">${ej}&nbsp;€</strong><br><span style="color:#777;font-size:12px">4×3 + −20 % · un 40 % menos</span></td></tr></table>` +
     `<p>${t.cierre}</p>` +
+    (tipo === 'bf-acceso'
+      ? `<div style="border:1px solid #E0B83A;border-radius:10px;padding:14px 16px;margin:16px 0;background:#fffaf0;text-align:center">` +
+        `<div style="font-size:12px;letter-spacing:2px;color:#9a7a14;font-weight:800">🎁 SORTEO BLACK FRIDAY</div>` +
+        (ganador
+          ? `<p style="margin:6px 0 0">Ya tenemos ganador de ${_escHtml(SORTEO.premio)}: <strong>${_escHtml(ganador)}</strong>. ¡Enhorabuena! Te escribimos para el envío.</p>`
+          : `<p style="margin:6px 0 0">Hoy sorteamos ${_escHtml(SORTEO.premio)} entre todos los participantes. Anunciamos el ganador en nuestro Instagram y TikTok.</p>`) +
+        `<p style="margin:6px 0 0;font-size:13px;color:#777">Si no te ha tocado, no te vas con las manos vacías: tu acceso anticipado ya está activo.</p></div>`
+      : '') +
     `<p style="margin:24px 0 8px;text-align:center"><a href="${t.acceso && enlaceAcceso ? enlaceAcceso : NL_SITE + t.ruta + utm}" style="display:inline-block;max-width:100%;box-sizing:border-box;background:#0b0b0b;color:#E0B83A;padding:14px 24px;border-radius:8px;text-decoration:none;font-weight:800;font-size:15px;line-height:1.3;letter-spacing:.5px;text-transform:uppercase">${t.boton}</a></p>` +
     `<p style="font-size:13px;color:#777;text-align:center">Durante el Black Friday no se acumulan otros códigos de descuento: ya tienes el mejor precio del año.</p>` +
     `<p style="color:#1D6B50;font-weight:600;margin-top:24px">Gracias por estar ahí 💚<br>Savia de Alma</p>` +
@@ -2766,7 +2858,7 @@ async function manejarNewsletter(request, env, cors) {
     const to = body.to || env.ORDER_EMAIL_TO;
     const tipo = ['bf-acceso', 'bf-recordatorio', 'bf-lanzamiento', 'bf-ultimos'].includes(body.tipo) ? body.tipo : 'bf-acceso';
     const token = await nlToken(to, env);
-    const { subject, html } = construirCorreoBF(tipo, nlWorker(env) + '/unsubscribe?e=' + encodeURIComponent(to) + '&amp;t=' + token, accesoUrl(to, await accesoToken(to, env), tipo));
+    const { subject, html } = construirCorreoBF(tipo, nlWorker(env) + '/unsubscribe?e=' + encodeURIComponent(to) + '&amp;t=' + token, accesoUrl(to, await accesoToken(to, env), tipo), await env.SAVIA_KV.get('sorteo:ganador'));
     const r = await enviarEmail(env, { to, subject: '[PRUEBA] ' + subject, html, replyTo: env.ORDER_EMAIL_TO || undefined, fromName: 'Savia de Alma' });
     return jsonResp({ ok: !!(r && r.ok), tipo }, 200, cors);
   }
@@ -3698,6 +3790,9 @@ export default {
         return await manejarContactosLista(request, env, cors);
       }
       // Alta en la newsletter (público). Envía email de bienvenida.
+      if (path === '/sorteo' && request.method === 'POST') {
+        return await manejarSorteo(request, env, cors);
+      }
       if (path === '/subscribe' && request.method === 'POST') {
         return await manejarSuscripcion(request, env, cors);
       }
@@ -3743,6 +3838,9 @@ export default {
       if (path === '/admin/carritos' && request.method === 'POST') {
         if (!_authAdmin(request, env)) return jsonResp({ error: 'no_autorizado' }, 401, cors);
         return jsonResp({ carritos: await _carritosGuardados(env) }, 200, cors);
+      }
+      if (path === '/admin/sorteo' && request.method === 'POST') {
+        return await manejarAdminSorteo(request, env, cors);
       }
       if (path === '/admin/embudo' && request.method === 'POST') {
         return await manejarEmbudo(request, env, cors);

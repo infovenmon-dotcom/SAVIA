@@ -180,6 +180,20 @@
         </div>
         <div id="nl-subs" style="margin-top:8px"></div>
         <p class="msg" id="nl-msg" style="margin-top:10px"></p>
+        <div style="margin-top:16px;padding:12px;border:1px solid #e0b83a;border-radius:10px;background:#fffaf0">
+          <strong>🎁 Sorteo Black Friday</strong> <span style="font-size:.85rem;color:#666">(participa hasta el 9/11 23:59 · sorteo el 10/11 en Lanzo)</span>
+          <div class="fila-top" style="margin-top:8px">
+            <button class="btn btn-secundario" onclick="sorteoVer()">📊 Ver participantes</button>
+            <button class="btn btn-secundario" onclick="sorteoDescargar()">⬇️ Descargar para Lanzo</button>
+          </div>
+          <div class="fila-top" style="margin-top:8px">
+            <label style="display:flex;flex-direction:column;font-size:.8rem">Ganador (tal como saldrá en el correo del 10/11)
+              <input type="text" id="sorteo-ganador" placeholder="@usuario o an***@gmail.com" style="min-width:240px">
+            </label>
+            <button class="btn btn-primario" onclick="sorteoGanador()">Guardar ganador</button>
+          </div>
+          <p class="msg" id="sorteo-msg" style="margin-top:8px"></p>
+        </div>
       </div>
 
       <div class="admin-caja">
@@ -390,6 +404,6 @@
 
   <script src="assets/js/config.js"></script>
   <script src="assets/js/products.js?v=20261016-25"></script>
-  <script src="assets/js/admin.js?v=20261025-1"></script>
+  <script src="assets/js/admin.js?v=20261028-1"></script>
 </body>
 </html>
