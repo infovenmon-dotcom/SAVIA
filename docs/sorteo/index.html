@@ -67,16 +67,24 @@
     .ok .contador { font-size: 64px; line-height: 1; margin: 10px 0 0; font-family: "Playfair Display", Georgia, serif; color: var(--oro); margin: 4px 0; }
     .seguir { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin: 0 0 14px; }
     .seguir a { background: #1d1d1d; border: 1px solid #333; color: #fff; text-decoration: none; padding: 12px; border-radius: 12px; font-weight: 700; font-size: 14px; }
+    .titular { font-size: clamp(34px, 10vw, 52px); line-height: 1.02; letter-spacing: .02em; margin: 10px 0 14px; }
+    .titular span { display: block; color: #fff; font-size: .52em; letter-spacing: .06em; margin-top: 8px; }
+    .premio-img { width: 100%; height: auto; border-radius: 14px; display: block; margin: 0 0 16px; }
+    .fecha { display: inline-block; background: #1a160b; border: 1px solid var(--oro); color: #fff; border-radius: 999px; padding: 7px 16px; font-size: 15px; margin: 0 0 18px; }
+    .fecha b { color: var(--oro); }
+    .aviso { font-size: 13px; color: #aaa; line-height: 1.45; }
   </style>
 </head>
 <body>
   <main class="wrap" id="sorteo">
     <a href="/"><img class="logo" src="/assets/img/logo-blanco.png" alt="Savia de Alma" width="84" height="84"></a>
     <p class="ante">🎁 SORTEO BLACK FRIDAY</p>
-    <h1>Sorteo</h1>
+    <h1 class="titular">Gana una caja regalo<span>con 4 productos a tu elección</span></h1>
+    <img class="premio-img" src="/assets/img/bf/premio-4.jpg" alt="Jabones, champús, acondicionadores y desodorantes sólidos de Savia de Alma" width="900" height="640">
 
     <section class="pedir">
-      <p class="premio">Sorteamos <b>una caja regalo Savia de Alma con 4 productos a elegir</b>. El <b>lunes 10 de noviembre</b>, el día que abrimos el Black Friday a los suscriptores.</p>
+      <p class="sub">Apúntate gratis y consigue <strong>hasta 3 participaciones</strong>.</p>
+      <p class="fecha">Sorteo: <b>martes 10 de noviembre</b></p>
       <ol class="pasos">
         <li>Apúntate a la newsletter → <b>1 participación</b></li>
         <li>Síguenos en Instagram <a href="https://www.instagram.com/savia_dealma/" target="_blank" rel="noopener">@savia_dealma</a> → <b>+1</b></li>
@@ -93,7 +101,7 @@
         <button type="submit">Participar en el sorteo</button>
         <p class="error" id="error" role="alert"></p>
       </form>
-      <p class="legal">Mayores de 18 años residentes en España peninsular y Baleares. Hasta el domingo 9 de noviembre a las 23:59. Promoción no patrocinada ni avalada por Instagram ni TikTok.</p>
+      <p class="legal">Mayores de 18 años residentes en España peninsular y Baleares. Hasta el lunes 9 de noviembre a las 23:59. Promoción no patrocinada ni avalada por Instagram ni TikTok.</p>
     </section>
 
     <section class="ok" aria-live="polite">
@@ -101,6 +109,7 @@
       <p class="contador" id="n-part">1</p>
       <h2 id="t-part">participación en el sorteo</h2>
       <p id="m-part">¿Quieres sumar más? Síguenos y vuelve a apuntarte con el mismo email añadiendo tu usuario.</p>
+      <p class="aviso">Si resultas ganador/a, comprobaremos que sigues las cuentas que has indicado. Si no las sigues, esas participaciones no cuentan.</p>
       <div class="seguir">
         <a href="https://www.instagram.com/savia_dealma/" target="_blank" rel="noopener">Seguir en Instagram</a>
         <a href="https://www.tiktok.com/@saviadealma" target="_blank" rel="noopener">Seguir en TikTok</a>
@@ -114,12 +123,7 @@
       <a class="btn" href="/tienda.html?utm_source=sorteo">Ver la tienda</a>
     </section>
 
-    <div class="fotos" aria-hidden="true">
-      <img src="/assets/img/bf/jabones.jpg" alt="" loading="lazy" width="560" height="700">
-      <img src="/assets/img/bf/champus.jpg" alt="" loading="lazy" width="560" height="700">
-      <img src="/assets/img/bf/acondicionadores.jpg" alt="" loading="lazy" width="560" height="700">
-      <img src="/assets/img/bf/desodorantes.jpg" alt="" loading="lazy" width="560" height="700">
-    </div>
+
 
     <p class="pie">Cosmética sólida natural, hecha a mano en España · <a href="/">saviadealma.com</a></p>
   </main>
@@ -171,7 +175,10 @@
     function mostrar(n) {
       document.getElementById('n-part').textContent = n;
       document.getElementById('t-part').textContent = n === 1 ? 'participación en el sorteo' : 'participaciones en el sorteo';
-      if (n >= 3) document.getElementById('m-part').textContent = '¡Tienes el máximo! Comprobaremos que nos sigues si resultas ganador/a.';
+      document.getElementById('m-part').textContent = n >= 3
+        ? '¡Tienes el máximo de participaciones!'
+        : (n === 2 ? 'Te falta una para el máximo. ' : '¿Quieres sumar más? ') + 'Síguenos y vuelve a enviar el formulario con el mismo email añadiendo tu usuario.';
+      document.querySelector('.seguir').style.display = n >= 3 ? 'none' : '';
       raiz.classList.add('hecho');
       window.scrollTo({ top: 0, behavior: 'smooth' });
     }
