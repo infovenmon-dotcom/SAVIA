@@ -616,7 +616,7 @@ async function sorteoVer() {
   try {
     const d = await _postAdmin('/admin/sorteo', {});
     const g = document.getElementById('sorteo-ganador'); if (g && d.ganador && !g.value) g.value = d.ganador;
-    _msg(m, `👥 ${d.personas} personas · ${d.participaciones} participaciones (Instagram: ${d.conIg} · TikTok: ${d.conTt})${d.ganador ? ' · Ganador guardado: ' + d.ganador : ''}`, 'ok');
+    _msg(m, `👥 ${d.personas} suscritos participan · ${d.participaciones} participaciones (Instagram: ${d.conIg} · TikTok: ${d.conTt} · por la página: ${d.viaPagina})${d.ganador ? ' · Ganador guardado: ' + d.ganador : ''}`, 'ok');
   } catch (e) { _msg(m, 'Error: ' + e.message, 'err'); }
 }
 function _descargar(nombre, texto) {

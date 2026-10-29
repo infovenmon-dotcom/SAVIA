@@ -2300,19 +2300,22 @@ const NL_FAVORITO = [
   { cat: 'faciales', t: 'Para el rostro nos gusta ir con delicadeza, y este es de los que solemos recomendar para empezar.' },
 ];
 
-/* Bloque del sorteo para la newsletter semanal (solo mientras está abierto). */
-function _bloqueSorteoNL() {
-  if (Date.now() > Date.parse(SORTEO.fin)) return '';
+/* Bloque del sorteo para la newsletter semanal (solo mientras está abierto y
+   solo a quien aún no ha pasado por la página del sorteo). Estar suscrito ya
+   da 1 participación; las redes suman +1 cada una, para este y los próximos. */
+function _bloqueSorteoNL(yaEnSorteo) {
+  if (yaEnSorteo || Date.now() > Date.parse(SORTEO.fin)) return '';
   const url = NL_SITE + '/sorteo/?utm_source=newsletter&amp;utm_medium=email&amp;utm_campaign=sorteo';
   return `<div style="background:#0b0b0b;color:#fff;border-radius:14px;padding:20px 18px;margin:0 0 22px;text-align:center">` +
     `<div style="font-size:12px;letter-spacing:3px;color:#E0B83A;font-weight:800">🎁 SORTEO BLACK FRIDAY</div>` +
-    `<div style="font-family:Georgia,'Times New Roman',serif;font-size:24px;line-height:1.2;color:#E0B83A;font-weight:700;margin:8px 0 4px">Gana una caja regalo con 4 productos a tu elección</div>` +
-    `<p style="margin:8px 0 14px;font-size:15px;line-height:1.55;color:#eee">Como ya estás suscrito/a, solo te falta confirmar tu participación. Y suma <strong style="color:#E0B83A">+1 por Instagram y +1 por TikTok</strong> si nos sigues. Sorteo el <strong style="color:#E0B83A">martes 10 de noviembre</strong>.</p>` +
-    `<a href="${url}" style="display:inline-block;max-width:100%;box-sizing:border-box;background:#E0B83A;color:#0b0b0b;padding:13px 24px;border-radius:8px;text-decoration:none;font-weight:800;font-size:15px;line-height:1.3">Participar en el sorteo</a>` +
+    `<div style="font-family:Georgia,'Times New Roman',serif;font-size:24px;line-height:1.2;color:#E0B83A;font-weight:700;margin:8px 0 4px">Sorteamos una caja regalo con 4 productos a tu elección</div>` +
+    `<p style="margin:8px 0 6px;font-size:15px;line-height:1.55;color:#eee">Por estar en nuestra newsletter <strong style="color:#E0B83A">ya participas</strong>, sin hacer nada. Y si nos sigues, suma <strong style="color:#E0B83A">+1 por Instagram y +1 por TikTok</strong>: déjanos tus usuarios una sola vez.</p>` +
+    `<p style="margin:0 0 14px;font-size:13px;line-height:1.5;color:#bbb">Desde ahora, estar apuntado/a y seguirnos te hace participar en <strong style="color:#fff">todos nuestros sorteos</strong>, con 1, 2 o 3 participaciones. El de esta vez es el <strong style="color:#fff">martes 10 de noviembre</strong>.</p>` +
+    `<a href="${url}" style="display:inline-block;max-width:100%;box-sizing:border-box;background:#E0B83A;color:#0b0b0b;padding:13px 24px;border-radius:8px;text-decoration:none;font-weight:800;font-size:15px;line-height:1.3">Sumar mis participaciones</a>` +
     `</div>`;
 }
 
-function construirCorreoSemanal(prod, prods, cfg, unsubUrl, resenas) {
+function construirCorreoSemanal(prod, prods, cfg, unsubUrl, resenas, yaEnSorteo) {
   // Una de cada 4 semanas: carta educativa SIN producto (aporta valor, no vende).
   const _wk = nlSemanaIdx();
   if (_wk % 4 === 3 && NL_CARTAS.length) {
@@ -2321,7 +2324,7 @@ function construirCorreoSemanal(prod, prods, cfg, unsubUrl, resenas) {
     const htmlE =
       `<div style="font-family:-apple-system,Segoe UI,Roboto,Arial,sans-serif;max-width:600px;margin:0 auto;color:#333;background:#fff">` +
       `<div style="text-align:center;padding:18px 0"><span style="font-size:20px;font-weight:700;color:#6b7a4f">Savia de Alma</span><br><span style="font-size:12px;color:#999;letter-spacing:1px">COSMÉTICA SÓLIDA NATURAL</span></div>` +
-      _bloqueSorteoNL() +
+      _bloqueSorteoNL(yaEnSorteo) +
       ap +
       `<div style="border:1px solid #dfe6d2;border-radius:14px;padding:22px;margin:0 0 22px;background:#fbfcf8">` +
         `<div style="font-family:Georgia,'Times New Roman',serif;font-size:15px;color:#6b7a4f;font-weight:700;margin-bottom:4px">🌿 Un minuto para cuidar mejor de ti</div>` +
@@ -2408,7 +2411,7 @@ function construirCorreoSemanal(prod, prods, cfg, unsubUrl, resenas) {
   const html =
     `<div style="font-family:-apple-system,Segoe UI,Roboto,Arial,sans-serif;max-width:600px;margin:0 auto;color:#333;background:#fff">` +
     `<div style="text-align:center;padding:18px 0"><span style="font-size:20px;font-weight:700;color:#6b7a4f">Savia de Alma</span><br><span style="font-size:12px;color:#999;letter-spacing:1px">COSMÉTICA SÓLIDA NATURAL</span></div>` +
-      _bloqueSorteoNL() +
+      _bloqueSorteoNL(yaEnSorteo) +
     bannerOferta +
     apertura +
     editorial +
@@ -2527,6 +2530,7 @@ async function manejarSorteo(request, env, cors) {
   const previo = JSON.parse(await env.SAVIA_KV.get('sorteo:' + email) || 'null');
   const reg = { email, ig: ig || (previo && previo.ig) || '', tt: tt || (previo && previo.tt) || '', ts: (previo && previo.ts) || Math.floor(ahora / 1000), canal: (previo && previo.canal) || canal };
   await env.SAVIA_KV.put('sorteo:' + email, JSON.stringify(reg));
+  if (reg.ig || reg.tt) await env.SAVIA_KV.put('redes:' + email, JSON.stringify({ ig: reg.ig, tt: reg.tt, ts: Math.floor(ahora / 1000) }));
   // Alta en la newsletter (con su correo de bienvenida) solo si aún no estaba suscrito.
   const yaSuscrito = (await env.SAVIA_KV.get('sub:' + email)) && !(await env.SAVIA_KV.get('unsub:' + email));
   if (!yaSuscrito) {
@@ -2539,19 +2543,20 @@ async function manejarSorteo(request, env, cors) {
 }
 
 async function _listaSorteo(env) {
-  const out = []; let cursor;
-  do {
-    const r = await env.SAVIA_KV.list({ prefix: 'sorteo:', cursor });
-    for (const { name } of r.keys) {
-      if (name === 'sorteo:ganador') continue;
-      try { const v = JSON.parse(await env.SAVIA_KV.get(name)); if (v && v.email) out.push(v); } catch { /* */ }
-    }
-    cursor = r.list_complete ? undefined : r.cursor;
-  } while (cursor);
-  // Solo cuentan quienes siguen suscritos.
-  const vivos = [];
-  for (const v of out) if (!(await env.SAVIA_KV.get('unsub:' + v.email))) vivos.push(v);
-  return vivos.sort((a, b) => a.ts - b.ts);
+  // Participan todos los suscritos activos (nlDestinatarios ya quita las bajas);
+  // las redes salen de lo que cada uno nos indicó (redes:<email> o su registro del sorteo).
+  const emails = await nlDestinatarios(env);
+  const out = [];
+  // Fuera del sorteo: las cuentas del propio organizador.
+  const excluir = new Set(['info@saviadealma.com', 'info.venmon@gmail.com', String(env.ORDER_EMAIL_TO || '').toLowerCase()]);
+  for (const email of emails) {
+    if (excluir.has(email) || /@saviadealma\.(com|es)$/.test(email)) continue;
+    let ig = '', tt = '', ts = 0, viaPagina = false;
+    try { const r = JSON.parse(await env.SAVIA_KV.get('redes:' + email) || 'null'); if (r) { ig = r.ig || ''; tt = r.tt || ''; } } catch { /* */ }
+    try { const v = JSON.parse(await env.SAVIA_KV.get('sorteo:' + email) || 'null'); if (v) { viaPagina = true; ts = v.ts || 0; ig = ig || v.ig || ''; tt = tt || v.tt || ''; } } catch { /* */ }
+    out.push({ email, ig, tt, ts, viaPagina });
+  }
+  return out.sort((a, b) => a.email.localeCompare(b.email));
 }
 async function _aliasSorteo(email) {
   const [u, d] = email.split('@');
@@ -2569,7 +2574,7 @@ async function manejarAdminSorteo(request, env, cors) {
   const lista = await _listaSorteo(env);
   const ganador = await env.SAVIA_KV.get('sorteo:ganador');
   const conIg = lista.filter(v => v.ig).length, conTt = lista.filter(v => v.tt).length;
-  const resumen = { ok: true, personas: lista.length, participaciones: lista.length + conIg + conTt, conIg, conTt, fin: SORTEO.fin, premio: SORTEO.premio, ganador };
+  const resumen = { ok: true, personas: lista.length, participaciones: lista.length + conIg + conTt, conIg, conTt, viaPagina: lista.filter(v => v.viaPagina).length, fin: SORTEO.fin, premio: SORTEO.premio, ganador };
   if (b.accion === 'csv') {
     const lineas = [];
     const claves = [];
@@ -2685,7 +2690,7 @@ async function procesarCola(env) {
         const token = await nlToken(to, env);
         const unsub = nlWorker(env) + '/unsubscribe?e=' + encodeURIComponent(to) + '&amp;t=' + token;
         const { subject, html } = job.tpl === 'semanal'
-          ? construirCorreoSemanal(ctxSemanal.prod, ctxSemanal.prods, ctxSemanal.cfg, unsub, ctxSemanal.resenas)
+          ? construirCorreoSemanal(ctxSemanal.prod, ctxSemanal.prods, ctxSemanal.cfg, unsub, ctxSemanal.resenas, !!(await env.SAVIA_KV.get('sorteo:' + to)))
           : construirCorreoBF(job.tpl, unsub, accesoUrl(to, await accesoToken(to, env), job.tpl), job.tpl === 'bf-acceso' ? await env.SAVIA_KV.get('sorteo:ganador') : null);
         const r = await enviarEmail(env, { to, subject, html, replyTo: env.ORDER_EMAIL_TO || undefined, fromName: 'Savia de Alma', soloBrevo: !quedaResend });
         // Si Resend ha dicho que no (cupo del día), no se vuelve a probar hoy.
