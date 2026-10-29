@@ -2442,6 +2442,21 @@ async function nlToken(email, env) {
 }
 
 /* Lista de destinatarios (leads menos bajas). */
+/* Lectura en bloque de KV: hasta 100 claves por operación (cuenta como 1 de las
+   1.000 que permite cada invocación). Devuelve Map clave -> valor (string o null).
+   Si el runtime no admite el bloque, cae a lecturas sueltas. */
+async function _kvGetMany(env, keys) {
+  const out = new Map();
+  for (let i = 0; i < keys.length; i += 100) {
+    const lote = keys.slice(i, i + 100);
+    let m = null;
+    try { m = await env.SAVIA_KV.get(lote); } catch { m = null; }
+    if (m && typeof m.get === 'function') { _kvGetMany.bloque = true; for (const k of lote) out.set(k, m.get(k) ?? null); }
+    else { _kvGetMany.bloque = false; for (const k of lote) out.set(k, await env.SAVIA_KV.get(k)); }
+  }
+  return out;
+}
+
 async function nlDestinatarios(env) {
   if (!env.SAVIA_KV) return [];
   const emails = new Set();
@@ -2455,12 +2470,9 @@ async function nlDestinatarios(env) {
     if (res.list_complete) break;
     cursor = res.cursor;
   }
-  const out = [];
-  for (const e of emails) {
-    const baja = await env.SAVIA_KV.get('unsub:' + e);
-    if (!baja) out.push(e);
-  }
-  return out;
+  const lista = [...emails];
+  const bajas = await _kvGetMany(env, lista.map(e => 'unsub:' + e));
+  return lista.filter(e => !bajas.get('unsub:' + e));
 }
 
 /* Envío del correo semanal. opts.soloA = email de prueba; opts.avanzar mueve rotación. */
@@ -2549,11 +2561,14 @@ async function _listaSorteo(env) {
   const out = [];
   // Fuera del sorteo: las cuentas del propio organizador.
   const excluir = new Set(['info@saviadealma.com', 'info.venmon@gmail.com', String(env.ORDER_EMAIL_TO || '').toLowerCase()]);
-  for (const email of emails) {
-    if (excluir.has(email) || /@saviadealma\.(com|es)$/.test(email)) continue;
+  const validos = emails.filter(e => !(excluir.has(e) || /@saviadealma\.(com|es)$/.test(e)));
+  const redes = await _kvGetMany(env, validos.map(e => 'redes:' + e));
+  const regs = await _kvGetMany(env, validos.map(e => 'sorteo:' + e));
+  const js = v => { try { return JSON.parse(v || 'null'); } catch { return null; } };
+  for (const email of validos) {
     let ig = '', tt = '', ts = 0, viaPagina = false;
-    try { const r = JSON.parse(await env.SAVIA_KV.get('redes:' + email) || 'null'); if (r) { ig = r.ig || ''; tt = r.tt || ''; } } catch { /* */ }
-    try { const v = JSON.parse(await env.SAVIA_KV.get('sorteo:' + email) || 'null'); if (v) { viaPagina = true; ts = v.ts || 0; ig = ig || v.ig || ''; tt = tt || v.tt || ''; } } catch { /* */ }
+    const r = js(redes.get('redes:' + email)); if (r) { ig = r.ig || ''; tt = r.tt || ''; }
+    const v = js(regs.get('sorteo:' + email)); if (v) { viaPagina = true; ts = v.ts || 0; ig = ig || v.ig || ''; tt = tt || v.tt || ''; }
     out.push({ email, ig, tt, ts, viaPagina });
   }
   return out.sort((a, b) => a.email.localeCompare(b.email));
@@ -2574,7 +2589,7 @@ async function manejarAdminSorteo(request, env, cors) {
   const lista = await _listaSorteo(env);
   const ganador = await env.SAVIA_KV.get('sorteo:ganador');
   const conIg = lista.filter(v => v.ig).length, conTt = lista.filter(v => v.tt).length;
-  const resumen = { ok: true, personas: lista.length, participaciones: lista.length + conIg + conTt, conIg, conTt, viaPagina: lista.filter(v => v.viaPagina).length, fin: SORTEO.fin, premio: SORTEO.premio, ganador };
+  const resumen = { ok: true, personas: lista.length, participaciones: lista.length + conIg + conTt, conIg, conTt, viaPagina: lista.filter(v => v.viaPagina).length, lecturaEnBloque: _kvGetMany.bloque, fin: SORTEO.fin, premio: SORTEO.premio, ganador };
   if (b.accion === 'csv') {
     const lineas = [];
     const claves = [];
@@ -2907,11 +2922,14 @@ async function manejarNewsletter(request, env, cors) {
       cursor = res.cursor;
     }
     const suscriptores = [];
-    for (const [email, ts] of map) {
-      if (await env.SAVIA_KV.get('unsub:' + email)) continue;
+    const todos = [...map.keys()];
+    const bajas = await _kvGetMany(env, todos.map(e => 'unsub:' + e));
+    const vivos = todos.filter(e => !bajas.get('unsub:' + e));
+    const leads = await _kvGetMany(env, vivos.map(e => keyDe.get(e)));
+    for (const email of vivos) {
       let origen = 'Formulario de la portada';
-      try { const v = JSON.parse((await env.SAVIA_KV.get(keyDe.get(email))) || '{}'); if (v.origen) origen = v.origen; } catch { /* lead antiguo */ }
-      suscriptores.push({ email, ts, origen });
+      try { const v = JSON.parse(leads.get(keyDe.get(email)) || '{}'); if (v.origen) origen = v.origen; } catch { /* lead antiguo */ }
+      suscriptores.push({ email, ts: map.get(email), origen });
     }
     suscriptores.sort((a, b) => b.ts - a.ts);       // más recientes primero
     return jsonResp({ total: suscriptores.length, suscriptores }, 200, cors);
