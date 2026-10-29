@@ -164,7 +164,8 @@ const DEVOLUCION_SCHEMA = {
   returnPolicyCategory: 'https://schema.org/MerchantReturnFiniteReturnWindow',
   merchantReturnDays: 14,
   returnMethod: 'https://schema.org/ReturnByMail',
-  returnFees: 'https://schema.org/ReturnShippingFees',
+  // Los gastos de la devolución los paga el cliente (devoluciones.html §3): sin importe fijo.
+  returnFees: 'https://schema.org/ReturnFeesCustomerResponsibility',
   merchantReturnLink: SITIO + '/devoluciones.html',
 };
 
