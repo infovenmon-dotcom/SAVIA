@@ -720,7 +720,9 @@ function iniciarBannerRotativo() {
   if (document.documentElement.classList.contains('en-campana') || (typeof campanaActiva === 'function' && campanaActiva())) return;
   const slides = [
     b.innerHTML.trim(),
-    '🖤 <strong>BLACK FRIDAY</strong> <span class="bp-extra">· ¿Quieres saber lo que hemos preparado? </span><span class="banner-envio" style="cursor:pointer" onclick="window.abrirRegalo&&abrirRegalo()">Apúntate y entérate antes</span>',
+    (Date.now() < Date.parse('2026-11-09T23:59:59+01:00')
+      ? '🖤 <strong>BLACK FRIDAY</strong> · 🎁 <span class="bp-extra">Sorteamos una caja con 4 productos · </span><a class="banner-envio" style="text-decoration:none" href="/sorteo/?utm_source=web_banner">Participa en el sorteo</a>'
+      : '🖤 <strong>BLACK FRIDAY</strong> <span class="bp-extra">· ¿Quieres saber lo que hemos preparado? </span><span class="banner-envio" style="cursor:pointer" onclick="window.abrirRegalo&&abrirRegalo()">Apúntate y entérate antes</span>'),
     '👋 <span class="bp-extra">¿Aún no nos conoces? Te lo ponemos fácil: </span><strong>10&nbsp;% en tu 1.ª compra</strong> <span class="banner-envio">+ jabonera y bolsa de sisal de regalo 🎁</span>',
   ];
   if (slides.length < 2) return;

@@ -8,6 +8,10 @@
   var CODIGO = 'REGALATE10';
   function estado() { try { return JSON.parse(localStorage.getItem(KEY) || 'null'); } catch (e) { return null; } }
   function guardar(v) { try { localStorage.setItem(KEY, JSON.stringify(v)); } catch (e) {} }
+  // Sorteo Black Friday (hasta el lunes 9/11 23:59): la ventana y la cinta lo anuncian.
+  var SORTEO_FIN = Date.parse('2026-11-09T23:59:59+01:00');
+  function enSorteo() { return Date.now() < SORTEO_FIN && !(typeof campanaActiva === 'function' && campanaActiva()); }
+  function yaEnSorteo() { try { return !!localStorage.getItem('savia_sorteo'); } catch (e) { return false; } }
   var st = estado();
   var noMostrar = !!(st && (st.suscrito || (st.cerrado && Date.now() - st.cerrado < 7 * 864e5)));
   // Durante la campaña (Black Friday) no hay regalo de bienvenida.
@@ -63,7 +67,9 @@
      durante la campaña (Black Friday), ni en el panel. */
   function cintaPermitida() {
     var e = estado() || {};
-    if (e.suscrito || /admin\.html/.test(location.pathname)) return false;
+    if (/admin\.html/.test(location.pathname) || /\/sorteo\//.test(location.pathname)) return false;
+    if (enSorteo()) { if (yaEnSorteo()) return false; }
+    else if (e.suscrito) return false;
     if (typeof campanaActiva === 'function' && campanaActiva()) return false;
     try { if (sessionStorage.getItem('savia_cinta_off')) return false; } catch (er) {}
     return true;
@@ -77,11 +83,17 @@
     ponerCss();
     var c = document.createElement('div');
     c.className = 'rg-cinta';
-    c.innerHTML = '<button class="rg-cinta-b" type="button" aria-label="Apúntate: acceso anticipado al Black Friday, 10 % y regalo en tu primer pedido">🖤 <b>BLACK FRIDAY</b> · ENTÉRATE</button>' +
+    c.innerHTML = (enSorteo()
+        ? '<button class="rg-cinta-b" type="button" aria-label="Participa en el sorteo de una caja regalo con 4 productos">🎁 <b>SORTEO</b> · PARTICIPA</button>'
+        : '<button class="rg-cinta-b" type="button" aria-label="Apúntate: acceso anticipado al Black Friday, 10 % y regalo en tu primer pedido">🖤 <b>BLACK FRIDAY</b> · ENTÉRATE</button>') +
       '<button class="rg-cinta-x" type="button" aria-label="Ocultar la oferta">×</button>';
     document.body.appendChild(c);
     document.body.classList.add('con-cinta');
-    c.querySelector('.rg-cinta-b').onclick = function () { quitarCinta(); crear(); };
+    c.querySelector('.rg-cinta-b').onclick = function () {
+      // Quien ya es suscriptor va directo a la página del sorteo (allí suma sus redes).
+      if (enSorteo() && (estado() || {}).suscrito) { location.href = '/sorteo/?utm_source=web_cinta'; return; }
+      quitarCinta(); crear();
+    };
     c.querySelector('.rg-cinta-x').onclick = function () {
       try { sessionStorage.setItem('savia_cinta_off', '1'); } catch (er) {}
       quitarCinta();
@@ -95,10 +107,31 @@
     ponerCss();
     var tienda = /tienda\.html/.test(location.pathname);
     var d = document.createElement('div');
-    d.className = 'rg-fondo'; d.setAttribute('role', 'dialog'); d.setAttribute('aria-modal', 'true'); d.setAttribute('aria-label', 'Regalo de bienvenida');
+    d.className = 'rg-fondo'; d.setAttribute('role', 'dialog'); d.setAttribute('aria-modal', 'true'); d.setAttribute('aria-label', enSorteo() ? 'Sorteo de una caja regalo' : 'Regalo de bienvenida');
     d.innerHTML =
       '<div class="rg-caja rg-negro">' +
         '<button class="rg-x" type="button" aria-label="Cerrar">×</button>' +
+        (enSorteo() ?
+        '<div class="rg-pedir">' +
+          '<p class="rg-bf-s">🎁 SORTEO BLACK FRIDAY</p>' +
+          '<div class="rg-bf" style="font-size:34px">Gana una caja regalo</div>' +
+          '<h2 class="rg-tit" style="margin-top:4px">con 4 productos a tu elección</h2>' +
+          '<img src="/assets/img/bf/premio-4.jpg" alt="Jabones, champús, acondicionadores y desodorantes sólidos" style="width:100%;height:auto;border-radius:12px;margin:4px 0 10px">' +
+          '<p class="rg-sub">Apúntate gratis y entras en el sorteo del <strong>martes 10 de noviembre</strong>. Además: <strong>acceso anticipado</strong> al Black Friday y, si quieres probarnos ya, <strong>regalo + 10 %</strong> en tu primer pedido.</p>' +
+          '<form class="rg-form rg-form-sorteo"><input type="email" name="email" required placeholder="Tu email" autocomplete="email" inputmode="email">' +
+            '<label style="display:flex;gap:8px;align-items:flex-start;text-align:left;font-size:12px;line-height:1.4;color:#bbb"><input type="checkbox" name="acepta" style="width:18px;height:18px;margin:1px 0 0;flex:0 0 auto;accent-color:#E0B83A"> <span>Acepto las <a href="/sorteo/bases/" target="_blank" style="color:#E0B83A">bases</a> y suscribirme a la newsletter (te das de baja cuando quieras).</span></label>' +
+            '<button type="submit">Participar</button><p class="rg-err" style="color:#ffb4a8;font-size:13px;margin:0;min-height:1em"></p></form>' +
+          '<p class="rg-legal">Suma +2 participaciones siguiéndonos: <a href="/sorteo/?utm_source=web_ventana">ver el sorteo</a>.</p>' +
+        '</div>' +
+        '<div class="rg-ok">' +
+          '<span class="rg-tag">✓ ¡ESTÁS DENTRO!</span>' +
+          '<div class="rg-bf rg-n" style="font-size:56px;margin-top:10px">1</div>' +
+          '<h2 class="rg-tit rg-nt">participación en el sorteo</h2>' +
+          '<p class="rg-sub">Suma <strong>+1 por Instagram y +1 por TikTok</strong> siguiéndonos e indicando tu usuario en la página del sorteo. Y si quieres probarnos ya, tu <strong>10 % está aplicado</strong> en el carrito.</p>' +
+          '<a class="rg-btn" href="/sorteo/?utm_source=web_ventana" style="margin-bottom:8px">Sumar participaciones</a>' +
+          (tienda ? '<button class="rg-btn rg-seguir" type="button" style="background:#222;color:#E0B83A;width:100%">Seguir comprando</button>' : '<a class="rg-btn" href="tienda.html" style="background:#222;color:#E0B83A">Ir a la tienda</a>') +
+        '</div>'
+        :
         '<div class="rg-pedir">' +
           '<p class="rg-bf-s">🖤 SE ACERCA</p>' +
           '<div class="rg-bf">Black<br>Friday</div>' +
@@ -117,7 +150,7 @@
           '<h2 class="rg-tit">¡Ya estás dentro!</h2>' +
           '<p class="rg-sub">Te avisaremos del <strong>Black Friday antes que a nadie</strong>. Y si quieres probarnos ya, tu <strong>10 % está aplicado</strong> en el carrito y la jabonera + bolsa de sisal irán en tu primer pedido.</p>' +
           (tienda ? '<button class="rg-btn rg-seguir" type="button">Seguir comprando</button>' : '<a class="rg-btn" href="tienda.html">Ir a la tienda</a>') +
-        '</div>' +
+        '</div>') +
       '</div>';
     document.body.appendChild(d);
     requestAnimationFrame(function () { d.classList.add('rg-on'); });
@@ -126,7 +159,34 @@
     d.addEventListener('click', function (e) { if (e.target === d) cerrar(); });
     document.addEventListener('keydown', function (e) { if (e.key === 'Escape') cerrar(); });
     var seg = d.querySelector('.rg-seguir'); if (seg) seg.onclick = cerrar;
-    d.querySelector('.rg-form').onsubmit = function (e) {
+    var fs = d.querySelector('.rg-form-sorteo');
+    if (fs) fs.onsubmit = function (e) {
+      e.preventDefault();
+      var email = (this.email.value || '').trim(), err = this.querySelector('.rg-err');
+      if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)) { err.textContent = 'Revisa el email.'; return false; }
+      if (!this.acepta.checked) { err.textContent = 'Para participar acepta las bases.'; return false; }
+      err.textContent = '';
+      var btn = this.querySelector('button'); btn.disabled = true; btn.textContent = 'Un momento…';
+      var ep = ((window.SAVIA_CONFIG || {}).checkoutEndpoint || '').trim().replace(/\/+$/, '');
+      var fin = function (j) {
+        if (!j || !j.ok) { btn.disabled = false; btn.textContent = 'Participar'; err.textContent = 'No se ha podido registrar. Inténtalo de nuevo.'; return; }
+        guardar({ suscrito: Date.now() });
+        try { localStorage.setItem('savia_sorteo', String(Date.now())); } catch (er) {}
+        if (!j.yaSuscrito) {
+          if (typeof aplicarCodigoTexto === 'function') aplicarCodigoTexto(CODIGO);
+          else try { localStorage.setItem('savia_codigo', JSON.stringify({ code: CODIGO, pct: 10, amountOff: 0 })); } catch (er) {}
+        }
+        var n = j.participaciones || 1;
+        d.querySelector('.rg-n').textContent = n;
+        d.querySelector('.rg-nt').textContent = n === 1 ? 'participación en el sorteo' : 'participaciones en el sorteo';
+        d.querySelector('.rg-caja').classList.add('rg-hecho');
+      };
+      fetch(ep + '/sorteo', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ email: email, acepta: true, canal: 'Web ' + origen() }) })
+        .then(function (r) { return r.json(); }).then(fin).catch(function () { fin(null); });
+      return false;
+    };
+    var fn = d.querySelector('.rg-form:not(.rg-form-sorteo)');
+    if (fn) fn.onsubmit = function (e) {
       e.preventDefault();
       var email = (this.email.value || '').trim(); if (!email) return false;
       var ep = ((window.SAVIA_CONFIG || {}).checkoutEndpoint || '').trim().replace(/\/+$/, '');
