@@ -16,7 +16,7 @@
   }
 
   // import() dinamico: en navegadores que no lo soporten, no rompe (catch).
-  import('https://cdn.jsdelivr.net/npm/motion@latest/+esm')
+  import('https://cdn.jsdelivr.net/npm/motion@14.1.1/+esm')
     .then(function (Motion) {
       var animate = Motion.animate;
       var inView  = Motion.inView;

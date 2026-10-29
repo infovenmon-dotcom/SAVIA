@@ -647,6 +647,24 @@ function initReveal() {
   // relevo con animaciones de muelle si la libreria llega a cargar.
   window.__revealObserver = obs;
   window.__revealItems = elementos;
+
+  // Red de seguridad: si con un scroll rápido el observador (o Motion) no llega
+  // a marcar una sección, nunca debe quedarse invisible. Se muestra todo lo que
+  // ya está en pantalla o por encima, al hacer scroll y a los 2,5 s.
+  const revelarPasados = () => {
+    const limite = window.innerHeight * 0.98;
+    elementos.forEach(el => {
+      if (el.classList.contains('is-visible')) return;
+      if (el.getBoundingClientRect().top < limite) {
+        el.classList.add('is-visible');
+        el.style.opacity = ''; el.style.transform = '';
+      }
+    });
+  };
+  let _rp = null;
+  window.addEventListener('scroll', () => { if (_rp) return; _rp = setTimeout(() => { _rp = null; revelarPasados(); }, 250); }, { passive: true });
+  setTimeout(revelarPasados, 2500);
+  window.addEventListener('beforeprint', () => elementos.forEach(el => el.classList.add('is-visible')));
 }
 
 document.addEventListener('keydown', e => { if (e.key === 'Escape') cerrarFicha(); });
