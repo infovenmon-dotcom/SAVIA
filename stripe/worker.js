@@ -2300,6 +2300,18 @@ const NL_FAVORITO = [
   { cat: 'faciales', t: 'Para el rostro nos gusta ir con delicadeza, y este es de los que solemos recomendar para empezar.' },
 ];
 
+/* Bloque del sorteo para la newsletter semanal (solo mientras está abierto). */
+function _bloqueSorteoNL() {
+  if (Date.now() > Date.parse(SORTEO.fin)) return '';
+  const url = NL_SITE + '/sorteo/?utm_source=newsletter&amp;utm_medium=email&amp;utm_campaign=sorteo';
+  return `<div style="background:#0b0b0b;color:#fff;border-radius:14px;padding:20px 18px;margin:0 0 22px;text-align:center">` +
+    `<div style="font-size:12px;letter-spacing:3px;color:#E0B83A;font-weight:800">🎁 SORTEO BLACK FRIDAY</div>` +
+    `<div style="font-family:Georgia,'Times New Roman',serif;font-size:24px;line-height:1.2;color:#E0B83A;font-weight:700;margin:8px 0 4px">Gana una caja regalo con 4 productos a tu elección</div>` +
+    `<p style="margin:8px 0 14px;font-size:15px;line-height:1.55;color:#eee">Como ya estás suscrito/a, solo te falta confirmar tu participación. Y suma <strong style="color:#E0B83A">+1 por Instagram y +1 por TikTok</strong> si nos sigues. Sorteo el <strong style="color:#E0B83A">martes 10 de noviembre</strong>.</p>` +
+    `<a href="${url}" style="display:inline-block;max-width:100%;box-sizing:border-box;background:#E0B83A;color:#0b0b0b;padding:13px 24px;border-radius:8px;text-decoration:none;font-weight:800;font-size:15px;line-height:1.3">Participar en el sorteo</a>` +
+    `</div>`;
+}
+
 function construirCorreoSemanal(prod, prods, cfg, unsubUrl, resenas) {
   // Una de cada 4 semanas: carta educativa SIN producto (aporta valor, no vende).
   const _wk = nlSemanaIdx();
@@ -2309,6 +2321,7 @@ function construirCorreoSemanal(prod, prods, cfg, unsubUrl, resenas) {
     const htmlE =
       `<div style="font-family:-apple-system,Segoe UI,Roboto,Arial,sans-serif;max-width:600px;margin:0 auto;color:#333;background:#fff">` +
       `<div style="text-align:center;padding:18px 0"><span style="font-size:20px;font-weight:700;color:#6b7a4f">Savia de Alma</span><br><span style="font-size:12px;color:#999;letter-spacing:1px">COSMÉTICA SÓLIDA NATURAL</span></div>` +
+      _bloqueSorteoNL() +
       ap +
       `<div style="border:1px solid #dfe6d2;border-radius:14px;padding:22px;margin:0 0 22px;background:#fbfcf8">` +
         `<div style="font-family:Georgia,'Times New Roman',serif;font-size:15px;color:#6b7a4f;font-weight:700;margin-bottom:4px">🌿 Un minuto para cuidar mejor de ti</div>` +
@@ -2395,6 +2408,7 @@ function construirCorreoSemanal(prod, prods, cfg, unsubUrl, resenas) {
   const html =
     `<div style="font-family:-apple-system,Segoe UI,Roboto,Arial,sans-serif;max-width:600px;margin:0 auto;color:#333;background:#fff">` +
     `<div style="text-align:center;padding:18px 0"><span style="font-size:20px;font-weight:700;color:#6b7a4f">Savia de Alma</span><br><span style="font-size:12px;color:#999;letter-spacing:1px">COSMÉTICA SÓLIDA NATURAL</span></div>` +
+      _bloqueSorteoNL() +
     bannerOferta +
     apertura +
     editorial +
