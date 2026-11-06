@@ -464,6 +464,9 @@ async function crearCheckout(request, env, cors) {
   form.append('metadata[origen]', _lim(org.s) || 'directo');
   if (_lim(org.c)) form.append('metadata[utm_campaign]', _lim(org.c));
   if (promo && promo.code) form.append('metadata[codigo]', String(promo.code).slice(0, 40));
+  // CP del carrito: con él se calculó la zona de envío. Al llegar el pedido se
+  // compara con la dirección que el cliente escribe en Stripe (aviso, sin pasos extra).
+  if (/^\d{5}$/.test(String(body.cp || '').trim())) form.append('metadata[cp]', String(body.cp).trim());
   // Casilla de "acepto recibir comunicaciones": Stripe la exige para poder
   // mandar el correo de recuperación a quien deja el pago a medias.
   form.append('consent_collection[promotions]', 'auto');
@@ -549,6 +552,24 @@ async function enviarEmail(env, { to, subject, html, replyTo, fromName, soloBrev
   return { ok: false, status: 0, body: 'sin proveedor de email', proveedor: null };
 }
 
+/* Compara la dirección que el cliente escribió en Stripe con el código postal
+   que puso en el carrito (con el que se calculó el envío). Devuelve el texto del
+   aviso o '' si todo cuadra. No bloquea nada: solo avisa en el correo del pedido. */
+function _avisoZonaEnvio(a, meta) {
+  const pais = String(a.country || 'ES').toUpperCase();
+  const cpStripe = String(a.postal_code || '').trim();
+  const zStripe = zonaPorCP(cpStripe);
+  const cpCarrito = String(meta.cp || '').trim();
+  const zCarrito = zonaPorCP(cpCarrito);
+  const nombre = z => z === 'baleares' ? 'Baleares' : z === 'no' ? 'Canarias, Ceuta o Melilla (no enviamos)' : 'Península';
+  if (pais !== 'ES') return `La dirección es de fuera de España (${pais}). Solo enviamos a Península y Baleares.`;
+  if (zStripe === 'no') return `El código postal de la dirección (${cpStripe}) es de ${nombre('no')}. Contacta con el cliente para reembolsar o acordar el envío.`;
+  if (zCarrito && zStripe && zCarrito !== zStripe) {
+    return `En el carrito puso el CP ${cpCarrito} (${nombre(zCarrito)}) pero la dirección de envío es ${cpStripe} (${nombre(zStripe)}). El envío se cobró como ${nombre(zCarrito)}.`;
+  }
+  return '';
+}
+
 /* ---------- Email de aviso de pedido ----------
    Recibe la sesión YA expandida (con line_items). */
 async function enviarEmailPedido(full, env) {
@@ -578,9 +599,11 @@ async function enviarEmailPedido(full, env) {
       }).join('') + '</ul>'
     : '<p>(ver el detalle en el panel de Stripe)</p>';
   const nombreEnvio = ship.name || cd.name || '';
+  const avisoEnvio = _avisoZonaEnvio(a, full.metadata || {});
 
   const html =
     `<h2>🛒 Nuevo pedido en Savia de Alma</h2>` +
+    (avisoEnvio ? `<div style="background:#FDECEA;border:2px solid #C0392B;border-radius:8px;padding:12px 14px;margin:10px 0;color:#7B1E14"><strong>⚠️ Revisa el envío antes de mandarlo.</strong><br>${avisoEnvio}</div>` : '') +
     `<p><strong>Cliente:</strong> ${cd.name || ''} &lt;${cd.email || '—'}&gt;</p>` +
     `<h3>Dirección de envío</h3>` +
     `<p>${nombreEnvio ? nombreEnvio + '<br>' : ''}${dir || '—'}</p>` +
@@ -591,7 +614,7 @@ async function enviarEmailPedido(full, env) {
 
   await enviarEmail(env, {
     to: env.ORDER_EMAIL_TO,
-    subject: `Nuevo pedido — ${total}`,
+    subject: `${avisoEnvio ? '⚠️ REVISAR ENVÍO · ' : ''}Nuevo pedido — ${total}`,
     html,
     replyTo: cd.email || undefined,
     fromName: 'Tienda Savia de Alma',
