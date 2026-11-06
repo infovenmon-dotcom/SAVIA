@@ -91,8 +91,8 @@
         <li>Síguenos en TikTok <a href="https://www.tiktok.com/@saviadealma" target="_blank" rel="noopener">@saviadealma</a> → <b>+1</b></li>
       </ol>
       <div class="solo-hoy" id="solo-hoy" hidden style="margin:14px 0;padding:14px 16px;border:2px solid #E5B95C;border-radius:12px;background:rgba(229,185,92,.12);text-align:left">
-        <p style="margin:0 0 6px;font-weight:800;color:#E5B95C;letter-spacing:.04em">⚡ SOLO HOY · HASTA 5 PARTICIPACIONES MÁS</p>
-        <p style="margin:0">¿Quieres más posibilidades? Comenta en <a href="https://www.instagram.com/savia_dealma/" target="_blank" rel="noopener">nuestra publicación del sorteo en Instagram</a> a quién le regalarías la caja, mencionándole. <b>Cada persona distinta que menciones = +1 participación</b> (máx. 5). Hasta hoy a las 23:59.</p>
+        <p style="margin:0 0 6px;font-weight:800;color:#E5B95C;letter-spacing:.04em">⚡ SOLO HOY · PARTICIPACIONES SIN LÍMITE</p>
+        <p style="margin:0">¿Quieres más posibilidades? Comenta en <a href="https://www.instagram.com/savia_dealma/" target="_blank" rel="noopener">nuestra publicación del sorteo en Instagram</a> a quién le regalarías la caja, mencionándole. <b>Cada persona distinta que menciones = +1 participación, sin límite.</b> Hasta hoy a las 23:59.</p>
       </div>
       <p class="sub" style="font-size:14px">¿Ya estás en nuestra newsletter? <strong>Ya participas</strong> con 1. Pon tu email y tus usuarios para sumar las otras 2: se guardan para <strong>todos nuestros sorteos</strong>.</p>
       <form id="form-sorteo" novalidate>
@@ -175,7 +175,7 @@
     var raiz = document.getElementById('sorteo');
     if (Date.now() > FIN) { raiz.querySelector('.pedir').hidden = true; raiz.querySelector('.cerrado').hidden = false; return; }
 
-    // Último día (9/11, hora de Madrid): +1 por cada amigo mencionado en Instagram (máx. 5). ?hoy=1 para previsualizar
+    // Último día (9/11, hora de Madrid): +1 por cada amigo mencionado en Instagram (sin límite). ?hoy=1 para previsualizar
     var HOY_INI = Date.parse('2026-11-09T00:00:00+01:00');
     var soloHoy = (Date.now() >= HOY_INI && Date.now() <= FIN) || /[?&]hoy=1/.test(location.search);
     if (soloHoy) document.getElementById('solo-hoy').hidden = false;
@@ -185,7 +185,7 @@
       document.getElementById('n-part').textContent = n;
       document.getElementById('t-part').textContent = n === 1 ? 'participación en el sorteo' : 'participaciones en el sorteo';
       document.getElementById('m-part').textContent = n >= 3
-        ? (soloHoy ? '¡Tienes las 3 de la web! Solo hoy: suma hasta 5 más comentando en Instagram a quién le regalarías la caja.' : '¡Tienes el máximo de participaciones!')
+        ? (soloHoy ? '¡Tienes las 3 de la web! Solo hoy: suma participaciones sin límite comentando en Instagram a quién le regalarías la caja.' : '¡Tienes el máximo de participaciones!')
         : (n === 2 ? 'Te falta una para el máximo. ' : '¿Quieres sumar más? ') + 'Síguenos y vuelve a enviar el formulario con el mismo email añadiendo tu usuario.';
       document.querySelector('.seguir').style.display = n >= 3 ? 'none' : '';
       raiz.classList.add('hecho');
