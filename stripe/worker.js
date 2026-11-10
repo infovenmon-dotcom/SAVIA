@@ -1603,6 +1603,21 @@ async function manejarEtiquetaCTT(request, env, cors) {
 
 /* Diagnóstico: envía un email de prueba (Resend o Brevo) y devuelve el resultado
    + info de la cuenta/dominio, para depurar la entregabilidad. */
+async function manejarCorreoSuelto(request, env, cors) {
+  if (!_authAdmin(request, env)) return jsonResp({ error: 'no_autorizado' }, 401, cors);
+  let b = {}; try { b = await request.json(); } catch { b = {}; }
+  const to = String(b.to || '').trim().toLowerCase();
+  if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(to)) return jsonResp({ ok: false, motivo: 'email no válido' }, 400, cors);
+  const subject = String(b.subject || '').slice(0, 200);
+  const texto = String(b.texto || '').slice(0, 20000);
+  if (!subject || !texto) return jsonResp({ ok: false, motivo: 'faltan asunto o texto' }, 400, cors);
+  const esc = t => t.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+  const cuerpo = esc(texto).replace(/(https?:\/\/[^\s<]+)/g, '<a href="$1" style="color:#6b7a4f">$1</a>').split(/\n{2,}/).map(par => `<p style="margin:0 0 14px">${par.replace(/\n/g, '<br>')}</p>`).join('');
+  const html = `<div style="font-family:Arial,Helvetica,sans-serif;font-size:15px;line-height:1.55;color:#2b2b2b;max-width:560px">${cuerpo}</div>`;
+  const r = await enviarEmail(env, { to, subject, html, replyTo: env.ORDER_EMAIL_FROM || env.ORDER_EMAIL_TO });
+  return jsonResp({ ok: !!r.ok, proveedor: r.proveedor || null, status: r.status }, 200, cors);
+}
+
 async function manejarTestEmail(request, env, cors) {
   if (!_authAdmin(request, env)) return jsonResp({ error: 'no_autorizado' }, 401, cors);
   const proveedor = env.RESEND_API_KEY ? 'resend' : (env.EMAIL_API_KEY ? 'brevo' : null);
@@ -3802,6 +3817,10 @@ export default {
       }
       if (path === '/admin/envio/etiqueta' && request.method === 'POST') {
         return await manejarEtiquetaCTT(request, env, cors);
+      }
+      // Panel: correo suelto a un cliente desde info@saviadealma.com (p. ej. ganador del sorteo).
+      if (path === '/admin/correo' && request.method === 'POST') {
+        return await manejarCorreoSuelto(request, env, cors);
       }
       if (path === '/admin/test-email' && request.method === 'POST') {
         return await manejarTestEmail(request, env, cors);
