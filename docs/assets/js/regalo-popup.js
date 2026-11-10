@@ -248,5 +248,27 @@
     l.onclick = function (e) { if (!(estado() || {}).suscrito) { e.preventDefault(); crear(); } };
     b.appendChild(l);
   }
-  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', franjaBF); else franjaBF();
+  // Durante el acceso anticipado no hay 10 % ni regalo de bienvenida: la web habla del Black Friday.
+  function webAcceso() {
+    if (!enAcceso()) return;
+    franjaBF();
+    document.querySelectorAll('.btn-regalo').forEach(function (bt) {
+      var l = bt.querySelector('.br-largo'), c = bt.querySelector('.br-corto');
+      if (l) l.textContent = 'Tu acceso al Black Friday'; if (c) c.textContent = 'Black Friday';
+      bt.firstChild && bt.firstChild.nodeType === 3 && (bt.firstChild.textContent = ' 🖤 ');
+      bt.setAttribute('aria-label', 'Apúntate y recibe tu acceso anticipado al Black Friday');
+    });
+    document.querySelectorAll('.benefit').forEach(function (bn) {
+      if (/newsletter/i.test(bn.textContent) && /10/.test(bn.textContent))
+        bn.innerHTML = '<span class="ck">✓</span><span>Suscríbete a la <b>newsletter</b> y entra ya en el <b>Black Friday</b>: <span class="env-pill">hasta −40 %</span>, 10 días antes que nadie. <a class="apuntarme" href="#newsletter">Quiero mi acceso</a></span>';
+    });
+    var nl = document.getElementById('newsletter');
+    if (nl) {
+      var h = nl.querySelector('h2'); if (h) h.textContent = 'Tu acceso anticipado al Black Friday';
+      var p = nl.querySelector('p'); if (p) p.innerHTML = 'Apúntate a nuestra newsletter y te enviamos <strong>al momento</strong> tu acceso: <strong>−20 % en toda la tienda + 4×3</strong> (hasta −40 %), 10 días antes que nadie.';
+      var bt2 = nl.querySelector('button[type=submit]'); if (bt2) bt2.textContent = 'Quiero mi acceso';
+      var ok = document.getElementById('newsletter-ok'); if (ok) ok.innerHTML = '🖤 ¡Gracias! Revisa tu correo: te hemos enviado tu <strong>acceso al Black Friday</strong>.';
+    }
+  }
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', webAcceso); else webAcceso();
 })();

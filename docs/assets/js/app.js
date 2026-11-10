@@ -736,6 +736,8 @@ function iniciarBannerRotativo() {
   if (!b) return;
   // Durante el Black Friday no hay 10 % ni regalo de bienvenida: no se rota.
   if (document.documentElement.classList.contains('en-campana') || (typeof campanaActiva === 'function' && campanaActiva())) return;
+  // Acceso anticipado (10/11 → 20/11): no hay 10 % de bienvenida; la franja muestra el aviso del Black Friday.
+  if (Date.now() >= Date.parse('2026-11-10T00:00:00+01:00') && Date.now() < Date.parse('2026-11-20T00:00:00+01:00')) return;
   const slides = [
     b.innerHTML.trim(),
     (Date.now() < Date.parse('2026-11-09T23:59:59+01:00')
