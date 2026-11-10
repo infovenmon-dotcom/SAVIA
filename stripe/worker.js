@@ -1859,6 +1859,24 @@ async function manejarSuscripcion(request, env, cors) {
       resumen + bloqueBF +
       `<p>Y, como siempre, cada domingo te escribimos con algo útil sobre cuidado natural y cosmética sólida. 💚</p>` +
       cta + pie + `</div>`;
+  } else if (ahoraMs >= Date.parse(ACCESO_DESDE) && ahoraMs < Date.parse(CAMPANA.desde)) {
+    // Nuevo suscriptor durante el acceso anticipado: no hay regalo ni 10 % de bienvenida,
+    // solo su acceso al Black Friday.
+    subject = '🖤 Tu acceso anticipado al Black Friday — Savia de Alma';
+    html =
+      `<div style="font-family:-apple-system,Segoe UI,Roboto,Arial,sans-serif;max-width:560px;margin:0 auto;color:#333">` +
+      `<h2 style="color:#6b7a4f">¡Bienvenida/o a Savia de Alma! 🌿</h2>` +
+      `<p>Gracias por unirte. Llegas en el mejor momento: nuestro <strong>Black Friday</strong> ya está abierto para los suscriptores, 10 días antes que nadie.</p>` +
+      bloqueBF +
+      `<p style="margin-top:18px">Además, cada <strong>domingo</strong> te escribimos con <strong>algo útil</strong> —nunca solo promociones:</p>` +
+      `<ul style="padding-left:18px;color:#444;line-height:1.7;margin:6px 0 0">` +
+        `<li>💡 Un consejo de cuidado (o de nuestra experta)</li>` +
+        `<li>🌿 El ingrediente de la semana</li>` +
+        `<li>❓ Un mito que desmontamos</li>` +
+        `<li>⭐ Una opinión real de clientes</li>` +
+        `<li>♻️ Un pequeño gesto sostenible</li>` +
+      `</ul>` +
+      pie + `</div>`;
   } else {
     // Nuevo suscriptor: bienvenida (el regalo llega en su primer pedido).
     subject = '🌿 Tu 10 % de bienvenida — Savia de Alma';
