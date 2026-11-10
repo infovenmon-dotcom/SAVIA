@@ -10,6 +10,9 @@
   function guardar(v) { try { localStorage.setItem(KEY, JSON.stringify(v)); } catch (e) {} }
   // Sorteo Black Friday (hasta el lunes 9/11 23:59): la ventana y la cinta lo anuncian.
   var SORTEO_FIN = Date.parse('2026-11-09T23:59:59+01:00');
+  // Acceso anticipado al Black Friday para suscriptores (10/11 → 20/11): quien se apunta recibe su acceso al momento.
+  var ACC_INI = Date.parse('2026-11-10T00:00:00+01:00'), ACC_FIN = Date.parse('2026-11-20T00:00:00+01:00');
+  function enAcceso() { var n = Date.now(); return n >= ACC_INI && n < ACC_FIN; }
   function enSorteo() { return Date.now() < SORTEO_FIN && !(typeof campanaActiva === 'function' && campanaActiva()); }
   function yaEnSorteo() { try { return !!localStorage.getItem('savia_sorteo'); } catch (e) { return false; } }
   var st = estado();
@@ -85,7 +88,7 @@
     c.className = 'rg-cinta';
     c.innerHTML = (enSorteo()
         ? '<button class="rg-cinta-b" type="button" aria-label="Participa en el sorteo de una caja regalo con 4 productos">🎁 <b>SORTEO</b> · PARTICIPA</button>'
-        : '<button class="rg-cinta-b" type="button" aria-label="Apúntate: acceso anticipado al Black Friday, 10 % y regalo en tu primer pedido">🖤 <b>BLACK FRIDAY</b> · ENTÉRATE</button>') +
+        : (enAcceso() ? '<button class="rg-cinta-b" type="button" aria-label="El Black Friday ya ha empezado para suscriptores: apúntate y recibe tu acceso">🖤 <b>BLACK FRIDAY YA</b> · HASTA −40 %</button>' : '<button class="rg-cinta-b" type="button" aria-label="Apúntate: acceso anticipado al Black Friday, 10 % y regalo en tu primer pedido">🖤 <b>BLACK FRIDAY</b> · ENTÉRATE</button>')) +
       '<button class="rg-cinta-x" type="button" aria-label="Ocultar la oferta">×</button>';
     document.body.appendChild(c);
     document.body.classList.add('con-cinta');
@@ -133,22 +136,22 @@
         '</div>'
         :
         '<div class="rg-pedir">' +
-          '<p class="rg-bf-s">🖤 SE ACERCA</p>' +
+          (enAcceso() ? '<p class="rg-bf-s">🖤 YA HA EMPEZADO · SOLO SUSCRIPTORES</p>' : '<p class="rg-bf-s">🖤 SE ACERCA</p>') +
           '<div class="rg-bf">Black<br>Friday</div>' +
-          '<h2 class="rg-tit">¿Quieres saber lo que hemos preparado?</h2>' +
-          '<p class="rg-sub">Apúntate y <strong>entérate antes que nadie</strong>: los suscriptores entran con <strong>acceso anticipado</strong>.</p>' +
+          (enAcceso() ? '<h2 class="rg-tit">Hasta −40 %, 10 días antes que nadie</h2>' : '<h2 class="rg-tit">¿Quieres saber lo que hemos preparado?</h2>') +
+          (enAcceso() ? '<p class="rg-sub">Nuestros suscriptores ya tienen abierto el Black Friday: <strong>−20 % en todo + 4×3</strong>. Apúntate y <strong>te enviamos tu acceso al momento</strong> a tu correo.</p>' : '<p class="rg-sub">Apúntate y <strong>entérate antes que nadie</strong>: los suscriptores entran con <strong>acceso anticipado</strong>.</p>') +
           '<hr class="rg-sep">' +
           '<p class="rg-sub" style="margin-top:4px">Y si quieres probarnos ya, en tu <strong>primer pedido</strong> te regalamos:</p>' +
           '<div class="rg-imgs"><img src="assets/img/products/jabonera-bambu.jpg" alt="Jabonera de bambú"><span class="rg-plus">+</span><img src="assets/img/products/esponja-exfoliante.jpg" alt="Bolsa de sisal"></div>' +
           '<p class="rg-diez"><b>4×3</b> siempre en todos los productos<br>y <b>−10 %</b> en tu primer pedido</p>' +
-          '<form class="rg-form"><input type="email" name="email" required placeholder="Tu email" autocomplete="email" inputmode="email"><button type="submit">Apuntarme</button></form>' +
+          '<form class="rg-form"><input type="email" name="email" required placeholder="Tu email" autocomplete="email" inputmode="email"><button type="submit">' + (enAcceso() ? 'Quiero mi acceso' : 'Apuntarme') + '</button></form>' +
           '<p class="rg-legal">Un correo a la semana, sin spam. Te das de baja cuando quieras. <a href="privacidad.html">Privacidad</a></p>' +
         '</div>' +
         '<div class="rg-ok">' +
           '<span class="rg-tag">✓ ¡HECHO!</span>' +
           '<div class="rg-bf" style="font-size:40px;margin-top:10px">Black Friday</div>' +
           '<h2 class="rg-tit">¡Ya estás dentro!</h2>' +
-          '<p class="rg-sub">Te avisaremos del <strong>Black Friday antes que a nadie</strong>. Y si quieres probarnos ya, tu <strong>10 % está aplicado</strong> en el carrito y la jabonera + bolsa de sisal irán en tu primer pedido.</p>' +
+          (enAcceso() ? '<p class="rg-sub"><strong>Mira tu correo:</strong> te acabamos de enviar tu enlace de acceso al Black Friday (si no lo ves, revisa Promociones o Spam).</p>' : '<p class="rg-sub">Te avisaremos del <strong>Black Friday antes que a nadie</strong>. Y si quieres probarnos ya, tu <strong>10 % está aplicado</strong> en el carrito y la jabonera + bolsa de sisal irán en tu primer pedido.</p>') +
           (tienda ? '<button class="rg-btn rg-seguir" type="button">Seguir comprando</button>' : '<a class="rg-btn" href="tienda.html">Ir a la tienda</a>') +
         '</div>') +
       '</div>';
