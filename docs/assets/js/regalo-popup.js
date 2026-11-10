@@ -140,10 +140,12 @@
           '<div class="rg-bf">Black<br>Friday</div>' +
           (enAcceso() ? '<h2 class="rg-tit">Hasta −40 %, 10 días antes que nadie</h2>' : '<h2 class="rg-tit">¿Quieres saber lo que hemos preparado?</h2>') +
           (enAcceso() ? '<p class="rg-sub">Nuestros suscriptores ya tienen abierto el Black Friday: <strong>−20 % en todo + 4×3</strong>. Apúntate y <strong>te enviamos tu acceso al momento</strong> a tu correo.</p>' : '<p class="rg-sub">Apúntate y <strong>entérate antes que nadie</strong>: los suscriptores entran con <strong>acceso anticipado</strong>.</p>') +
-          '<hr class="rg-sep">' +
+          (enAcceso() ? '' : (
+            '<hr class="rg-sep">' +
           '<p class="rg-sub" style="margin-top:4px">Y si quieres probarnos ya, en tu <strong>primer pedido</strong> te regalamos:</p>' +
           '<div class="rg-imgs"><img src="assets/img/products/jabonera-bambu.jpg" alt="Jabonera de bambú"><span class="rg-plus">+</span><img src="assets/img/products/esponja-exfoliante.jpg" alt="Bolsa de sisal"></div>' +
-          '<p class="rg-diez"><b>4×3</b> siempre en todos los productos<br>y <b>−10 %</b> en tu primer pedido</p>' +
+          '<p class="rg-diez"><b>4×3</b> siempre en todos los productos<br>y <b>−10 %</b> en tu primer pedido</p>'
+          )) +
           '<form class="rg-form"><input type="email" name="email" required placeholder="Tu email" autocomplete="email" inputmode="email"><button type="submit">' + (enAcceso() ? 'Quiero mi acceso' : 'Apuntarme') + '</button></form>' +
           '<p class="rg-legal">Un correo a la semana, sin spam. Te das de baja cuando quieras. <a href="privacidad.html">Privacidad</a></p>' +
         '</div>' +
