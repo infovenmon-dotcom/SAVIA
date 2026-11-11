@@ -241,6 +241,7 @@
   // Franja superior durante el acceso anticipado: aviso del Black Friday para suscriptores.
   function franjaBF() {
     if (!enAcceso()) return;
+    if (typeof accesoGuardado === 'function' && accesoGuardado()) return; // ya tiene su acceso
     var b = document.querySelector('.banner-promo'); if (!b || b.querySelector('.bp-bf')) return;
     var l = document.createElement('a'); l.className = 'bp-bf'; l.href = '/black-friday/';
     l.style.cssText = 'display:block;margin-top:4px;color:#F2D59B;font-weight:700;text-decoration:underline;text-underline-offset:3px';

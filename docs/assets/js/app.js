@@ -59,6 +59,20 @@ function bloquePrecio(p, { grande = false } = {}) {
   const ahora = precioDe(p);
   const antes = precioAntesDe(p);
   const style = grande ? ' style="font-size:1.4rem"' : '';
+  // Black Friday con acceso anticipado: el suscrito ve ya en cada producto el precio que paga
+  // (solo con su enlace personal; el público general sigue viendo el precio normal → paridad Amazon).
+  const _c = (typeof campanaActiva === 'function') ? campanaActiva() : null;
+  if (_c && typeof accesoGuardado === 'function' && accesoGuardado() && typeof precioCarritoDe === 'function') {
+    const bf = precioCarritoDe(p), base = antes !== null ? antes : ahora;
+    if (bf < base) {
+      return `<div class="card-precio tiene-oferta precio-bf"${style}>`
+        + `<span class="precio-antes">${eur(base)}</span> `
+        + `<span class="precio-ahora">${eur(bf)}</span> `
+        + `<span class="precio-dto" style="background:#0b0b0b;color:#E0B83A">-${dtoPorcentaje(base, bf)}% BF</span> `
+        + `<small>IVA incl.</small>`
+        + `<div style="font-size:.72rem;font-weight:600;color:#9a7a14;margin-top:3px;line-height:1.25">🖤 Y con 4×3: llévate 4, paga 3 · hasta −40 %</div></div>`;
+    }
+  }
   if (antes !== null) {
     return `<div class="card-precio tiene-oferta"${style}>`
       + `<span class="precio-antes">${eur(antes)}</span> `
