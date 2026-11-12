@@ -19,6 +19,13 @@ window.SAVIA_CONFIG = {
         checkoutEndpoint: "https://savia-pago.tu-usuario.workers.dev", */
   checkoutEndpoint: "https://savia-pago.info-venmon.workers.dev",
 
+  /* PÍXELES DE PUBLICIDAD (solo se cargan si el visitante acepta las cookies)
+     metaPixelId:   número del píxel de Meta (Administrador de eventos → Orígenes de datos)
+     tiktokPixelId: ID del píxel de TikTok (TikTok Ads → Herramientas → Eventos)
+     Vacío ("") = no se carga nada. */
+  metaPixelId: "",
+  tiktokPixelId: "",
+
   /* PRODUCTOS AGOTADOS (sin stock) — lista rápida
      Pon aquí los "handle" de los productos sin stock. Esos mostrarán la etiqueta
      "Agotado" y el botón "Comprar en Amazon" en vez de "Añadir al carrito".
