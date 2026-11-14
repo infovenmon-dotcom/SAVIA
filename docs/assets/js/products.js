@@ -2357,8 +2357,7 @@ window.SAVIA_DATA = {
         "BIODEGRADABLE: sin plásticos ni fibras sintéticas.",
         "CON NUEZ MOLIDA: exfoliación suave de origen natural.",
         "CON CORDÓN: cuélgala para que se seque bien."
-      ],
-      "proximamente": true
+      ]
     },
     {
       "emoji": "🧼",
