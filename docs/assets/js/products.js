@@ -2717,8 +2717,7 @@ window.SAVIA_DATA = {
         "LA ESPUMA SE MONTA, NO SE APLICA: por eso hacen falta el bol y la brocha.",
         "SIN PLÁSTICO: el jabón es sólido, se acabaron los botes de espuma.",
         "PARA REGALAR: llega como un conjunto, no como piezas sueltas."
-      ],
-      "proximamente": true
+      ]
     }
   ]
 };
