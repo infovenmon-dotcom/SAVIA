@@ -144,11 +144,10 @@
     d.setAttribute('aria-label', 'Aviso de cookies');
     d.style.cssText = 'position:fixed;left:12px;right:12px;bottom:12px;z-index:9998;max-width:560px;margin:0 auto;background:#fffdf8;color:#2b2b2b;border:1px solid #e7ded2;border-radius:14px;box-shadow:0 10px 30px rgba(0,0,0,.18);padding:14px 16px;font:14px/1.45 -apple-system,Segoe UI,Roboto,Arial,sans-serif';
     d.innerHTML =
-      '<p style="margin:0 0 10px">🍪 Usamos cookies de <strong>Meta (Instagram/Facebook) y TikTok</strong> para medir nuestros anuncios y mostrarte ofertas que te interesen. ' +
-      'Puedes aceptarlas o rechazarlas: la tienda funciona igual. <a href="/privacidad.html" style="color:#1D6B50">Más información</a>.</p>' +
+      '<p style="margin:0 0 10px">🍪 <strong>¿Una galletita?</strong> Las usamos para saber qué anuncios te han traído hasta aquí. Tú decides: la tienda funciona igual. <a href="/privacidad.html" style="color:#1D6B50">Más info</a></p>' +
       '<div style="display:flex;gap:8px;justify-content:flex-end;flex-wrap:wrap">' +
-      '<button type="button" data-c="no" style="padding:9px 16px;border-radius:999px;border:1px solid #1D6B50;background:#fff;color:#1D6B50;font-weight:700;cursor:pointer">Rechazar</button>' +
-      '<button type="button" data-c="si" style="padding:9px 16px;border-radius:999px;border:0;background:#1D6B50;color:#fff;font-weight:700;cursor:pointer">Aceptar</button>' +
+      '<button type="button" data-c="no" style="padding:9px 16px;border-radius:999px;border:1px solid #1D6B50;background:#fff;color:#1D6B50;font-weight:700;cursor:pointer">No, gracias</button>' +
+      '<button type="button" data-c="si" style="padding:9px 16px;border-radius:999px;border:0;background:#1D6B50;color:#fff;font-weight:700;cursor:pointer">Vale 🍪</button>' +
       '</div>';
     d.addEventListener('click', function (ev) {
       var b = ev.target.closest('button[data-c]'); if (!b) return;
