@@ -23,7 +23,7 @@ window.SAVIA_CONFIG = {
      metaPixelId:   número del píxel de Meta (Administrador de eventos → Orígenes de datos)
      tiktokPixelId: ID del píxel de TikTok (TikTok Ads → Herramientas → Eventos)
      Vacío ("") = no se carga nada. */
-  metaPixelId: "",
+  metaPixelId: "1137867945797162",
   tiktokPixelId: "",
 
   /* PRODUCTOS AGOTADOS (sin stock) — lista rápida
