@@ -110,8 +110,11 @@
   var D = function () { return (window.SAVIA_DATA && window.SAVIA_DATA.products) || []; };
   var prod = function (h) { return D().find(function (p) { return p.handle === h; }); };
   var vende = function (h) { return window.Carrito ? Carrito.vendible(h) : !!prod(h); };
-  var precio = function (p) { return (typeof precioDe === 'function') ? precioDe(p) : p.price; };
+  var precio = function (p) { return (typeof precioCarritoDe === 'function') ? precioCarritoDe(p) : ((typeof precioDe === 'function') ? precioDe(p) : p.price); };
   var eur = function (n) { return n.toFixed(2).replace('.', ',') + ' €'; };
+  var normal = function (p) { return (typeof precioDe === 'function') ? precioDe(p) : p.price; };
+  /* Precio de una unidad: durante el Black Friday, el normal tachado y el rebajado. */
+  var pu = function (p) { var a = normal(p), b = precio(p); return b < a ? '<s style="opacity:.6;font-weight:400">' + eur(a) + '</s> ' + eur(b) : eur(b); };
   var esc = function (s) { return String(s == null ? '' : s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/"/g, '&quot;'); };
   var img = function (p) { var u = p.image || ''; return (u && u[0] !== '/' && !/^https?:/.test(u)) ? '/' + u : u; };
 
@@ -121,7 +124,9 @@
     var total = ps.reduce(function (a, b) { return a + b; }, 0);
     var gratis = 0;
     for (var i = 0; i < Math.floor(ps.length / 4); i++) gratis += ps[i];
-    return { total: total, gratis: gratis, pagas: total - gratis };
+    // Total sin ninguna rebaja (lo que se tacha): precio normal de todos.
+    var sinDto = handles.map(prod).filter(Boolean).map(normal).reduce(function (a, b) { return a + b; }, 0);
+    return { total: Math.max(total, sinDto), gratis: gratis, pagas: total - gratis };
   }
 
   function anadirVarios(handles) {
@@ -154,7 +159,7 @@
       if (p && li) {
         var im = li.querySelector('img'); if (im) { im.src = img(p); im.alt = p.title; }
         var a = li.querySelector('.ritual-nom'); if (a) { a.href = '/producto/' + p.handle + '/'; a.textContent = p.title; }
-        var pr = li.querySelector('.ritual-pu'); if (pr) pr.textContent = eur(precio(p));
+        var pr = li.querySelector('.ritual-pu'); if (pr) pr.innerHTML = pu(p);
       }
       actualizarRitual(cont, s.closest('[data-ritual]').getAttribute('data-ritual'));
     });
@@ -170,7 +175,7 @@
     return '<li>' +
       '<img src="' + esc(img(p)) + '" alt="' + esc(p.title) + '" width="160" height="160" loading="lazy">' +
       '<div class="ritual-info"><a class="ritual-nom" href="/producto/' + p.handle + '/">' + esc(p.title) + '</a>' +
-      '<span class="ritual-pu">' + eur(precio(p)) + '</span>' +
+      '<span class="ritual-pu">' + pu(p) + '</span>' +
       (alternativas.length > 1
         ? '<label class="ritual-cambiar"><span>Cambiar por</span><select id="r-' + rid + '-' + i + '" data-hueco>' +
           alternativas.map(function (x) { return '<option value="' + x.handle + '"' + (x.handle === h ? ' selected' : '') + '>' + esc(x.title) + '</option>'; }).join('') +
@@ -193,7 +198,7 @@
     var t = totales(elegidos(cont, rid));
     card.querySelector('.ritual-precio').innerHTML =
       '<s>' + eur(t.total) + '</s> <strong>' + eur(t.pagas) + '</strong>' +
-      '<span>Con el 4×3, el de menor precio (' + eur(t.gratis) + ') te sale gratis</span>';
+      '<span>' + ((typeof campanaActiva === 'function' && campanaActiva()) ? '🖤 Black Friday −20 % y con el 4×3' : 'Con el 4×3') + ', el de menor precio (' + eur(t.gratis) + ') te sale gratis</span>';
   }
 
   /* ---------- Pagina /encuentra-tu-ritual/ ---------- */
@@ -240,7 +245,7 @@
           '<a href="/producto/' + p.handle + '/"><img src="' + esc(img(p)) + '" alt="' + esc(p.title) + '" width="200" height="200" loading="lazy"></a>' +
           '<h3><a href="/producto/' + p.handle + '/">' + esc(p.title) + '</a></h3>' +
           '<p class="sel-short">' + esc((p.short || '').split('·')[0]) + '</p>' +
-          '<p class="sel-precio">' + eur(precio(p)) + '</p>' +
+          '<p class="sel-precio">' + pu(p) + '</p>' +
           '<button class="btn btn-secundario btn-sm btn-bloque" type="button" data-anadir-uno="' + p.handle + '">Añadir</button>' +
           '</article>';
       };

@@ -21,6 +21,13 @@
       el.innerHTML = antes !== null
         ? `<span class="precio-antes">${eurFicha(antes)}</span> <span class="precio-ahora">${eurFicha(ahora)}</span>`
         : eurFicha(ahora);
+      // Black Friday: precio rebajado también en las páginas de familia.
+      const _c = (typeof campanaActiva === 'function') ? campanaActiva() : null;
+      if (_c && typeof precioCarritoDe === 'function') {
+        const bf = precioCarritoDe(p), base = antes !== null ? antes : ahora;
+        if (bf < base) el.innerHTML = `<span class="precio-antes">${eurFicha(base)}</span> <span class="precio-ahora">${eurFicha(bf)}</span> <span class="precio-dto" style="background:#0b0b0b;color:#E0B83A">-${dtoPorcentaje(base, bf)}% BF</span>`
+          + `<span style="display:block;font-size:.78rem;font-weight:600;color:#9a7a14;margin-top:4px">🖤 Y con 4×3: llévate 4, paga 3</span>`;
+      }
     });
     document.querySelectorAll('[data-comprar-handle]').forEach(btn => {
       const p = SAVIA_DATA.products.find(x => x.handle === btn.dataset.comprarHandle);
