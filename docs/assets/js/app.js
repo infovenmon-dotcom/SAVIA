@@ -62,7 +62,7 @@ function bloquePrecio(p, { grande = false } = {}) {
   // Black Friday con acceso anticipado: el suscrito ve ya en cada producto el precio que paga
   // (solo con su enlace personal; el público general sigue viendo el precio normal → paridad Amazon).
   const _c = (typeof campanaActiva === 'function') ? campanaActiva() : null;
-  if (_c && typeof accesoGuardado === 'function' && accesoGuardado() && typeof precioCarritoDe === 'function') {
+  if (_c && typeof precioCarritoDe === 'function') {
     const bf = precioCarritoDe(p), base = antes !== null ? antes : ahora;
     if (bf < base) {
       return `<div class="card-precio tiene-oferta precio-bf"${style}>`
