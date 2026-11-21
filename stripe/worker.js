@@ -2924,8 +2924,9 @@ function construirCorreoBF(tipo, unsub, enlaceAcceso, ganador, ctx) {
       ? `<div style="border:1px solid #E0B83A;border-radius:10px;padding:14px 16px;margin:18px 0;background:#fffaf0;text-align:center">` +
         `<div style="font-size:12px;letter-spacing:2px;color:#9a7a14;font-weight:800">🎁 COMPRA Y PARTICIPA</div>` +
         `<p style="margin:6px 0 0;font-size:16px"><strong>Sorteamos 3 tarjetas regalo</strong> entre todos los pedidos del 20 al 30 de noviembre.</p>` +
-        `<p style="margin:6px 0 0">Cada tarjeta vale <strong>lo mismo que el pedido ganador</strong> (hasta 100&nbsp;€): si te toca, ese pedido te sale gratis. No tienes que hacer nada más: cada pedido participa solo.</p>` +
-        `<p style="margin:8px 0 0;font-size:12px;color:#777">Para ti o para regalar a quien más quieres. <a href="${NL_SITE}/sorteo-tarjetas-regalo/${utm}" style="color:#777">Consulta las bases</a>.</p></div>`
+        `<p style="margin:6px 0 0">Si tu pedido sale elegido, te regalamos una <strong>tarjeta regalo por el mismo importe</strong> (hasta 100&nbsp;€) para <strong>darte un capricho o regalársela a quien tú quieras cuidar</strong>.</p>` +
+        `<p style="margin:6px 0 0">No tienes que hacer nada más: cada pedido participa solo.</p>` +
+        `<p style="margin:8px 0 0;font-size:12px;color:#777">Cuídate tú. Regala cuidado. <a href="${NL_SITE}/sorteo-tarjetas-regalo/${utm}" style="color:#777">Consulta las bases</a>.</p></div>`
       : '') +
     `<p>${t.cierre}</p>` +
     (tipo === 'bf-acceso'
