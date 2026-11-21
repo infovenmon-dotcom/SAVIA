@@ -9,6 +9,8 @@
        pulsar "Finalizar"     → InitiateCheckout
        compra hecha           → Purchase (con importe)
        alta en la newsletter  → Lead / CompleteRegistration
+   - Microsoft Clarity (clarityId): mapas de calor y grabaciones anónimas, también
+     solo con consentimiento.
    - Si el visitante rechaza, no se carga nada y la tienda funciona igual.
    =========================================================================== */
 (function () {
@@ -16,7 +18,8 @@
   var CFG = window.SAVIA_CONFIG || {};
   var META = String(CFG.metaPixelId || '').trim();
   var TT = String(CFG.tiktokPixelId || '').trim();
-  if (!META && !TT) return;                       // sin IDs: no hacemos nada
+  var CLARITY = String(CFG.clarityId || '').trim(); // mapas de calor y grabaciones anónimas
+  if (!META && !TT && !CLARITY) return;           // sin IDs: no hacemos nada
 
   var CLAVE = 'savia_cookies';                    // 'si' | 'no'
   function leer() { try { return localStorage.getItem(CLAVE); } catch (e) { return null; } }
@@ -71,10 +74,22 @@
     } catch (e) { /* los píxeles nunca deben romper la tienda */ }
   }
 
+  /* Microsoft Clarity: mapas de calor y grabaciones anónimas de la navegación.
+     Igual que los píxeles, solo con consentimiento. */
+  function cargarClarity() {
+    if (!CLARITY || window.clarity) return;
+    (function (c, l, a, r, i, t, y) {
+      c[a] = c[a] || function () { (c[a].q = c[a].q || []).push(arguments); };
+      t = l.createElement(r); t.async = 1; t.src = 'https://www.clarity.ms/tag/' + i;
+      y = l.getElementsByTagName(r)[0]; y.parentNode.insertBefore(t, y);
+    })(window, document, 'clarity', 'script', CLARITY);
+    try { window.clarity('consent'); } catch (e) { /* */ }
+  }
+
   function activar() {
     if (activo) return;
     activo = true;
-    cargarMeta(); cargarTikTok();
+    cargarMeta(); cargarTikTok(); cargarClarity();
     var c = cola; cola = [];
     c.forEach(function (x) { enviar(x[0], x[1]); });
   }
@@ -144,7 +159,7 @@
     d.setAttribute('aria-label', 'Aviso de cookies');
     d.style.cssText = 'position:fixed;left:12px;right:12px;bottom:12px;z-index:9998;max-width:560px;margin:0 auto;background:#fffdf8;color:#2b2b2b;border:1px solid #e7ded2;border-radius:14px;box-shadow:0 10px 30px rgba(0,0,0,.18);padding:14px 16px;font:14px/1.45 -apple-system,Segoe UI,Roboto,Arial,sans-serif';
     d.innerHTML =
-      '<p style="margin:0 0 10px">🍪 <strong>¿Una galletita?</strong> Las usamos para saber qué anuncios te han traído hasta aquí. Tú decides: la tienda funciona igual. <a href="/privacidad.html" style="color:#1D6B50">Más info</a></p>' +
+      '<p style="margin:0 0 10px">🍪 <strong>¿Una galletita?</strong> Las usamos para saber qué anuncios te han traído hasta aquí y para mejorar la web. Tú decides: la tienda funciona igual. <a href="/privacidad.html" style="color:#1D6B50">Más info</a></p>' +
       '<div style="display:flex;gap:8px;justify-content:flex-end;flex-wrap:wrap">' +
       '<button type="button" data-c="no" style="padding:9px 16px;border-radius:999px;border:1px solid #1D6B50;background:#fff;color:#1D6B50;font-weight:700;cursor:pointer">No, gracias</button>' +
       '<button type="button" data-c="si" style="padding:9px 16px;border-radius:999px;border:0;background:#1D6B50;color:#fff;font-weight:700;cursor:pointer">Vale 🍪</button>' +

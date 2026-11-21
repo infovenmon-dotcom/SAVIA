@@ -22,9 +22,11 @@ window.SAVIA_CONFIG = {
   /* PÍXELES DE PUBLICIDAD (solo se cargan si el visitante acepta las cookies)
      metaPixelId:   número del píxel de Meta (Administrador de eventos → Orígenes de datos)
      tiktokPixelId: ID del píxel de TikTok (TikTok Ads → Herramientas → Eventos)
+     clarityId:     ID del proyecto de Microsoft Clarity (clarity.microsoft.com)
      Vacío ("") = no se carga nada. */
   metaPixelId: "1137867945797162",
   tiktokPixelId: "",
+  clarityId: "zh8uxpbb67",
 
   /* PRODUCTOS AGOTADOS (sin stock) — lista rápida
      Pon aquí los "handle" de los productos sin stock. Esos mostrarán la etiqueta
