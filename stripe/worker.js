@@ -2735,6 +2735,10 @@ async function procesarCola(env) {
     const prod = prods.find(x => x.handle === (job.extra && job.extra.handle)) || prods[0];
     ctxSemanal = { prods, cfg, prod, resenas: await cargarResenas(env.PRODUCTS_URL) };
   }
+  let ctxBF = null;
+  if (job.tpl === 'bf-domingo') {
+    try { ctxBF = { prods: await cargarCatalogoCompleto(env.PRODUCTS_URL), cfg: await getConfig(env) }; } catch (e) { console.error('ctx bf-domingo', e); }
+  }
   let n = 0;
   while (job.pos < job.emails.length && n < COLA_LOTE) {
     const quedaResend = hayResend && cupo.resend < CUPO_DIA.resend;
@@ -2747,7 +2751,7 @@ async function procesarCola(env) {
         const unsub = nlWorker(env) + '/unsubscribe?e=' + encodeURIComponent(to) + '&amp;t=' + token;
         const { subject, html } = job.tpl === 'semanal'
           ? construirCorreoSemanal(ctxSemanal.prod, ctxSemanal.prods, ctxSemanal.cfg, unsub, ctxSemanal.resenas, !!(await env.SAVIA_KV.get('sorteo:' + to)))
-          : construirCorreoBF(job.tpl, unsub, accesoUrl(to, await accesoToken(to, env), job.tpl), job.tpl === 'bf-acceso' ? await env.SAVIA_KV.get('sorteo:ganador') : null);
+          : construirCorreoBF(job.tpl, unsub, accesoUrl(to, await accesoToken(to, env), job.tpl), job.tpl === 'bf-acceso' ? await env.SAVIA_KV.get('sorteo:ganador') : null, ctxBF);
         const r = await enviarEmail(env, { to, subject, html, replyTo: env.ORDER_EMAIL_TO || undefined, fromName: 'Savia de Alma', soloBrevo: !quedaResend });
         // Si Resend ha dicho que no (cupo del día), no se vuelve a probar hoy.
         if (r && r.resendFallo) cupo.resend = CUPO_DIA.resend;
@@ -2814,7 +2818,40 @@ async function recuperarPagosAMedias(env) {
 }
 
 /* ---------- Correos del Black Friday 2026 ---------- */
-function construirCorreoBF(tipo, unsub, enlaceAcceso, ganador) {
+/* Rejilla de favoritos con el precio normal tachado y el del Black Friday. */
+const BF_FAVORITOS = ['champu-cacao', 'jabon-lavanda', 'desodorante-te-verde', 'acondicionador-coco'];
+function _bloquePreciosBF(ctx, utm) {
+  if (!ctx || !ctx.prods || !ctx.prods.length) return '';
+  const mapa = {}; ctx.prods.forEach(p => { mapa[p.handle] = p; });
+  const cfgSin = { ...ctx.cfg, campanaActiva: false };
+  const eur = n => n.toFixed(2).replace('.', ',') + '&nbsp;€';
+  let lista = BF_FAVORITOS.filter(h => mapa[h]);
+  // Si falta alguno, se completa con el primero de cada familia principal.
+  for (const col of ['Champús Sólidos', 'Jabones Artesanales', 'Desodorantes Sólidos', 'Acondicionadores']) {
+    if (lista.length >= 4) break;
+    const p = ctx.prods.find(x => x.collection === col && !lista.includes(x.handle) && !noVendible(x.handle, ctx.cfg));
+    if (p) lista.push(p.handle);
+  }
+  lista = lista.filter(h => !noVendible(h, ctx.cfg)).slice(0, 4);
+  if (!lista.length) return '';
+  const celda = h => {
+    const p = mapa[h];
+    let normal, bf;
+    try { normal = precioEfectivo(h, mapa, cfgSin); bf = precioEfectivo(h, mapa, ctx.cfg); } catch { return ''; }
+    const url = NL_SITE + '/producto/' + h + '/' + utm;
+    return `<td style="width:50%;padding:6px;vertical-align:top"><a href="${url}" style="text-decoration:none;color:#333;display:block;border:1px solid #e7ded2;border-radius:10px;padding:10px;text-align:center;background:#fff">` +
+      `<img src="${nlImg(p.image)}" alt="${_escHtml(p.title)}" width="200" style="width:100%;max-width:200px;height:auto;border-radius:8px">` +
+      `<div style="font-size:13px;font-weight:700;margin:6px 0 4px;line-height:1.3">${_escHtml(p.title)}</div>` +
+      (bf < normal ? `<span style="text-decoration:line-through;color:#999;font-size:13px">${eur(normal)}</span> ` : '') +
+      `<strong style="font-size:18px;color:#1D6B50">${eur(bf)}</strong></a></td>`;
+  };
+  let filas = '';
+  for (let i = 0; i < lista.length; i += 2) filas += '<tr>' + celda(lista[i]) + (lista[i + 1] ? celda(lista[i + 1]) : '<td></td>') + '</tr>';
+  return `<p style="margin:18px 0 6px;font-weight:700;color:#1D6B50">Algunos favoritos, ya rebajados:</p>` +
+    `<table role="presentation" style="width:100%;border-collapse:collapse">${filas}</table>`;
+}
+
+function construirCorreoBF(tipo, unsub, enlaceAcceso, ganador, ctx) {
   const utm = `?utm_source=newsletter&amp;utm_medium=email&amp;utm_campaign=${tipo}`;
   const T = {
     'bf-acceso': {
@@ -2849,6 +2886,14 @@ function construirCorreoBF(tipo, unsub, enlaceAcceso, ganador) {
       cierre: 'Champús, jabones, desodorantes, rituales completos… y el envío es gratis desde 20&nbsp;€.',
       boton: 'Aprovechar el Black Friday', ruta: '/tienda.html',
     },
+    'bf-domingo': {
+      subject: '🖤 Black Friday: tus favoritos rebajados (stock limitado)',
+      antetitulo: 'Solo hasta el 30 de noviembre',
+      titulo: 'No te quedes sin lo que más te gusta',
+      intro: 'El Black Friday sigue en marcha: <strong>−20 % en todos los productos</strong> y, encima, el <strong>4×3</strong> (de cada 4, el de menor precio te sale gratis). El descuento ya está aplicado en la web, sin códigos.',
+      cierre: '⚠️ <strong>Algunas referencias tienen stock limitado.</strong> Si hay algo que te encanta o que quieres regalar en Navidad, mejor no esperar al último día. El envío es gratis desde 20&nbsp;€.',
+      boton: 'Ver todos los precios', ruta: '/tienda.html',
+    },
     'bf-ultimos': {
       subject: '⌛ Últimas horas: el Black Friday acaba mañana lunes',
       antetitulo: 'Últimos días',
@@ -2860,7 +2905,7 @@ function construirCorreoBF(tipo, unsub, enlaceAcceso, ganador) {
   }[tipo] || null;
   const t = T || {};
   // Ejemplo real: 4 champús de 10,99 € → 4×3 (paga 3) y −20 %.
-  const ej = (n => n.toFixed(2).replace('.', ','))(10.99 * 3 * 0.8);
+  const ej = (n => n.toFixed(2).replace('.', ','))(Math.round(10.99 * 0.8 * 100) / 100 * 3);
   const html =
     `<style>a[x-apple-data-detectors]{color:inherit!important;text-decoration:none!important;font:inherit!important}u+#body a{color:inherit;text-decoration:none}</style>` +
     `<div style="font-family:-apple-system,Segoe UI,Roboto,Arial,sans-serif;max-width:560px;margin:0 auto;color:#333;line-height:1.55">` +
@@ -2874,6 +2919,7 @@ function construirCorreoBF(tipo, unsub, enlaceAcceso, ganador) {
     `<table role="presentation" style="width:100%;border-collapse:collapse;margin:14px 0"><tr>` +
     `<td style="padding:12px;border:1px solid #e7ded2;background:#f6f3ec;text-align:center;font-size:14px">Ejemplo: <strong>4 champús sólidos</strong><br>` +
     `<span style="text-decoration:line-through;color:#999">43,96&nbsp;€</span> → <strong style="font-size:20px;color:#1D6B50">${ej}&nbsp;€</strong><br><span style="color:#777;font-size:12px">4×3 + −20 % · un 40 % menos</span></td></tr></table>` +
+    (tipo === 'bf-domingo' ? _bloquePreciosBF(ctx, utm) : '') +
     `<p>${t.cierre}</p>` +
     (tipo === 'bf-acceso'
       ? `<div style="border:1px solid #E0B83A;border-radius:10px;padding:14px 16px;margin:16px 0;background:#fffaf0;text-align:center">` +
@@ -2931,9 +2977,10 @@ async function manejarNewsletter(request, env, cors) {
   }
   if (accion === 'prueba_bf') {
     const to = body.to || env.ORDER_EMAIL_TO;
-    const tipo = ['bf-acceso', 'bf-recordatorio', 'bf-lanzamiento', 'bf-ultimos'].includes(body.tipo) ? body.tipo : 'bf-acceso';
+    const tipo = ['bf-acceso', 'bf-recordatorio', 'bf-lanzamiento', 'bf-domingo', 'bf-ultimos'].includes(body.tipo) ? body.tipo : 'bf-acceso';
+    const ctxBF = tipo === 'bf-domingo' ? { prods: await cargarCatalogoCompleto(env.PRODUCTS_URL), cfg: await getConfig(env) } : null;
     const token = await nlToken(to, env);
-    const { subject, html } = construirCorreoBF(tipo, nlWorker(env) + '/unsubscribe?e=' + encodeURIComponent(to) + '&amp;t=' + token, accesoUrl(to, await accesoToken(to, env), tipo), await env.SAVIA_KV.get('sorteo:ganador'));
+    const { subject, html } = construirCorreoBF(tipo, nlWorker(env) + '/unsubscribe?e=' + encodeURIComponent(to) + '&amp;t=' + token, accesoUrl(to, await accesoToken(to, env), tipo), await env.SAVIA_KV.get('sorteo:ganador'), ctxBF);
     const r = await enviarEmail(env, { to, subject: '[PRUEBA] ' + subject, html, replyTo: env.ORDER_EMAIL_TO || undefined, fromName: 'Savia de Alma' });
     return jsonResp({ ok: !!(r && r.ok), tipo }, 200, cors);
   }
