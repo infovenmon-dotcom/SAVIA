@@ -2887,7 +2887,7 @@ function construirCorreoBF(tipo, unsub, enlaceAcceso, ganador, ctx) {
       boton: 'Aprovechar el Black Friday', ruta: '/tienda.html',
     },
     'bf-domingo': {
-      subject: '🖤 Black Friday: tus favoritos rebajados (stock limitado)',
+      subject: '🖤 Black Friday: tus favoritos rebajados + sorteamos 3 tarjetas regalo',
       antetitulo: 'Solo hasta el 30 de noviembre',
       titulo: 'No te quedes sin lo que más te gusta',
       intro: 'El Black Friday sigue en marcha: <strong>−20 % en todos los productos</strong> y, encima, el <strong>4×3</strong> (de cada 4, el de menor precio te sale gratis). El descuento ya está aplicado en la web, sin códigos.',
@@ -2920,6 +2920,13 @@ function construirCorreoBF(tipo, unsub, enlaceAcceso, ganador, ctx) {
     `<td style="padding:12px;border:1px solid #e7ded2;background:#f6f3ec;text-align:center;font-size:14px">Ejemplo: <strong>4 champús sólidos</strong><br>` +
     `<span style="text-decoration:line-through;color:#999">43,96&nbsp;€</span> → <strong style="font-size:20px;color:#1D6B50">${ej}&nbsp;€</strong><br><span style="color:#777;font-size:12px">4×3 + −20 % · un 40 % menos</span></td></tr></table>` +
     (tipo === 'bf-domingo' ? _bloquePreciosBF(ctx, utm) : '') +
+    (tipo === 'bf-domingo'
+      ? `<div style="border:1px solid #E0B83A;border-radius:10px;padding:14px 16px;margin:18px 0;background:#fffaf0;text-align:center">` +
+        `<div style="font-size:12px;letter-spacing:2px;color:#9a7a14;font-weight:800">🎁 COMPRA Y PARTICIPA</div>` +
+        `<p style="margin:6px 0 0;font-size:16px"><strong>Sorteamos 3 tarjetas regalo</strong> entre todos los pedidos del 20 al 30 de noviembre.</p>` +
+        `<p style="margin:6px 0 0">Cada tarjeta vale <strong>lo mismo que el pedido ganador</strong> (hasta 100&nbsp;€): si te toca, ese pedido te sale gratis. No tienes que hacer nada más: cada pedido participa solo.</p>` +
+        `<p style="margin:8px 0 0;font-size:12px;color:#777">Para ti o para regalar a quien más quieres. <a href="${NL_SITE}/sorteo-tarjetas-regalo/${utm}" style="color:#777">Consulta las bases</a>.</p></div>`
+      : '') +
     `<p>${t.cierre}</p>` +
     (tipo === 'bf-acceso'
       ? `<div style="border:1px solid #E0B83A;border-radius:10px;padding:14px 16px;margin:16px 0;background:#fffaf0;text-align:center">` +
