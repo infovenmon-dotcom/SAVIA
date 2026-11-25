@@ -2737,7 +2737,7 @@ async function procesarCola(env) {
     ctxSemanal = { prods, cfg, prod, resenas: await cargarResenas(env.PRODUCTS_URL) };
   }
   let ctxBF = null;
-  if (job.tpl === 'bf-domingo') {
+  if (job.tpl === 'bf-domingo' || job.tpl === 'bf-viernes') {
     try { ctxBF = { prods: await cargarCatalogoCompleto(env.PRODUCTS_URL), cfg: await getConfig(env) }; } catch (e) { console.error('ctx bf-domingo', e); }
   }
   let n = 0;
@@ -2819,14 +2819,26 @@ async function recuperarPagosAMedias(env) {
 }
 
 /* ---------- Correos del Black Friday 2026 ---------- */
+/* Bloque del sorteo de 3 tarjetas regalo (pedidos del 20 al 30 de noviembre). */
+function _bloqueSorteoTarjetas(utm, tipo) {
+  const grande = tipo === 'bf-viernes';
+  const cierre = tipo === 'bf-ultimos' ? '<p style="margin:6px 0 0"><strong>Último día para participar: lunes 30 a las 23:59.</strong></p>' : '';
+  return `<div style="border:${grande ? 2 : 1}px solid #E0B83A;border-radius:12px;padding:${grande ? '18px' : '14px 16px'};margin:18px 0;background:#fffaf0;text-align:center">` +
+    `<div style="font-size:12px;letter-spacing:2px;color:#9a7a14;font-weight:800">🎁 COMPRA Y PARTICIPA</div>` +
+    `<p style="margin:6px 0 0;font-size:${grande ? 20 : 16}px"><strong>Sorteamos 3 tarjetas regalo</strong> entre todos los pedidos del 20 al 30 de noviembre.</p>` +
+    `<p style="margin:6px 0 0">Si tu pedido sale elegido, te regalamos una <strong>tarjeta regalo por el mismo importe</strong> (hasta 100&nbsp;€) para <strong>darte un capricho o regalársela a quien tú quieras cuidar</strong>.</p>` +
+    `<p style="margin:6px 0 0">No tienes que hacer nada más: cada pedido participa solo.</p>` + cierre +
+    `<p style="margin:8px 0 0;font-size:12px;color:#777">Cuídate tú. Regala cuidado. <a href="${NL_SITE}/sorteo-tarjetas-regalo/${utm}" style="color:#777">Consulta las bases</a>.</p></div>`;
+}
+
 /* Rejilla de favoritos con el precio normal tachado y el del Black Friday. */
 const BF_FAVORITOS = ['champu-cacao', 'jabon-lavanda', 'desodorante-te-verde', 'acondicionador-coco'];
-function _bloquePreciosBF(ctx, utm) {
+function _bloquePreciosBF(ctx, utm, favoritos, titulo) {
   if (!ctx || !ctx.prods || !ctx.prods.length) return '';
   const mapa = {}; ctx.prods.forEach(p => { mapa[p.handle] = p; });
   const cfgSin = { ...ctx.cfg, campanaActiva: false };
   const eur = n => n.toFixed(2).replace('.', ',') + '&nbsp;€';
-  let lista = BF_FAVORITOS.filter(h => mapa[h]);
+  let lista = (favoritos || BF_FAVORITOS).filter(h => mapa[h]);
   // Si falta alguno, se completa con el primero de cada familia principal.
   for (const col of ['Champús Sólidos', 'Jabones Artesanales', 'Desodorantes Sólidos', 'Acondicionadores']) {
     if (lista.length >= 4) break;
@@ -2848,7 +2860,7 @@ function _bloquePreciosBF(ctx, utm) {
   };
   let filas = '';
   for (let i = 0; i < lista.length; i += 2) filas += '<tr>' + celda(lista[i]) + (lista[i + 1] ? celda(lista[i + 1]) : '<td></td>') + '</tr>';
-  return `<p style="margin:18px 0 6px;font-weight:700;color:#1D6B50">Algunos favoritos, ya rebajados:</p>` +
+  return `<p style="margin:18px 0 6px;font-weight:700;color:#1D6B50">${titulo || 'Algunos favoritos, ya rebajados:'}</p>` +
     `<table role="presentation" style="width:100%;border-collapse:collapse">${filas}</table>`;
 }
 
@@ -2895,6 +2907,14 @@ function construirCorreoBF(tipo, unsub, enlaceAcceso, ganador, ctx) {
       cierre: '⚠️ <strong>Algunas referencias tienen stock limitado.</strong> Si hay algo que te encanta o que quieres regalar en Navidad, mejor no esperar al último día. El envío es gratis desde 20&nbsp;€.',
       boton: 'Ver todos los precios', ruta: '/tienda.html',
     },
+    'bf-viernes': {
+      subject: '🖤 Hoy es Black Friday: tu pedido puede volver en forma de tarjeta regalo',
+      antetitulo: 'Hoy es el día',
+      titulo: 'Hoy es Black Friday 🖤',
+      intro: 'Hoy es el día grande y en Savia de Alma lo celebramos por partida doble: <strong>−20 % en toda la tienda + 4×3</strong> (hasta un 40 % menos)… y un sorteo muy especial.',
+      cierre: 'Aprovecha para adelantar los regalos de Navidad: algunas referencias tienen <strong>stock limitado</strong> y el envío es gratis desde 20&nbsp;€. Todo, solo hasta el lunes 30.',
+      boton: 'Quiero mis favoritos', ruta: '/tienda.html',
+    },
     'bf-ultimos': {
       subject: '⌛ Últimas horas: el Black Friday acaba mañana lunes',
       antetitulo: 'Últimos días',
@@ -2917,18 +2937,13 @@ function construirCorreoBF(tipo, unsub, enlaceAcceso, ganador, ctx) {
     `<div style="font-size:13px;letter-spacing:2px;color:#e9e2cf;margin-top:10px;font-weight:700">−20 % EN TODO + 4×3 · ${t.acceso ? 'PARA TI YA · HASTA EL 30 DE NOVIEMBRE' : 'DEL 20 AL 30 DE NOVIEMBRE'}</div></div>` +
     `<h2 style="color:#1D6B50;font-family:Georgia,serif;margin:22px 0 8px">${t.titulo}</h2>` +
     `<p>${t.intro}</p>` +
+    (tipo === 'bf-viernes' ? _bloqueSorteoTarjetas(utm, tipo) : '') +
     `<table role="presentation" style="width:100%;border-collapse:collapse;margin:14px 0"><tr>` +
     `<td style="padding:12px;border:1px solid #e7ded2;background:#f6f3ec;text-align:center;font-size:14px">Ejemplo: <strong>4 champús sólidos</strong><br>` +
     `<span style="text-decoration:line-through;color:#999">43,96&nbsp;€</span> → <strong style="font-size:20px;color:#1D6B50">${ej}&nbsp;€</strong><br><span style="color:#777;font-size:12px">4×3 + −20 % · un 40 % menos</span></td></tr></table>` +
     (tipo === 'bf-domingo' ? _bloquePreciosBF(ctx, utm) : '') +
-    (tipo === 'bf-domingo'
-      ? `<div style="border:1px solid #E0B83A;border-radius:10px;padding:14px 16px;margin:18px 0;background:#fffaf0;text-align:center">` +
-        `<div style="font-size:12px;letter-spacing:2px;color:#9a7a14;font-weight:800">🎁 COMPRA Y PARTICIPA</div>` +
-        `<p style="margin:6px 0 0;font-size:16px"><strong>Sorteamos 3 tarjetas regalo</strong> entre todos los pedidos del 20 al 30 de noviembre.</p>` +
-        `<p style="margin:6px 0 0">Si tu pedido sale elegido, te regalamos una <strong>tarjeta regalo por el mismo importe</strong> (hasta 100&nbsp;€) para <strong>darte un capricho o regalársela a quien tú quieras cuidar</strong>.</p>` +
-        `<p style="margin:6px 0 0">No tienes que hacer nada más: cada pedido participa solo.</p>` +
-        `<p style="margin:8px 0 0;font-size:12px;color:#777">Cuídate tú. Regala cuidado. <a href="${NL_SITE}/sorteo-tarjetas-regalo/${utm}" style="color:#777">Consulta las bases</a>.</p></div>`
-      : '') +
+    (tipo === 'bf-viernes' ? _bloquePreciosBF(ctx, utm, ['champu-romero-quina', 'jabon-rosa-mosqueta', 'exfoliante-cafe-coco', 'limpiador-facial-rosa-mosqueta'], 'Ideas para ti (o para regalar), ya rebajadas:') : '') +
+    (tipo === 'bf-domingo' || tipo === 'bf-ultimos' ? _bloqueSorteoTarjetas(utm, tipo) : '') +
     `<p>${t.cierre}</p>` +
     (tipo === 'bf-acceso'
       ? `<div style="border:1px solid #E0B83A;border-radius:10px;padding:14px 16px;margin:16px 0;background:#fffaf0;text-align:center">` +
@@ -2986,8 +3001,8 @@ async function manejarNewsletter(request, env, cors) {
   }
   if (accion === 'prueba_bf') {
     const to = body.to || env.ORDER_EMAIL_TO;
-    const tipo = ['bf-acceso', 'bf-recordatorio', 'bf-lanzamiento', 'bf-domingo', 'bf-ultimos'].includes(body.tipo) ? body.tipo : 'bf-acceso';
-    const ctxBF = tipo === 'bf-domingo' ? { prods: await cargarCatalogoCompleto(env.PRODUCTS_URL), cfg: await getConfig(env) } : null;
+    const tipo = ['bf-acceso', 'bf-recordatorio', 'bf-lanzamiento', 'bf-domingo', 'bf-viernes', 'bf-ultimos'].includes(body.tipo) ? body.tipo : 'bf-acceso';
+    const ctxBF = (tipo === 'bf-domingo' || tipo === 'bf-viernes') ? { prods: await cargarCatalogoCompleto(env.PRODUCTS_URL), cfg: await getConfig(env) } : null;
     const token = await nlToken(to, env);
     const { subject, html } = construirCorreoBF(tipo, nlWorker(env) + '/unsubscribe?e=' + encodeURIComponent(to) + '&amp;t=' + token, accesoUrl(to, await accesoToken(to, env), tipo), await env.SAVIA_KV.get('sorteo:ganador'), ctxBF);
     const r = await enviarEmail(env, { to, subject: '[PRUEBA] ' + subject, html, replyTo: env.ORDER_EMAIL_TO || undefined, fromName: 'Savia de Alma' });
