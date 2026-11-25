@@ -2559,6 +2559,7 @@ const ENVIOS_PROGRAMADOS = [
   { id: 'bf-recordatorio', cuando: '2026-11-15T10:00:00+01:00' },
   { id: 'bf-lanzamiento', cuando: '2026-11-20T08:00:00+01:00' },
   { id: 'bf-domingo', cuando: '2026-11-22T10:00:00+01:00' },
+  { id: 'bf-viernes', cuando: '2026-11-27T09:00:00+01:00' },
   { id: 'bf-ultimos', cuando: '2026-11-29T10:00:00+01:00' },
 ];
 
