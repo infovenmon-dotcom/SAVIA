@@ -625,6 +625,42 @@ fs.writeFileSync(path.join(RAIZ, 'sitemap.xml'),
   + urls.map(u => `  <url>\n    <loc>${u.loc}</loc>\n    <lastmod>${hoy}</lastmod>\n    <priority>${u.pri}</priority>\n  </url>`).join('\n')
   + `\n</urlset>\n`);
 
+/* --- feed-google.xml: catalogo para Google Merchant Center (fichas gratuitas
+   en Google Shopping). Mismos precios que la web; durante la campaña va el
+   precio rebajado como sale_price con sus fechas, igual que en precios.js. --- */
+const CAMPANA_FEED = { pct: 20, desde: '2026-11-20T00:00:00+01:00', hasta: '2026-11-30T23:59:59+01:00' };
+const xml = (t) => String(t == null ? '' : t).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+const enFeed = PRODUCTOS.filter(p => !p.proximamente && typeof p.price === 'number' && isFinite(p.price) && p.price > 0);
+const itemFeed = (p) => {
+  const imgs = (p.images && p.images.length ? p.images : [p.image]).filter(Boolean).map(i => SITIO + '/' + i.replace(/^\//, ''));
+  const precio = Number(p.price);
+  const rebajado = Math.round(precio * (1 - CAMPANA_FEED.pct / 100) * 100) / 100;
+  const desc = (p.descripcion || [p.short].concat(p.bullets || []).join('. ') || p.title).replace(/\s+/g, ' ').trim().slice(0, 4900);
+  const envio = precio >= ENVIO.gratisDesde ? 0 : ENVIO.peninsula;
+  return `    <item>
+      <g:id>${xml(p.sku || p.handle)}</g:id>
+      <g:title>${xml(p.title)}</g:title>
+      <g:description>${xml(desc)}</g:description>
+      <g:link>${SITIO}/producto/${p.handle}/</g:link>
+      <g:image_link>${xml(imgs[0])}</g:image_link>
+${imgs.slice(1, 10).map(i => `      <g:additional_image_link>${xml(i)}</g:additional_image_link>`).join('\n')}
+      <g:availability>in_stock</g:availability>
+      <g:price>${precio.toFixed(2)} EUR</g:price>
+      <g:sale_price>${rebajado.toFixed(2)} EUR</g:sale_price>
+      <g:sale_price_effective_date>${CAMPANA_FEED.desde}/${CAMPANA_FEED.hasta}</g:sale_price_effective_date>
+      <g:brand>Savia de Alma</g:brand>
+      <g:condition>new</g:condition>
+      <g:identifier_exists>no</g:identifier_exists>
+      <g:mpn>${xml(p.sku || p.handle)}</g:mpn>
+      <g:product_type>${xml(p.collectionName || p.type || '')}</g:product_type>
+      <g:shipping><g:country>ES</g:country><g:service>Estándar península</g:service><g:price>${envio.toFixed(2)} EUR</g:price></g:shipping>
+    </item>`;
+};
+fs.writeFileSync(path.join(RAIZ, 'feed-google.xml'),
+  `<?xml version="1.0" encoding="UTF-8"?>\n<rss version="2.0" xmlns:g="http://base.google.com/ns/1.0">\n  <channel>\n    <title>Savia de Alma</title>\n    <link>${SITIO}/</link>\n    <description>Cosmética sólida natural hecha a mano en España</description>\n`
+  + enFeed.map(itemFeed).join('\n') + `\n  </channel>\n</rss>\n`);
+console.log(`feed-google.xml con ${enFeed.length} productos`);
+
 /* --- llms.txt: resumen legible por asistentes de IA --- */
 /* Solo los cosmeticos: en un cepillo o una jabonera la pregunta vegano/no
    vegano no aplica, y afirmarlo sin saberlo seria inventarselo. */
